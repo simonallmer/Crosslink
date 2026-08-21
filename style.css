@@ -1,0 +1,124 @@
+:root {
+  --paper: #FBF9F3;
+  --card: #FFFFFF;
+  --ink: #1B1A17;
+  --ink-soft: #55524A;
+  --ink-faint: #8C887D;
+  --rule: #D9D4C6;
+  --rule-strong: #B4AE9C;
+  --live: #0F6E56;
+  --live-bg: #E4F2EC;
+  --wrong: #A32D2D;
+  --wrong-bg: #FBEBEB;
+  --barred: #CFC9B8;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14140F;
+    --card: #1D1D18;
+    --ink: #EFEBE0;
+    --ink-soft: #A9A498;
+    --ink-faint: #6E6A5F;
+    --rule: #35342C;
+    --rule-strong: #514F44;
+    --live: #5DCAA5;
+    --live-bg: #0C2C24;
+    --wrong: #F09595;
+    --wrong-bg: #331717;
+    --barred: #3B3A31;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--sans); font-size: 15px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+body.wide main { max-width: 1040px; }
+
+.eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 8px; }
+h1 { font-family: var(--serif); font-size: 30px; font-weight: 400; margin: 0 0 8px; letter-spacing: -.01em; }
+.standfirst { margin: 0; color: var(--ink-soft); font-size: 15px; max-width: 46ch; }
+
+.controls { display: flex; align-items: center; gap: 18px; margin: 26px 0 18px; flex-wrap: wrap; }
+.toggle { font-size: 13px; color: var(--ink-soft); display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+.toggle input { accent-color: var(--live); }
+select#which { font: inherit; font-size: 13px; color: var(--ink); background: var(--card);
+  border: 1px solid var(--rule-strong); border-radius: 6px; padding: 5px 8px; }
+button.ghost {
+  font: inherit; font-size: 13px; color: var(--ink-soft);
+  background: transparent; border: 1px solid var(--rule-strong);
+  border-radius: 6px; padding: 5px 12px; cursor: pointer;
+}
+button.ghost:hover:not(:disabled) { color: var(--ink); border-color: var(--ink-soft); }
+button.ghost:disabled { opacity: .4; cursor: default; }
+button.ghost.solid:not(:disabled) { color: var(--live); border-color: var(--live); }
+
+.board-scroll { overflow: hidden; }
+.board { display: grid; gap: 4px; width: max-content; }
+.board[data-size="5"] .noun .slots, .board[data-size="5"] .noun .word { font-size: 15px; letter-spacing: .1em; }
+.board[data-size="5"] .gut.shown { font-size: 10px; padding: 3px 4px; }
+.board > div { border-radius: 4px; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+.noun { border: 1px solid var(--rule); background: var(--card); position: relative; }
+.noun.dark { border-color: var(--rule); background: transparent; opacity: .65; }
+.noun.reachable { border-color: var(--rule-strong); cursor: pointer; }
+.noun.reachable:hover { border-color: var(--ink-soft); }
+.noun.selected { border-color: var(--live); box-shadow: 0 0 0 2px var(--live-bg); }
+.noun.centre-open { border-color: var(--live); }
+.noun .slots { font-family: var(--serif); font-size: 17px; letter-spacing: .16em; color: var(--ink); }
+.noun .slots .blank { color: var(--rule-strong); }
+.noun .slots .rev { color: var(--live); }
+.noun .word { font-family: var(--serif); font-size: 17px; letter-spacing: .06em; }
+.noun.done-clean .word { color: var(--ink); }
+.noun.done-partial .word { color: var(--ink-soft); }
+.noun.done-given .word { color: var(--ink-faint); font-style: italic; }
+.noun.done-clean, .noun.done-partial, .noun.done-given { border-color: var(--rule-strong); }
+.noun .tick { position: absolute; top: 4px; right: 6px; font-size: 9px; color: var(--ink-faint); letter-spacing: .06em; }
+
+.gut { border: 1px dashed var(--rule); opacity: .35; }
+.gut.shown {
+  opacity: 1; border: 1px solid var(--live); background: var(--live-bg);
+  padding: 4px 6px; font-size: 11px; line-height: 1.25; color: var(--live);
+  flex-direction: column; gap: 2px;
+}
+.gut.shown .arrow { font-size: 12px; opacity: .85; }
+.gut.barred { opacity: 1; border: none; background: transparent; }
+.gut.barred::after { content: ""; width: 60%; height: 4px; border-radius: 2px; background: var(--barred); }
+.gut.conflict { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+.dead { }
+.dead::after { content: ""; width: 3px; height: 3px; border-radius: 50%; background: var(--rule); }
+
+#ghost-input { position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; }
+
+.panel { margin-top: 28px; min-height: 92px; }
+.panel-empty { color: var(--ink-faint); font-size: 14px; margin: 0; }
+.panel-head { margin: 0 0 8px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+.routes { list-style: none; margin: 0 0 14px; padding: 0; }
+.routes li { font-family: var(--serif); font-size: 17px; margin: 0 0 6px; color: var(--ink); }
+.routes li em { font-style: normal; color: var(--live); }
+.routes li .gap { color: var(--rule-strong); letter-spacing: .14em; }
+.hint-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.note { font-size: 12px; color: var(--ink-faint); }
+.message { margin: 12px 0 0; font-size: 13px; min-height: 20px; color: var(--wrong); }
+.message.ok { color: var(--live); }
+
+.finish { margin-top: 34px; border-top: 1px solid var(--rule); padding-top: 24px; }
+.finish h2 { font-family: var(--serif); font-weight: 400; font-size: 22px; margin: 0 0 6px; }
+.finish-sub { margin: 0 0 16px; color: var(--ink-soft); font-size: 14px; }
+.sentences { list-style: none; margin: 0; padding: 0; }
+.sentences li { font-family: var(--serif); font-size: 17px; margin: 0 0 7px; color: var(--ink-soft); }
+.sentences li .n { font-size: 14px; letter-spacing: .1em; color: var(--ink); }
+
+footer { margin-top: 46px; border-top: 1px solid var(--rule); padding-top: 14px; }
+footer p { margin: 0; font-size: 12px; color: var(--ink-faint); }
+
+@media (max-width: 640px) {
+  main { padding: 26px 16px 60px; }
+  h1 { font-size: 25px; }
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crosslink — demo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow" id="eyebrow">Crosslink</p>
+    <h1 id="title">The Centre Is a Fish</h1>
+    <p class="standfirst" id="standfirst"></p>
+  </header>
+
+  <div class="controls">
+    <select id="which" aria-label="Puzzle"></select>
+    <label class="toggle"><input type="checkbox" id="peek"> Peek one ring ahead</label>
+    <button id="restart" class="ghost">Restart</button>
+  </div>
+
+  <div class="board-scroll">
+    <div id="board" class="board" role="grid" aria-label="Crosslink board"></div>
+  </div>
+
+  <input id="ghost-input" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" aria-hidden="true">
+
+  <section id="panel" class="panel">
+    <p class="panel-empty" id="panel-empty">Tap the centre square to begin.</p>
+    <div id="panel-body" hidden>
+      <p class="panel-head"><span id="panel-count"></span></p>
+      <ul id="routes" class="routes"></ul>
+      <div class="hint-row">
+        <button id="enter" class="ghost solid">Enter word</button>
+        <button id="hint" class="ghost"></button>
+        <span id="hint-note" class="note"></span>
+      </div>
+    </div>
+    <p id="message" class="message"></p>
+  </section>
+
+  <section id="finish" class="finish" hidden>
+    <h2>The board closes.</h2>
+    <p class="finish-sub" id="finish-sub"></p>
+    <ul id="sentences" class="sentences"></ul>
+  </section>
+
+  <footer>
+    <p>Nouns in the cells. Verbs in the gutters. A verb appears only when one of its two words is known.</p>
+  </footer>
+</main>
+
+<script src="puzzles/puzzle-01-fish.js"></script>
+<script src="puzzles/puzzle-02-salt.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
