@@ -31,14 +31,22 @@
     fit();
   }
 
-  // The lattice keeps its proportions; it only ever shrinks to the page.
+  // The lattice keeps its proportions, and shrinks to the page — but only so far.
+  // Past MIN_SCALE the verbs stop being readable, so the board scrolls sideways instead.
+  var MIN_SCALE = 0.82;
+
   function fit() {
     var wrap = document.querySelector(".board-scroll"), board = document.getElementById("board");
     board.style.transform = "none";
-    var s = Math.min(1, wrap.clientWidth / board.offsetWidth);
+    board.style.margin = "0";
+    var w = board.offsetWidth, h = board.offsetHeight;
+    var s = Math.min(1, Math.max(MIN_SCALE, wrap.clientWidth / w));
     board.style.transformOrigin = "top left";
     board.style.transform = "scale(" + s + ")";
-    wrap.style.height = Math.ceil(board.offsetHeight * s) + "px";
+    // Collapse the layout box the transform left behind, so the scroller measures true.
+    board.style.marginRight = -Math.round(w * (1 - s)) + "px";
+    board.style.marginBottom = -Math.round(h * (1 - s)) + "px";
+    wrap.style.height = "";
   }
   window.addEventListener("resize", function () { if (st) fit(); });
 
@@ -209,7 +217,18 @@
 
   // ---- input ----------------------------------------------------------
 
-  ghost.addEventListener("input", function () {
+  function back() {
+    if (!st.selected) return;
+    if (st.filled[CL.K(st.selected[0], st.selected[1])] !== undefined) lift(st.selected[0], st.selected[1]);
+    else { st.draft = st.draft.slice(0, -1); draw(); }
+  }
+
+  ghost.addEventListener("input", function (ev) {
+    if (ev.inputType === "deleteContentBackward" || ev.inputType === "deleteContentForward") {
+      ghost.value = "";
+      back();
+      return;
+    }
     var letters = ghost.value.toUpperCase().replace(/[^A-Z]/g, "");
     ghost.value = "";
     if (!st.selected || !letters) return;
@@ -221,11 +240,7 @@
 
   ghost.addEventListener("keydown", function (ev) {
     if (!st.selected) return;
-    if (ev.key === "Backspace") {
-      ev.preventDefault();
-      if (st.filled[CL.K(st.selected[0], st.selected[1])] !== undefined) lift(st.selected[0], st.selected[1]);
-      else { st.draft = st.draft.slice(0, -1); draw(); }
-    }
+    if (ev.key === "Backspace") { ev.preventDefault(); back(); }
     else if (ev.key === "Enter") { ev.preventDefault(); submit(); }
     else if (ev.key === "Escape") { ev.preventDefault(); st.selected = null; st.draft = ""; draw(); }
   });
