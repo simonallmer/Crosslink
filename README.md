@@ -1,11 +1,12 @@
 # Crosslink
 
-A puzzle of verbs. Nouns sit in the cells; the relations between them sit in the
-gutters. The board is a (2N−1)² lattice: for N = 3 that is 5 × 5 — nine nouns,
+A game of connections. Nouns sit in the cells; the relations between them sit in
+the gutters. The board is a (2N−1)² lattice: for N = 3 that is 5 × 5 — nine nouns,
 twelve gutters, four structural corners.
 
 Open it with the `crosslink` launch config (`python3 -m http.server 8812`). The
-picker in the header switches puzzles; every rule below holds at any odd size.
+front page leads to the daily board, the puzzle index, the word list and the
+rulebook; every rule below holds at any odd size.
 
 ## What the engine implements
 

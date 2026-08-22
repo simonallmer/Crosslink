@@ -3,56 +3,300 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crosslink — demo</title>
+<title>Crosslink</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="cursors.css">
 </head>
 <body>
+<div class="desktop">
+
 <main>
-  <header>
-    <p class="eyebrow" id="eyebrow">Crosslink</p>
-    <h1 id="title">The Centre Is a Fish</h1>
-    <p class="standfirst" id="standfirst"></p>
-  </header>
-
-  <div class="controls">
-    <select id="which" aria-label="Puzzle"></select>
-    <label class="toggle"><input type="checkbox" id="peek"> Peek one ring ahead</label>
-    <button id="restart" class="ghost">Restart</button>
+  <div class="win-bar main-bar">
+    <span class="win-title" id="win-name">Crosslink</span>
+    <button class="win-x" id="x-main" title="Close" aria-label="Close">&#10006;</button>
   </div>
 
-  <div class="board-scroll">
-    <div id="board" class="board" role="grid" aria-label="Crosslink board"></div>
+  <div class="toolbar">
+    <button class="tool" id="nav-back">&#9664; Back</button>
+    <button class="tool" id="nav-home">Home</button>
+    <span class="loc-label">Location:</span>
+    <span class="loc" id="loc"></span>
+    <button class="tool arrow" id="loc-arrow" title="Other sites" aria-haspopup="true" aria-expanded="false">&#9660;</button>
+    <button class="tool" id="sound-toggle" title="Sound" aria-pressed="true">&#9834; On</button>
+    <ul class="sitelist" id="sitelist" hidden></ul>
   </div>
 
-  <input id="ghost-input" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-hidden="true">
+  <!-- ===================== the front page ===================== -->
+  <section class="view" id="view-menu">
+    <div class="banner">
+      <svg class="banner-art" viewBox="0 0 600 210" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#123A63"/><stop offset="0.55" stop-color="#0D2A48"/><stop offset="1" stop-color="#0A1D33"/>
+          </linearGradient>
+          <pattern id="dither" width="4" height="4" patternUnits="userSpaceOnUse">
+            <rect width="4" height="4" fill="none"/>
+            <rect x="0" y="0" width="1" height="1" fill="#FFFFFF" opacity="0.10"/>
+            <rect x="2" y="2" width="1" height="1" fill="#FFFFFF" opacity="0.06"/>
+          </pattern>
+          <radialGradient id="glow" cx="0.5" cy="0.62" r="0.62">
+            <stop offset="0" stop-color="#2E7FA8" stop-opacity="0.85"/>
+            <stop offset="1" stop-color="#2E7FA8" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
 
-  <section id="panel" class="panel">
-    <p class="panel-empty" id="panel-empty">Tap the centre square to begin.</p>
-    <div id="panel-body" hidden>
-      <p class="panel-head"><span id="panel-count"></span></p>
-      <ul id="routes" class="routes"></ul>
-      <div class="hint-row">
-        <button id="enter" class="ghost solid">Enter word</button>
-        <button id="hint" class="ghost"></button>
-        <span id="hint-note" class="note"></span>
+        <rect width="600" height="210" fill="url(#sky)"/>
+        <g class="rays">
+          <path d="M300 205 L120 0 L180 0 Z"/><path d="M300 205 L228 0 L262 0 Z"/>
+          <path d="M300 205 L318 0 L352 0 Z"/><path d="M300 205 L410 0 L470 0 Z"/>
+          <path d="M300 205 L20 40 L20 74 Z"/><path d="M300 205 L580 40 L580 74 Z"/>
+        </g>
+        <rect width="600" height="210" fill="url(#glow)"/>
+        <rect width="600" height="210" fill="url(#dither)"/>
+
+        <!-- confetti: the two days the designer spent -->
+        <g class="conf">
+          <path class="c-mag" d="M44 30 L60 58 L28 58 Z"/>
+          <circle class="c-gold" cx="96" cy="24" r="7"/>
+          <path class="c-cyan" d="M22 96 h10 v10 h-10 Z"/>
+          <path class="c-mag" d="M18 150 l9 -9 9 9 -9 9 Z"/>
+          <path class="c-gold" d="M62 170 h34 v6 h-34 Z"/>
+          <circle class="c-cyan" cx="118" cy="186" r="5"/>
+          <path class="c-cyan" d="M556 34 L572 62 L540 62 Z"/>
+          <circle class="c-mag" cx="512" cy="26" r="7"/>
+          <path class="c-gold" d="M566 104 h12 v12 h-12 Z"/>
+          <path class="c-cyan" d="M574 152 l9 -9 9 9 -9 9 Z"/>
+          <path class="c-mag" d="M506 172 h34 v6 h-34 Z"/>
+          <circle class="c-gold" cx="470" cy="188" r="5"/>
+          <path class="c-gold" d="M150 60 l8 8 8 -8 8 8 8 -8" fill="none" stroke-width="4"/>
+          <path class="c-cyan" d="M418 148 l8 8 8 -8 8 8 8 -8" fill="none" stroke-width="4"/>
+        </g>
+
+      </svg>
+
+      <div class="banner-type">
+        <p class="banner-kicker">Simon Allmer Presents</p>
+        <h1 class="banner-name">Crosslink</h1>
+        <p class="banner-sub">A Game of Connections</p>
       </div>
     </div>
-    <p id="message" class="message"></p>
+
+    <div class="frontispiece">
+      <div class="tile-col">
+        <a class="tile t-red" href="#daily" data-go="daily">
+          <span class="tile-art" aria-hidden="true">
+            <svg viewBox="0 0 44 44"><rect class="s" x="3" y="3" width="14" height="10"/><rect class="s" x="27" y="3" width="14" height="10"/><rect class="s f" x="15" y="17" width="14" height="10"/><rect class="s" x="3" y="31" width="14" height="10"/><rect class="s" x="27" y="31" width="14" height="10"/><path class="w" d="M10 13v18M34 13v18M17 8h10M17 36h10"/></svg>
+          </span>
+          <span class="tile-name">Play Daily</span>
+        </a>
+        <a class="tile t-green" href="#words" data-go="words">
+          <span class="tile-art" aria-hidden="true">
+            <svg viewBox="0 0 44 44"><path class="w" d="M6 9h32M6 16h32M6 23h20M6 30h32M6 37h24"/><rect class="s f" x="28" y="20" width="10" height="7"/></svg>
+          </span>
+          <span class="tile-name">Word List</span>
+        </a>
+      </div>
+
+      <div class="hero" id="hero">
+        <svg viewBox="0 0 200 150" aria-label="A three by three lattice. Click it for the board numbers.">
+          <path class="w" d="M56 19h13M126 19h13M56 75h13M126 75h13M56 131h13M126 131h13M30 32v25M100 32v25M170 32v25M30 88v25M100 88v25M170 88v25"/>
+          <path class="h" d="M69 19l-6-3v6zM139 19l-6-3v6zM69 75l-6-3v6zM139 75l-6-3v6zM100 57l3-6h-6zM30 57l3-6h-6zM170 113l3 6h-6zM100 113l3 6h-6z"/>
+          <g class="cell" data-n="1"><rect class="p red"   x="4"   y="6"   width="52" height="26"/><text x="30"  y="24">1</text></g>
+          <g class="cell" data-n="2"><rect class="p navy"  x="74"  y="6"   width="52" height="26"/><text x="100" y="24">2</text></g>
+          <g class="cell" data-n="3"><rect class="p gold"  x="144" y="6"   width="52" height="26"/><text x="170" y="24">3</text></g>
+          <g class="cell" data-n="4"><rect class="p green" x="4"   y="62"  width="52" height="26"/><text x="30"  y="80">4</text></g>
+          <g class="cell" data-n="5"><rect class="p f"     x="74"  y="62"  width="52" height="26"/><text x="100" y="80">5</text></g>
+          <g class="cell" data-n="6"><rect class="p red"   x="144" y="62"  width="52" height="26"/><text x="170" y="80">6</text></g>
+          <g class="cell" data-n="7"><rect class="p gold"  x="4"   y="118" width="52" height="26"/><text x="30"  y="136">7</text></g>
+          <g class="cell" data-n="8"><rect class="p green" x="74"  y="118" width="52" height="26"/><text x="100" y="136">8</text></g>
+          <g class="cell" data-n="9"><rect class="p navy"  x="144" y="118" width="52" height="26"/><text x="170" y="136">9</text></g>
+        </svg>
+        <p class="hero-note" id="hero-note">Click the board.</p>
+      </div>
+
+      <div class="tile-col">
+        <a class="tile t-navy" href="#puzzles" data-go="puzzles">
+          <span class="tile-art" aria-hidden="true">
+            <svg viewBox="0 0 44 44"><rect class="s" x="4" y="5" width="36" height="9"/><rect class="s f" x="4" y="18" width="36" height="9"/><rect class="s" x="4" y="31" width="36" height="9"/></svg>
+          </span>
+          <span class="tile-name">Puzzles</span>
+        </a>
+        <a class="tile t-gold" href="#rules" data-go="rules">
+          <span class="tile-art" aria-hidden="true">
+            <svg viewBox="0 0 44 44"><path class="s f" d="M8 6h13a4 4 0 0 1 4 4v28a4 4 0 0 0-4-4H8z"/><path class="s" d="M36 6H23a4 4 0 0 0-4 4v28a4 4 0 0 1 4-4h13z"/></svg>
+          </span>
+          <span class="tile-name">Rulebook</span>
+        </a>
+      </div>
+    </div>
+
+    <p class="front-note">Welcome to the Crosslink Home Page on the World Wide Web.</p>
+    <p class="front-out"><a href="https://simonallmer.com" class="out">&#9679; Back to Simon Allmer</a></p>
   </section>
 
-  <section id="finish" class="finish" hidden>
-    <h2>The board closes.</h2>
-    <p class="finish-sub" id="finish-sub"></p>
-    <ul id="sentences" class="sentences"></ul>
+  <!-- ===================== the board ===================== -->
+  <section class="view" id="view-play" hidden>
+    <header>
+      <p class="eyebrow" id="eyebrow">Crosslink</p>
+      <h1 id="title">The Centre Is a Fish</h1>
+      <p class="standfirst" id="standfirst"></p>
+    </header>
+
+    <div class="controls">
+      <label class="toggle"><input type="checkbox" id="peek"> Peek ahead</label>
+      <label class="toggle"><input type="checkbox" id="check"> Error check</label>
+      <button id="restart" class="ghost">Restart</button>
+    </div>
+
+    <div class="board-scroll">
+      <div id="board" class="board" role="grid" aria-label="Crosslink board"></div>
+    </div>
+
+    <input id="ghost-input" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-hidden="true">
+
+    <section id="panel" class="panel">
+      <p class="panel-empty" id="panel-empty">Tap the centre square to begin.</p>
+      <div id="panel-body" hidden>
+        <p class="panel-head"><span id="panel-count"></span></p>
+        <ul id="routes" class="routes"></ul>
+        <div class="hint-row">
+          <button id="enter" class="ghost solid">Enter word</button>
+          <button id="hint" class="ghost"></button>
+          <span id="hint-note" class="note"></span>
+        </div>
+      </div>
+      <p id="message" class="message"></p>
+    </section>
+
+    <section id="finish" class="finish" hidden>
+      <h2>The board closes.</h2>
+      <p class="finish-sub" id="finish-sub"></p>
+      <ul id="sentences" class="sentences"></ul>
+    </section>
+  </section>
+
+  <!-- ===================== the index of boards ===================== -->
+  <section class="view" id="view-puzzles" hidden>
+    <h1 class="page-title">Puzzles</h1>
+    <p class="page-sub">Every Crosslink so far. No word appears on two boards.</p>
+    <table class="index" id="puzzle-index"></table>
+    <p class="page-foot" id="puzzle-foot"></p>
+  </section>
+
+  <!-- ===================== the word list ===================== -->
+  <section class="view" id="view-words" hidden>
+    <h1 class="page-title">Word List</h1>
+    <p class="page-sub" id="words-sub"></p>
+    <p class="legend">
+      <span class="key open">Set in a board &#8212; click the number to play it</span>
+      <span class="key none">Waiting for a board</span>
+    </p>
+    <ul class="wordgrid" id="word-index"></ul>
+  </section>
+
+  <!-- ===================== the rulebook ===================== -->
+  <section class="view" id="view-rules" hidden>
+    <h1 class="page-title">Rulebook</h1>
+    <blockquote class="epigraph">
+      <p>&#8220;The dictionary defines words only in terms of other words. What matters is not
+      the words themselves which are a collection of mostly arbitrary sounds, but the
+      <em>relationships</em> between one word to the next.&#8221;</p>
+      <cite>Tim Berners-Lee, CERN, 1994</cite>
+    </blockquote>
+    <div class="rules">
+      <h2>The board</h2>
+      <p>Nine words stand in the cells of a three-by-three lattice. Between them, in the
+      gutters, stand the connections that join them. Every gutter is a sentence: the word at
+      the tail, the connection, the word at the head.</p>
+
+      <h2>What you can see</h2>
+      <p>At the start, only the four connections touching the centre are shown, and only the
+      centre square can be filled. A connection appears the moment one of its two words is
+      known, and a square opens the moment a connection reaches it from a word you have
+      placed. The board grows outward from the middle, the way the web did.</p>
+
+      <h2>Entering a word</h2>
+      <p>Click a lit square and type. Each letter has its own line, so you can count what the
+      square wants. <em>Enter word</em> sets it down; <em>Take it back</em> lifts it again.
+      Nothing is final, and a square you take back keeps any mark it earned.</p>
+
+      <h2>Help, and what it costs</h2>
+      <p><em>Surface a link</em> opens another route into the square and costs nothing.
+      <em>Reveal a letter</em> seats a letter you did not type, and marks the square as
+      partly solved. <em>Reveal the word</em> marks it as given, not solved. The board keeps
+      the count and reads it back to you at the close.</p>
+      <p>Pressing <em>S</em> gives up the whole board at once, and says so in the report.</p>
+
+      <h2>Two switches</h2>
+      <p><em>Peek ahead</em> lights the ring of squares beyond the ones you can reach, so you
+      can see where the board is going. <em>Error check</em> turns a wrong word red the moment
+      you enter it. With error check off, nothing on the board ever contradicts you.</p>
+
+      <h2>The two windows</h2>
+      <p>Clicking the sentences in the clue panel opens the <em>Written form</em>, which holds
+      every sentence the board has surfaced, whole or half-known. Clicking a word you have
+      placed opens the <em>Lexicon</em>, which holds its senses — usually more than one, and
+      usually the second one is the one the board is using.</p>
+
+      <h2>The hunt</h2>
+      <p>No word is ever set in two boards. The Word List is the whole quarry, and every
+      board takes nine words out of it for good.</p>
+
+      <h2>Difficulty</h2>
+      <p>Each board carries one, two or three stars. The count comes from the words on it:
+      how ordinary they are, and how many of them are being used in a second sense. A board
+      of plain facts earns one star. A board where half the words are wearing two coats
+      earns three.</p>
+    </div>
+    <p class="credit">Game Design: Simon Allmer</p>
   </section>
 
   <footer>
-    <p>Nouns in the cells. Verbs in the gutters. A verb appears only when one of its two words is known.</p>
+    <p>Words in the cells. Connections in the gutters. A connection appears only when one of its two words is known.</p>
   </footer>
 </main>
 
+<div class="wrap-break" aria-hidden="true"></div>
+
+<aside class="win" id="win-script" hidden>
+  <div class="win-bar">
+    <span class="win-title">Written form</span>
+    <button class="win-x" id="x-script" title="Close" aria-label="Close">&#10006;</button>
+  </div>
+  <div class="win-body">
+    <ul id="script-list" class="script"></ul>
+  </div>
+</aside>
+
+<aside class="win" id="win-lex" hidden>
+  <div class="win-bar">
+    <span class="win-title">Lexicon</span>
+    <button class="win-x" id="x-lex" title="Close" aria-label="Close">&#10006;</button>
+  </div>
+  <div class="win-body">
+    <p class="lex-word" id="lex-word"></p>
+    <p class="lex-pos" id="lex-pos"></p>
+    <ol class="lex-senses" id="lex-senses"></ol>
+    <p class="lex-note" id="lex-note"></p>
+    <p class="lex-where" id="lex-where"></p>
+    <p class="lex-head">Words on this board</p>
+    <ul class="lex-list" id="lex-list"></ul>
+  </div>
+</aside>
+
+</div>
+
+<script src="sound.js"></script>
+<script src="registry.js"></script>
+<script src="vocabulary.js"></script>
+<script src="lexicon.js"></script>
 <script src="puzzles/puzzle-01-fish.js"></script>
 <script src="puzzles/puzzle-02-salt.js"></script>
+<script src="puzzles/puzzle-03-flow.js"></script>
+<script src="puzzles/puzzle-04-nile.js"></script>
+<script src="puzzles/puzzle-05-landfall.js"></script>
+<script src="puzzles/puzzle-06-bread.js"></script>
+<script src="puzzles/puzzle-07-orchard.js"></script>
 <script src="engine.js"></script>
 <script src="app.js"></script>
 </body>

@@ -2,7 +2,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "02-salt",
   title: "Worth Its Weight",
-  standfirst: "Twenty-five nouns, twenty-six relations. Four verbs point at the middle, and nothing else on the board exists yet.",
+  standfirst: "Twenty-five words, twenty-six connections. Four of them point at the middle, and nothing else on the board exists yet.",
   size: 5,
   centre: [2, 2],
 
