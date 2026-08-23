@@ -287,13 +287,36 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
 .gut.to-left  .arrow { left: 0;  top: 50%; margin-top: -5px; border-left-width: 0;  border-right-color: var(--link); }
 .gut.to-down  .arrow { bottom: 0; left: 50%; margin-left: -5px; border-bottom-width: 0; border-top-color: var(--link); }
 .gut.to-up    .arrow { top: 0;    left: 50%; margin-left: -5px; border-top-width: 0;    border-bottom-color: var(--link); }
+/* R2, the equivalence: a plain line, no head. Specced in §2 at 0.3 and built at
+   3.1. The arrowhead is not hidden but never drawn — an eq has no direction to
+   hide — and the wire is drawn a shade heavier so a headless line reads as a
+   deliberate kind of join rather than as an arrow that failed to render. */
+.gut.level .arrow { display: none; }
+.gut.shown.level::before { background: var(--ink-faint); }
+.gut.shown.level.h::before { height: 2px; margin-top: -1px; }
+.gut.shown.level.v::before { width: 2px; margin-left: -1px; }
 
 /* the verb, printed on the wire */
 .gut.shown .label {
   position: relative; z-index: 1; background: var(--sheet);
   font-family: var(--sans); font-size: 10px; line-height: 1.25;
-  color: var(--ink); padding: 0 3px; max-width: calc(100% - 22px);
+  color: var(--ink); padding: 0 3px;
 }
+
+/* The room a label must leave for its arrowhead depends on which way the wire
+   runs, and for a long time it did not: one `max-width: calc(100% - 22px)` was
+   applied to both axes. On a horizontal gutter that is right — the head sits at
+   the left or the right end, so the width is what has to be given up. On a
+   VERTICAL gutter the head sits at top or bottom centre, so twenty-two pixels of
+   width buys nothing and costs a line: "is soft enough to cast and hard enough
+   for" was squeezed into 76px, wrapped to four lines, overflowed a 42px gutter
+   and printed itself over its own arrow.
+
+   So the reserve now follows the axis. A vertical label gets the full column
+   and gives up height instead, and the gutter rows are a few pixels taller so
+   three lines and an arrowhead both fit without touching. */
+.gut.shown.h .label { max-width: calc(100% - 20px); }
+.gut.shown.v .label { max-width: calc(100% - 4px);  }
 
 /* A verb whose two words are both down leaves only its wire — and comes back,
    like a tooltip, the moment you go looking for it. */
@@ -302,6 +325,54 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
    a page of sentences, and a sentence you have earned should still be readable
    without hovering for it. */
 .gut.spent { opacity: .55; }
+
+/* ---- a connection with two faces ---------------------------------- */
+/* A turnable gutter is marked, and marked quietly: a dotted underline on the
+   label, which is what 1994 used for a thing you could click that was not a
+   link. No icon, no badge — the board already has as many marks as it can
+   carry, and this one has to sit under 34 of them at once without shouting. */
+.gut.turnable .label {
+  /* no cursor here: cursors.css owns it outright, and a rule in this file would
+     outrank the one over there. The hand is added to its list instead.
+
+     text-decoration, not border-bottom: a border is part of the box and adds a
+     pixel of height, which is a pixel these gutters do not have — it pushed
+     "is soft enough to cast and hard enough for" over the A2d line the moment
+     the mark was added. An underline lives inside the line box and costs
+     nothing. */
+  text-decoration: underline dotted var(--ink-faint);
+  text-underline-offset: 2px;
+}
+.gut.turnable:hover .label {
+  color: var(--link); text-decoration-color: var(--link);
+}
+
+/* The face that is showing. `over` is the back, and it is tinted rather than
+   restyled — same size, same face, so a turned board still reads as one board
+   and you can see at a glance which gutters you have been into. */
+.gut.over .label {
+  color: var(--visited);
+  text-decoration: underline dashed var(--visited);
+  text-underline-offset: 2px;
+}
+
+/* The turn. Scaling X to zero and back is the whole trick, and it is the right
+   trick: it is what a card does, it costs one property, and it degrades to an
+   instant swap wherever the animation does not run. The label is repainted at
+   the midpoint by the redraw, so the text changes while the card is edge-on. */
+@keyframes gut-turn {
+  0%   { transform: scaleX(1); }
+  49%  { transform: scaleX(.04); }
+  50%  { transform: scaleX(.04); }
+  100% { transform: scaleX(1); }
+}
+/* Only the gutter that was just clicked, never all thirty-four: the board is
+   rebuilt from scratch on every keystroke, so an animation on `.turnable` would
+   set the whole page shivering each time a letter went in. */
+.gut.turning .label { animation: gut-turn 260ms ease-in-out; }
+@media (prefers-reduced-motion: reduce) {
+  .gut.turning .label { animation: none; }
+}
 .gut.barred::after { content: ""; width: 46%; height: 2px; background: var(--barred); }
 .board[data-size="3"] .gut.shown .label { font-size: 11px; }
 .dead::after { content: "+"; font-family: var(--mono); font-size: 9px; color: var(--rule); }
@@ -448,14 +519,42 @@ footer p::before { content: "\2691 "; }
   color: #E7C45A;
 }
 
+/* Two tiles, the emblem, two tiles. It was a wrapping flex row, and a wrapping
+   flex row breaks it asymmetrically: at any width between "all three fit" and
+   "nothing fits" only the right-hand column drops, and the front page reads as
+   two buttons beside the emblem and two stranded underneath it. A phone held
+   sideways lands in that gap almost exactly.
+
+   A grid instead, with two states and no third. Wide: three columns, two tiles
+   each side. Narrow: two columns, the emblem spanning both, and the tile
+   columns dissolved with `display: contents` so their four tiles place
+   themselves two above the emblem and two below. Either way the four buttons
+   sit in a square, which is the only arrangement that looks deliberate. */
 .frontispiece {
-  display: flex; align-items: center; justify-content: center;
-  gap: 18px; flex-wrap: wrap; margin-bottom: 18px;
+  display: grid; grid-auto-flow: column;
+  align-items: center; justify-content: center;
+  gap: 18px; margin-bottom: 18px;
 }
 .tile-col { display: flex; flex-direction: column; gap: 14px; }
 .hero {
-  flex: 0 0 auto; width: 240px; padding: 10px; background: var(--card);
+  justify-self: center;
+  width: 240px; padding: 10px; background: var(--card);
   border: 2px solid; border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
+}
+
+/* 620px of tiles and emblem, plus the sheet's padding and the desktop's — below
+   that the three-across state cannot hold, so it does not try to. */
+@media (max-width: 700px) {
+  .frontispiece {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 172px));
+    justify-content: center; gap: 14px 14px;
+  }
+  .tile-col { display: contents; }
+  /* Named through the parent so the fixed widths further down the sheet, which
+     come later in source order, do not win them back. */
+  .frontispiece .hero { grid-column: 1 / -1; width: 100%; max-width: 240px; }
+  .frontispiece .tile { width: auto; }
 }
 .hero svg { display: block; width: 100%; height: auto; }
 .hero .p { fill: var(--card); stroke: var(--ink-soft); stroke-width: 2; }

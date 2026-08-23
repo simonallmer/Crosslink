@@ -36,58 +36,57 @@ wrong, and it says nothing at all while a neighbour is still empty.
 
 **Words are used once.** Entering a word already on the board is refused.
 
-## Demo 01 — *The Centre Is a Fish* (3×3)
+**Either English is accepted.** Boards and the lexicon are written in British
+English; the American spelling is taken on entry and the square keeps whatever
+was typed. Only same-length pairs need declaring — CENTRE/CENTER, GREY/GRAY,
+DEFENCE/DEFENSE — because the letter count printed on every square already
+refuses HARBOR for HARBOUR. The pairs are a written list in `spelling.js`, not a
+substitution rule: a rule that swapped -RE for -ER would mark WIER correct for
+WIRE, and one that swapped -ISE for -IZE cannot tell PRISE from PRIZE.
 
-```
-SALMON  →spawns→  ROE  →is called ikura in→  JAPAN
-  ↓returns from the        ↓hatches into              ——
-OCEAN   ←swims in←  FISH  ←catches←          NET
-  ↑is the largest          ↓becomes, in Latin,        ——
-PACIFIC     ——      PISCES →is a sign of the→ ZODIAC
-```
+**Not every connection is an arrow.** A gutter may be an *equivalence* — a plain
+line with no head, reading the same from either end, for a pair where an arrow
+would be a lie about which way the fact runs. `HEADLINE — DEADLINE` is the first.
 
-Nine nouns, nine verbs, three barred gutters. FISH has four sockets; ROE and OCEAN
-have three; SALMON is the corner with two independent routes in, which is the
-crossing the format lives on. The door is deliberately easy.
+**A connection can turn over.** Where a board gives a gutter a second face,
+clicking it turns the sentence over to another way of saying the same join —
+sometimes plainer, sometimes only different, sometimes harder. It is free and
+counted nowhere: a board solved with every connection turned is solved outright.
+That is a category distinction, not leniency — revealing a letter short-circuits
+the deduction, and a second sentence about the same relation does not. Board 6
+carries the first thirty-four; boards without second faces render as before.
 
-## Demo 02 — *Worth Its Weight* (5×5)
+## The boards
 
-Twenty-five nouns, twenty-six verbs, fourteen barred gutters, and SALT alone in the
-middle. The four opening verbs are *"⟶ yields"*, *"⟵ is named for"*,
-*"↑ is drawn from the"* and *"↓ was once paid as"* — two pointing in, two out —
-against a four-letter count.
+Seven, and every one of them passes `tools/check-boards.py` on its own account.
+Two more used to stand in front of them — *The Centre Is a Fish* and *Worth Its
+Weight*, built before §1 of the spec existed — and they were withdrawn at 2.5
+rather than kept as exceptions: between them they broke D1, D2, D4 and E9, and
+the first was built on the staged reveal that R0 took away at 1.5. The boards
+below renumbered up into the gap.
 
-```
-MOUNTAIN  TUNNEL    SUN     VINEGAR  OLIVE
-ROCK      PICK      SEA     LETTUCE  OIL
-CRYSTAL   MINE      SALT    SALAD    SAUCE
-CUBE      WAGE     SALARY   LATIN    TONGUE
-MINT      COIN     SOLDIER  ROME     EMPIRE
-```
+| № | Title | Size | Links | Stars | What it is |
+|---|---|---|---|---|---|
+| 1 | Everything Flows | 3×3 | 12/12 | ★★ | The riddle. Three words down the middle lead two lives — a river to the west, money to the east, the same letters either way. |
+| 2 | The Gift of the River | 3×3 | 12/12 | ★ | The net. No wordplay anywhere on it; every connection is a plain fact, and the only difficulty is which fact goes where. |
+| 3 | Landfall | 5×5 | 34/40 | ★ | The long one. |
+| 4 | Half Past Four | 3×3 | 12/12 | ★ | The easiest board in the game on purpose: nine things you could draw, and no word doing a second job. |
+| 5 | From the Ground Up | 5×5 | 34/40 | ★ | A garden, which is already a network before anyone puts a grid on it. |
+| 6 | Set, Inked and Pulled | 5×5 | 35/40 | ★★★ | The press, both senses. Metal in the west, newsprint in the east, PRESS in the middle meaning both — and every connection turns over. |
+| 7 | A Fire That Learned to Push | 5×5 | 32/40 | ★ | A subject board at full size. Five bands and four arms, with STEAM in the middle. |
 
-It is one field — rock, sea, table, Rome — so the routes are etymological as often
-as they are factual: *SALAD is named for SALT*, *SALT was once paid as SALARY*,
-*SALARY is taken whole from LATIN*, *SOLDIER is named for the solidus, a COIN*.
-LATIN and SALAD carry four verbs each; the rim words carry one.
+Boards 1 and 2 are the two kinds the format admits, and the spec names them as
+such under E4a: a *riddle*, where the pleasure is the twist, and a *net*, where
+the pleasure is that everything really is joined to everything. The second is
+not the lesser kind.
 
-Verified: every one of the twenty-five is reachable from the centre by unfolding
-alone, in five rings. The board is harder than demo 01 in the right way — the
-centre takes real thought, and the corners are nearly forced by the time you get
-to them.
-
-## Two things to decide by playing
-
-**Peek one ring ahead.** The toggle does two things: it shows letter counts one
-step beyond the solved frontier, *and* it lets you enter words there. Strict mode
-is tighter and more elegant; peek mode is the only mode in which a wrong word can
-sit unnoticed and be caught later by a neighbour, which is the crossword's best
-feeling. Play both.
-
-**3×3 or 5×5.** Both are in the picker now. Demo 01 is nine nouns and nine verb
-phrases; demo 02 is twenty-five and twenty-six — more writing than a whole week of
-Hotel Metropole, every day. The centre opening is identical at either size; what
-changes is the length of the middle game, and how much of it is unfolding rather
-than deducing.
+Boards 6 and 7 are a third thing, and E14 names it: a **subject board**, where
+the layout itself is the argument. Board 7's rows are a sequence and its arms are
+branches, and both are legible before a single square is filled — solve it and
+you are not holding twenty-five facts about the industrial revolution, you are
+holding one shape. Every clue on a subject board carries the fact it depends on
+rather than testing for it, so a solver who knew none of them still reaches every
+square, and knows them afterwards.
 
 ## Known limitation, and what it implies
 
@@ -104,8 +103,13 @@ index.html                  shell
 style.css                   the look, light and dark
 engine.js                   lattice, edges, visibility rules, rendering
 app.js                      state, typing, hint ladder, error check, finish
-puzzles/puzzle-01-fish.js   3x3 — the door
-puzzles/puzzle-02-salt.js   5x5 — the long one
+lexicon.js                  the definitions, written by hand
+registry.js                 the polysemous quarry
+vocabulary.js               the general quarry
+sound.js                    the noises
+cursors.css                 the drawn cursors
+puzzles/puzzle-*.js         one file per board, in order
+tools/check-boards.py       the acceptance test — D1-D4, H2, L1, E9
 ```
 
 Adding a puzzle is one file pushed onto `CROSSLINK.puzzles`, plus a `<script>` tag:

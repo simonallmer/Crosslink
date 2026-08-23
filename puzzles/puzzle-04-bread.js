@@ -1,6 +1,6 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
-  id: "06-bread",
+  id: "04-bread",
   title: "Half Past Four",
   standfirst: "Nine words, twelve connections, and nothing on the board that is not in a kitchen before the rest of the street is awake.",
   size: 3,

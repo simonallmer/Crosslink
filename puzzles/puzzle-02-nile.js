@@ -1,6 +1,6 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
-  id: "04-nile",
+  id: "02-nile",
   title: "The Gift of the River",
   standfirst: "Nine words and twelve connections, and every one of them is a plain fact. The only difficulty is which fact goes where.",
   size: 3,

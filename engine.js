@@ -7,6 +7,30 @@
   var K = function (r, c) { return r + "," + c; };
   CL.K = K;
 
+  // One gutter, resolved. `a` is the cell that comes first in board order (left
+  // before right, top before bottom) and `b` the one after it; `fwd` is the dir
+  // value that means "a acts on b".
+  //
+  // R2, the equivalence, is built here: `kind: "eq"` is a relation that reads the
+  // same both ways, so it has no subject and no object to resolve and no head to
+  // draw — the two cells are peers and the sentence prints in board order, which
+  // is what §2 asked for when it specced this and nothing built it. `dir` is not
+  // read at all for an eq, and a board that omits `kind` gets the directed
+  // relation it always had.
+  function edge(id, d, a, b, fwd) {
+    var eq = d.kind === "eq";
+    var f = d.dir === fwd;
+    return {
+      id: id,
+      verb: d.verb, verb2: d.verb2 || null,
+      kind: eq ? "eq" : "dir",
+      arrow: eq ? null : (fwd === "right" ? (f ? "→" : "←") : (f ? "↓" : "↑")),
+      subject: eq ? a : (f ? a : b),
+      object:  eq ? b : (f ? b : a),
+      cells: [a, b]
+    };
+  }
+
   // Every non-barred relation on the board, with its subject and object resolved.
   CL.edgeList = function (p) {
     var out = [], r, g, c, d;
@@ -14,28 +38,14 @@
       for (g = 0; g < p.size - 1; g++) {
         d = p.h[r][g];
         if (!d) continue;
-        out.push({
-          id: "h:" + r + ":" + g,
-          verb: d.verb,
-          arrow: d.dir === "right" ? "→" : "←",
-          subject: d.dir === "right" ? [r, g] : [r, g + 1],
-          object:  d.dir === "right" ? [r, g + 1] : [r, g],
-          cells: [[r, g], [r, g + 1]]
-        });
+        out.push(edge("h:" + r + ":" + g, d, [r, g], [r, g + 1], "right"));
       }
     }
     for (g = 0; g < p.size - 1; g++) {
       for (c = 0; c < p.size; c++) {
         d = p.v[g][c];
         if (!d) continue;
-        out.push({
-          id: "v:" + g + ":" + c,
-          verb: d.verb,
-          arrow: d.dir === "down" ? "↓" : "↑",
-          subject: d.dir === "down" ? [g, c] : [g + 1, c],
-          object:  d.dir === "down" ? [g + 1, c] : [g, c],
-          cells: [[g, c], [g + 1, c]]
-        });
+        out.push(edge("v:" + g + ":" + c, d, [g, c], [g + 1, c], "down"));
       }
     }
     return out;
@@ -52,6 +62,35 @@
   };
 
   CL.answer = function (st, r, c) { return st.puzzle.nouns[r][c]; };
+
+  // ---- spellings ----------------------------------------------------
+  // Built once, from spelling.js: every accepted variant mapped back to the one
+  // form the boards and the lexicon are written in. A word not in the table is
+  // its own canonical, which is nearly all of them.
+  var CANON = null;
+  function canonMap() {
+    if (CANON) return CANON;
+    CANON = {};
+    var t = CL.spelling || {}, k, i;
+    for (k in t) if (t.hasOwnProperty(k)) {
+      CANON[k] = k;
+      for (i = 0; i < t[k].length; i++) CANON[t[k][i]] = k;
+    }
+    return CANON;
+  }
+
+  // The one form of a word. Used wherever a typed word meets a written one, and
+  // wherever a word is looked up in the lexicon.
+  CL.canon = function (w) {
+    if (!w) return w;
+    var u = String(w).toUpperCase();
+    return canonMap()[u] || u;
+  };
+
+  // Two words are the same word if they are the same word in either English.
+  // Every comparison of a typed answer against a written one goes through here:
+  // the error check, the noise a word makes, and the win.
+  CL.same = function (a, b) { return CL.canon(a) === CL.canon(b); };
 
   // What the solver is allowed to see, given what they have solved.
   CL.derive = function (st) {
@@ -86,7 +125,7 @@
     for (var y = 0; y < p.size; y++) {
       for (var x = 0; x < p.size; x++) {
         var kk = K(y, x);
-        if (st.filled[kk] !== undefined && st.filled[kk] !== CL.answer(st, y, x)) st.wrong[kk] = true;
+        if (st.filled[kk] !== undefined && !CL.same(st.filled[kk], CL.answer(st, y, x))) st.wrong[kk] = true;
       }
     }
   };
@@ -124,16 +163,36 @@
 
   // Cell geometry is a function of board size: a bigger lattice takes smaller squares.
   CL.dims = function (size) {
+    // Both gutter measurements were set by the arrowhead and not by the words,
+    // and both were a little too small for a connection written to E7's longer
+    // shapes. Measured off the live board rather than guessed:
+    //
+    //   gutRow 48 -> 54   three lines of 10px text and an arrowhead below them
+    //   gut    88 -> 104  the smallest width at which no connection on any board
+    //                     runs past three lines, on either face. 88 left
+    //                     seventeen of them at four. It costs 64px on a 5x5 -
+    //                     912 to 976, seven per cent - and the board scales.
+    //
+    // Measure this with offsetHeight and never with getBoundingClientRect. The
+    // board is fitted to the page with a CSS transform, so a rect is the SCALED
+    // box: at 0.87 a genuine four-line label measures 43px against an unscaled
+    // 12.5px line and rounds to three. That is how 96 was picked the first time,
+    // and it was wrong by two whole steps.
     return size >= 5
-      ? { noun: 112, gut: 88, row: 56, gutRow: 48 }
-      : { noun: 140, gut: 104, row: 62, gutRow: 52 };
+      ? { noun: 112, gut: 104, row: 56, gutRow: 54 }
+      : { noun: 140, gut: 104, row: 62, gutRow: 56 };
   };
 
-  // The sentence an edge makes, as far as the board knows it.
+  // Which of a connection's two faces is showing. A connection with no second
+  // face has one, and `flipped` never touches it.
+  CL.face = function (st, e) {
+    return (e.verb2 && st.flipped && st.flipped[e.id]) ? e.verb2 : e.verb;
+  };
+
   CL.sentence = function (st, e) {
     var s = st.filled[K(e.subject[0], e.subject[1])] || "…";
     var o = st.filled[K(e.object[0], e.object[1])] || "…";
-    return s + " " + e.verb + " " + o + ".";
+    return s + " " + CL.face(st, e) + " " + o + ".";
   };
 
   CL.render = function (st, onPick) {
@@ -238,9 +297,24 @@
     var both = st.filled[CL.K(a[0], a[1])] !== undefined && st.filled[CL.K(b[0], b[1])] !== undefined;
     var axis = id.charAt(0) === "h" ? "h" : "v";
     var HEAD = { "\u2192": "to-right", "\u2190": "to-left", "\u2193": "to-down", "\u2191": "to-up" };
-    d.className = "gut shown " + axis + " " + HEAD[e.arrow] + (both ? " spent" : "");
+    // An equivalence has no head to point: it gets the plain wire and says so.
+    var head = e.kind === "eq" ? "level" : HEAD[e.arrow];
+    var turnable = !!e.verb2, over = turnable && st.flipped[id];
+    d.className = "gut shown " + axis + " " + head + (both ? " spent" : "")
+                + (turnable ? " turnable" : "") + (over ? " over" : "")
+                + (st.turning === id ? " turning" : "");
     d.innerHTML = '<span class="arrow" aria-hidden="true"></span><span class="label"></span>';
-    d.lastChild.textContent = e.verb;
-    d.title = both ? CL.sentence(st, e) : e.verb;
+    d.lastChild.textContent = CL.face(st, e);
+    d.title = both ? CL.sentence(st, e) : CL.face(st, e);
+
+    // A connection with two faces turns over when you click it, and turns back.
+    // It costs nothing and is counted nowhere: the back is another sentence
+    // about the same relation, not the answer, so the deduction is still yours.
+    if (!turnable || !CL.onTurn) return;
+    d.onclick = function (ev) { ev.stopPropagation(); CL.onTurn(id); };
+    d.onmouseenter = function () {
+      CL.status(over ? "(turn back)" : "(this one reads another way)");
+    };
+    d.onmouseleave = function () { CL.status(null); };
   }
 })();

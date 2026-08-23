@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 1.8 · 23 August 2026**
+**Revision 3.4 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,44 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*3.3 → 3.4: PROOF—CASE comes back with the misreading taken out of it; PLATE—CASE
+goes; INK—HEADLINE stops claiming ink is blacker in a headline, which it is not
+(§21).*
+*3.2 → 3.3: **D4's ceiling stops being a failure.** The floor is a fact about
+the graph and stays hard; the ceiling was taste, said "roughly", capped a 5×5 at
+85 per cent while letting a 3×3 be 100 per cent, and had no reason written under
+it. It is a note now. Board №6 goes to 35 of 40.*
+*3.1 → 3.2: three clues on board №6 rewritten from a playtest — **E18**, a clue
+must name the thing that separates its answer from the near miss (§21).*
+*3.0 → 3.1: **R2 is built** — the equivalence, specced in §2 at 0.3 and drawn
+for the first time at 3.1 (§20); **E17**, the word-level connection and its
+limit; the compositor's-jargon clue on board №6 is withdrawn under E13.*
+*2.9 → 3.0: **Escape goes back** (§9, A12), and finds a trail bug the Back
+button had all along; the gutter is measured off its words instead of its
+arrowhead, so no connection runs past three lines (§17b, A2d); the audio clock
+is woken on the first gesture rather than the first note, and every noise now
+comes before its redraw (A8f).*
+*2.8 → 2.9: **W1 gets a dialect** — boards and the lexicon are written in
+British English, the American spelling is accepted on entry, and the pairs are a
+written list rather than a rule, because a rule marks misspellings correct
+(§19, W1a-W1c).*
+*2.7 → 2.8: **a connection has two faces** — click one and it turns over to a
+different sentence about the same join, free and counted nowhere (§18, A11);
+E16 governs what may be written on a back; board №6 carries the first
+thirty-four; `check-boards.py` now reads both faces, and caught an E9 breach on
+one within a minute of being taught to.*
+*2.6 → 2.7: board №6 is rebuilt from a 3×3 into a 5×5 around the PRESS double,
+and is the first board on the shelf at three stars (§17c); **E15** — a clue may
+teach a fact, but the square must not depend on it (§17c).*
+*2.5 → 2.6: board №1 is rewritten against the two rules §16 left open, E10 and
+E7; boards **№6 — Set, Inked and Pulled** and **№7 — A Fire That Learned to
+Push** are built, both at one star, both **subject boards** — a new obligation on
+the net, E14 (§17); A2d gets the number it was missing (§17b); the `twist` term
+is found to over-count on a board with a declared theme (§14).*
+*2.4 → 2.5: **the legacy list is closed** — boards №1 and №2 are withdrawn rather
+than exempted, and the five that remain renumber up into the gap (§16); giving
+the board up becomes **Shift+S** in every state (§9); the front page's four
+buttons stop breaking asymmetrically on a phone held sideways (§12b).*
 
 ---
 
@@ -144,6 +182,29 @@ not a defect; a network with slack in it is a network you can see the shape of.
 - **D4 — Budget, not target.** Roughly **10–12 of 12** relations on a 3×3, and
   **28–34 of 40** on the occasional 5×5. Below that, D2 usually fails. Above it,
   the board reads as a wall rather than a web.
+
+  *Amended at 3.3: the floor is hard and the ceiling is not, because they are not
+  the same kind of rule.* Below the floor **D2 stops being satisfiable** — that
+  is a fact about the graph, and a board that breaks it is broken. The ceiling
+  is a matter of taste about density, and three things were wrong with treating
+  it as a failure:
+
+  1. **The rule says "roughly."** `check-boards.py` read a hedge as a hard range.
+  2. **It was inconsistent with itself.** 12 of 12 on a 3×3 is **100 per cent** —
+     a full lattice, explicitly allowed, and board №1 is one. 34 of 40 on a 5×5
+     is **85 per cent**. The same board at two sizes was held to two standards,
+     and nobody wrote down why. Per word the density is identical either way.
+  3. **The struck proposal was a mandate, not a permission.** v0.2 wanted to
+     *require* 40/40. Striking a requirement is not the same as imposing a ban,
+     and §1 has been read as the second for eleven revisions.
+
+  The ceiling now prints as a note — *"35 of 40, above the usual 34: dense, not
+  wrong"* — and the run still passes. What survives of the original argument is
+  the part worth keeping: **slack is legible.** A gutter left bare is printed as
+  a bar and says *no relation is claimed here*, which is information the solver
+  can use, the way a crossword's black squares are. Fill every gutter and that
+  sentence can no longer be said. So a constructor should still want some bars.
+  They should not be made to invent one by arithmetic.
 
 ### 3×3 is the standard format
 
@@ -479,7 +540,7 @@ newspaper-puzzle look was borrowed, not ours.
   the start, and any square may be"* — a rule the reader could not finish reading
   is not a rule they have been told.
 - **A4 — The status bar reads out link targets.** Hovering a square writes
-  `http://simonallmer.com/crosslink/02-salt/salt.html` into the footer —
+  `http://simonallmer.com/crosslink/01-flow/river.html` into the footer —
   `?????.html` for a square you have not solved. The real domain, so the joke is
   also a signature. Period-correct, and it says what the game is about without a
   word of instruction.
@@ -780,7 +841,20 @@ seven boards**, none of them twice.
   - **A8c — There is an off switch, in the toolbar, and it is honest.** Default
     on, because the noise is half the period; one click to silence, and the
     control does not itself make a sound when it is turning sound off.
-  - **A8d — The audio context is built on the first click**, because a browser
+  - **A8f — The clock is woken on the first gesture, and every noise comes before
+  its redraw.** Two separate lags, both removed. *One:* a suspended context has a
+  stopped clock, so a note booked for `currentTime` is booked against a time that
+  is not moving; `resume()` returns a promise, and by the time it settles the
+  clock has jumped past the moment. The first sound after any suspension arrived
+  late or not at all — and browsers suspend on their own whenever a tab goes to
+  the background. The context is now primed on the first pointer or key event of
+  any kind and resumed on `visibilitychange`, so it is running before anything
+  needs to be heard. *Two:* `submit()` redrew the board and *then* made the
+  noise. A full redraw of a 5×5 is eighty-one elements and some six and a half
+  milliseconds, sitting between the key going down and the sound coming out for
+  no reason: the sound is the answer to what you just did, the redraw is only its
+  consequence. Sound first, everywhere.
+- **A8d — The audio context is built on the first click**, because a browser
     will not let a page make a noise before it has been touched.
 
 - **A9 — Light or dark is a choice, by a sun and a moon.** The system's
@@ -881,6 +955,25 @@ next ones should be written for the top of the scale.
 - **S7 — A puzzle may override with `stars`.** The reckoning is a default; a
   constructor who has watched someone play knows more than an arithmetic.
 
+**Open, at 2.6: `twist` over-counts on a board with a declared theme.** Board №6
+is a print shop — the title says so, the standfirst says so, and all nine words
+sit in their printing sense. The reckoning gives it ★★ anyway, and the whole of
+that is `twist`: PRESS and SPINE carry four registry domains each, which is 2.00
+of a raw 0.417. Strip the twist and it is 0.194, the second-easiest board on the
+shelf.
+
+The term is measuring a hazard the board has already spent. `twist` counts what a
+word *could* mean; it cannot see that eight neighbours and a title have settled
+which meaning is in play. Nobody solving a print shop weighs PRESS the newspapers
+against PRESS the machine.
+
+Not fixed, because the obvious fix is wrong. Counting only the domains a board
+*uses* would need the constructor to declare them, and a constructor who has to
+declare the twist will declare the flattering number. The likelier repair is to
+discount `twist` where the board's words cluster in one field — which is a
+measure the quarry's `k` already almost supports. Until then, S7 and a written
+reason, as on board №6.
+
 ---
 
 ## 12. The site *(built)*
@@ -923,6 +1016,26 @@ the way a 1994 browser navigates: a **toolbar** under the title bar with *Back*,
 **Held back for later:** progress. See H4 — nothing is remembered, deliberately,
 until there is an account to remember it in.
 
+### 12b. The front page on a phone held sideways *(built at 2.5)*
+
+S1 puts four tiles either side of the emblem — two left, two right. It was a
+wrapping flex row, and a wrapping flex row has a failure state in the middle: at
+any width where three columns will not fit but two tiles will, only the
+right-hand pair drops, and the page reads as two buttons beside the emblem and
+two stranded under it. A phone in landscape lands almost exactly in that gap.
+
+- **S1c — The four tiles sit in a square, or they sit two and two.** There is no
+  third arrangement, and no width at which one tile is alone on a line. Wide:
+  three columns, two tiles each side of the emblem. Narrow: two columns, the
+  emblem spanning both, two tiles above it and two below. Both are symmetrical
+  about the emblem, which is the only thing that makes four buttons look chosen
+  rather than fallen.
+
+  Written as a grid rather than a wrapping row, so the two states are declared
+  instead of emerging. The tile columns dissolve with `display: contents` in the
+  narrow state, which lets their four tiles place themselves against the two-column
+  track without a second copy of the markup.
+
 ---
 
 ## 9. Typing — fixed
@@ -931,11 +1044,29 @@ until there is an account to remember it in.
 demanded four keystrokes — you typed dead letters to walk past a letter the board
 had already given you.
 
-**S gives up the board.** With no square selected, **S**; with a square selected,
-**Shift+S** — because there you are spelling a word, and S is a letter like any
-other. Either fills the board and marks every square *given*, so the report reads
-*0 solved outright, 25 given*. There is no way to take a board that way and have
-it read as solved.
+- **A12 — Escape unwinds, innermost thing first.** The site list if it is open;
+  then the square you are standing on; then the page you are on. Only the last
+  is new — the first two were already bound, and the whole of the design is that
+  going back sits *underneath* them and not over them. Escape must never take
+  the page out from under someone who only meant to shut a menu. It is checked
+  by `defaultPrevented`, so the hidden input's own handler wins when it has
+  focus and the document's handler does the same job when it has not.
+
+  *What it found:* `trail` recorded non-moves. Clicking **Puzzles** while on
+  Puzzles pushed Puzzles, so Back sent you to the page you were already looking
+  at, `nav-back` was permanently enabled, and after enough of them Back from the
+  front page walked you *forward* into a stale board. The Back button always had
+  this; binding a key people mash to the same function is what made it obvious.
+  `go()` now declines to record a step that does not move.
+
+**Shift+S gives up the board.** *Changed at 2.5.* It used to be a bare **S**
+whenever no square was selected, and **Shift+S** only while one was — and the
+bare half of that was a trap: one stray keystroke before you had clicked
+anywhere threw the whole board away, and giving up is the single move the game
+will not let you take back. It is now **Shift+S** in both states. Two keys for
+the irreversible move, one key for nothing. It fills the board and marks every
+square *given*, so the report reads *0 solved outright, 9 given*. There is no
+way to take a board that way and have it read as solved.
 
 **Now:** one slot per letter. Revealed letters are seated the moment they are
 revealed; typing lands in the next slot you still owe and steps over the seated
@@ -960,3 +1091,501 @@ slot, and a reveal arriving mid-word no longer wipes the draft.
 5. **How far does the 1994 dress go?** A fake location bar, a "document done"
    status, a visited-link history across puzzles — each is available, and each
    risks turning a style into a bit.
+
+---
+
+## 16. The legacy list is closed *(done at 2.5)*
+
+§1's acceptance test shipped with an exemption: boards **№1 — The Centre Is a
+Fish** and **№2 — Worth Its Weight** were marked *legacy*, printed their failures
+and passed the run anyway, on the grounds that board №2's thin links were the
+evidence D1–D4 were written from.
+
+That was the right call while they were the only boards there were. It is the
+wrong one now that there are five that pass. Between them the two broke:
+
+| | №1 Fish | №2 Salt |
+|---|---|---|
+| **D1** degree floor | JAPAN, NET, PACIFIC, ZODIAC on one link | nine words on one link |
+| **D2** two ways in | five words with a single route | nineteen of twenty-five |
+| **D4** budget | 9 of 12 | 26 of 40 |
+| **E9** no naming | — | *"CRYSTAL of salt is always a CUBE"*, on a board whose middle square is SALT |
+
+And board №1 was built on a rule that no longer exists. Its whole premise — one
+four-letter word in the middle and nothing else on the page legible until it
+lands — was withdrawn at 1.5 by **R0**, which opened the map. Its own standfirst
+had already been rewritten to say *nine connections, all of them shown*, which is
+a board arguing with the reason it was made.
+
+- **B1 — There is no legacy list.** Every board in `puzzles/` passes
+  `tools/check-boards.py` on its own account. A board that fails is a board that
+  does not ship, and the rules are kept honest by having nothing exempt from them.
+  The evidence D1–D4 were written from is in §1, where evidence belongs, not on
+  the shelf as a playable board.
+
+**The renumbering.** The app numbers a board from its file, and numbers it again
+from its place in the list; the two must agree, so the survivors move up.
+
+| was | is | title |
+|---|---|---|
+| №3 | **№1** | Everything Flows |
+| №4 | **№2** | The Gift of the River |
+| №5 | **№3** | Landfall |
+| №6 | **№4** | Half Past Four |
+| №7 | **№5** | From the Ground Up |
+
+Every board reference in the revision notes above, and in §13, §13b and §13c, is
+written in the old numbers and is left in them: those sections record what was
+decided when, and a record that is edited to match the present is not a record.
+Read them through this table.
+
+**What was not settled, and now is.** Boards №1 and №2 passed the test but were
+not built to the standard §3 reached at 2.2 — E10, E11 and E13 were written after
+them. Two lines on **Everything Flows** were named here as soft: *"a RIVER cuts
+its own BANK"* (E10, with BED two squares away) and twelve connections all
+written to the same bare shape (E7, no line worth quoting). **Both are fixed at
+2.6; see §17.**
+
+Board №2, *The Gift of the River*, still stands as written. It has no E10 or E7
+fault that anyone has found, but it has not been read against E11 or E13 either,
+and it is the next board due that pass.
+
+---
+
+## 17. Boards №6 and №7 — the subject board *(built at 2.6)*
+
+§16 left board №1 with two known faults and shipped it anyway. Both are fixed,
+and fixing them turned into a rule the format did not have.
+
+### Board №1, rewritten
+
+- **E10.** *"a RIVER cuts its own BANK"* is gone. Cutting its own **bed** is the
+  sentence everyone knows, and BED sits two squares away — the clue fitted a
+  neighbour better than its own answer. It is now *"in a wet year breaks its own
+  —"*, which nothing but a bank does, and which pays twice: **breaking the bank**
+  is the other half of this board said out loud. E2 satisfied on a square that
+  had no wordplay at all before.
+- **E7.** All twelve connections were bare verb phrases of two to four words.
+  They are now written to five shapes — two bare verbs kept deliberately, three
+  parentheticals, one with a measure of time, two aphorisms, four plain
+  mechanisms. The board now has a line worth quoting, which is what E7 is
+  actually asking for: *"a RIVER spends its whole life looking for its own
+  MOUTH."*
+
+### The two new boards, and what they are for
+
+Both are **★**, and both are nets rather than riddles (E4a) — but they are a
+particular kind of net, and it is worth naming, because it is the thing the
+format can do that a crossword cannot.
+
+- **№6 — Set, Inked and Pulled** (3×3, 11/12). Three rows, three stages, in
+  order: the material, the machine, the object. RAG → PULP → PAPER across the
+  top; the press in the middle; TYPE, PAGE, SPINE along the bottom.
+- **№7 — A Fire That Learned to Push** (5×5, 32/40). Five bands — the ground,
+  what the ground becomes, the machine, what the machine was pointed at, what it
+  cost — with STEAM at the exact centre and four arms off it: the fire north, the
+  iron west, the railway east, the mill and the town south.
+
+- **E14 — A net should be a subject, and the layout should be the argument.**
+  A net board of unrelated true facts is a quiz with a grid drawn round it. A net
+  board whose *placement* carries the structure of its subject is something else:
+  the solver finishes holding not twenty-five facts but one shape. Board №7's
+  rows are a sequence and its arms are branches, and that is legible before a
+  single square is filled. Where a board has a subject with parts, put the parts
+  where they belong.
+
+- **E14b — On a subject board, every clue carries the fact it depends on.**
+  This is E3 stated as a positive. *"a SEAM runs for a mile and is a yard of
+  COAL"* does not test whether you know how thick a coal seam is; it tells you,
+  and asks you for the word. Same with the gauze on the lamp, the belt from the
+  ceiling, the lip on the wheel, the country agreeing on one clock. A solver who
+  knew none of them reaches every square, and knows them afterwards. A subject
+  board that tests retrieval instead of teaching it is board 02 again.
+
+### 17b. A2d gets its number
+
+**A2d — A connection is never cut off** has been in §6 since the beginning
+without a measurement, and both new boards broke it on first writing — five
+gutters overflowed. The budget, measured off the live board:
+
+| | horizontal gutter | vertical gutter |
+|---|---|---|
+| 3×3 | ~46 characters | ~56 |
+| 5×5 | **~34 characters** | ~51 |
+
+**Superseded at 3.0.** The budget above was measured against gutters whose size
+had been set by the arrowhead rather than by the words, and both measurements
+were a little too small once connections were written to E7's longer shapes. Two
+things were wrong:
+
+- **The arrow reserve ignored the axis.** One `max-width: calc(100% - 22px)` was
+  applied to every label. On a *horizontal* gutter that is right — the head sits
+  at the left or right end, so width is what must be given up. On a **vertical**
+  gutter the head sits at top or bottom centre, so twenty-two pixels of width
+  bought nothing and cost a line: *"is soft enough to cast and hard enough for"*
+  was squeezed into 76px, wrapped to four lines, overflowed a 42px gutter and
+  printed itself across its own arrow. The reserve now follows the axis.
+- **The gutter was too small in both directions.** Measured, not guessed:
+  `gutRow` 48 → **54** carries three lines of 10px text with the arrowhead clear
+  below them; `gut` 88 → **104** is the smallest width at which no connection on
+  any board runs past three lines, on either face — 88 left seventeen of them at
+  four. It costs 64px on a 5×5, 912 to 976, and the board scales. On a phone the
+  5×5 still meets `MIN_SCALE` and scrolls sideways inside its own scroller, as
+  it did before; the page itself does not.
+
+- **Measure with `offsetHeight`, never `getBoundingClientRect`.** The board is
+  fitted to the page with a CSS transform, so a rect is the **scaled** box: at
+  0.87 a genuine four-line label measures 43px against an unscaled 12.5px line
+  and rounds to three. The first pass at this picked `gut: 96` off exactly that
+  reading, declared every board clean, and was wrong by two whole steps — a
+  wider window immediately showed nine labels still at four lines. A measurement
+  taken through a transform is not a measurement.
+
+- **A2d — A connection is never cut off, and never runs past three lines.**
+  Verified across all seven boards and both faces of every turnable connection:
+  **340 faces, none over three lines, every arrowhead clear.** The character
+  budget is withdrawn as the wrong instrument — a long word wraps differently
+  from three short ones, and 36 characters clipped where 34 did not for reasons
+  no character count can express. Measure the rendered box.
+
+---
+
+### 17c. Board №6, rebuilt as a 5×5 *(at 2.7)*
+
+*Set, Inked and Pulled* was a 3×3 and the wrong size for its own subject. The
+centre square is **PRESS**, and PRESS is two things — the frame that squeezes and
+the trade that shouts — which is not a coincidence of spelling but a piece of
+history: the machine that could throw a thousand sheets a night is the machine
+that could throw the news. A 3×3 has room for one of those. A 5×5 has room for
+the join, so the board now runs **metal in the west, newsprint in the east, and
+the double in the middle**.
+
+Three squares carry a second life and each is load-bearing:
+
+| | first life | second life | where the board uses it |
+|---|---|---|---|
+| **PRESS** | the machine | the newspapers | both, either side of it |
+| **PRINTER** | the machine | the person who was one for four centuries | FRANKLIN chooses the word for a gravestone; the same word clamps a plate |
+| **COLUMN** | a strip of newsprint | the pillar on a portico | three clues take the first, and *"a LIBRARY is the kind of building given a COLUMN"* takes the second |
+
+**FRANKLIN** is the W4 case the rule was written for: an encyclopaedia entry in
+any century, and a name that is also a common noun. His clue is the board's best
+line and it is literally true — the signer of the Declaration chose *B. Franklin,
+Printer* for his own stone.
+
+**Three stars, and honestly.** raw = 0.870, and it is the first board on the shelf
+above one. §14 asked for exactly this: *"five of seven boards are easy ones… the
+next ones should be written for the top of the scale."* Most of the score is
+`hard`, not `twist` — EDITOR, COPY, PROOF, NEWS, SCOOP, DEADLINE, MARGIN and
+FRANKLIN sit at ease 2 and LIBEL at ease 1. **No S7 override here**, and the
+contrast with the 3×3 version is the point: there the twist was inert because the
+theme had spent it, and here the doubles are the puzzle.
+
+### E15 — a clue may teach a fact, but the square must not depend on it
+
+**RAG and PULP are gone**, and cutting them produced the rule. Both were true,
+both taught something worth knowing, and both were the wrong kind of hard: a
+solver who does not happen to know that paper was beaten from cloth for
+seventeen centuries has **no second route** to them, because nothing else on the
+board looks like rags. E14b says a subject board's clue should carry its own
+fact; **E15 is the limit on E14b** — carrying the fact is not enough on its own,
+because a fact you have just been handed is not yet a thing you can cross-check.
+The square still owes E6 a second way in.
+
+The test: *strike the taught fact out of the clue. Is there still a route to this
+square?* Every word on the rebuilt board has an everyday sense to arrive from — a
+case, a plate, a proof, a story, a scoop, a column — and the printing sense is
+what the neighbours add. That is the difference between a board that teaches you
+something and a board that requires you to have been taught.
+
+---
+
+## 18. The connection turns over *(built at 2.8)*
+
+Every clue in this game has been asked to do two jobs that pull against each
+other. **E6** wants it near-sufficient — read this gutter alone and land on one
+word. **E15** wants it independent of outside knowledge — do not make the square
+hostage to a fact the solver may not have. A clue that is specific enough to
+satisfy the first is usually specific enough to breach the second, and that
+tension is what killed RAG and PULP, and what made all three of FRANKLIN's
+connections faulty at once: *chose for a gravestone the word*, *was apprenticed
+at twelve to set*, *opened the first place to borrow a* — three sentences, all
+true, all lovely, and every one of them requiring you to already know Franklin.
+No second route into the square from anywhere.
+
+**A11 — A connection may carry a second face, and turning it costs nothing.**
+Click a gutter and it turns over, in the only animation this game has: the label
+scales to an edge and back, which is what a card does. Click it again and it
+turns back. The turned face is marked in the visited purple with a dashed rule,
+so you can see at a glance which gutters you have been into.
+
+- **A11a — It is free, and it is counted nowhere.** Not in the report, not as a
+  mark on a square, not as a rung on the hint ladder. This is the whole design
+  and it is not leniency, it is a category distinction: *Reveal a letter* and
+  *Reveal the word* short-circuit the deduction, and a turned connection does
+  not. The back of a gutter is another sentence about the same relation. You are
+  handed a different way of looking at the join; the join is still yours to make.
+  A board solved with all thirty-four turned is solved outright, and says so.
+- **A11b — Turning is per-session and Restart clears it.** Consistent with H4:
+  nothing is remembered between sittings, because there is nowhere honest to
+  keep it.
+- **A11c — A board without second faces loses nothing.** `verb2` is optional;
+  six of the seven boards have none and render exactly as before. The mark, the
+  click and the animation only exist where there is a back to turn to.
+
+### E16 — what may be written on a back
+
+- **E16 — A back face is a connection, and every rule that governs a front
+  governs it.** E9, E10, E11, E12, E13 all apply unchanged. `check-boards.py`
+  now reads `verb2` alongside `verb`, and it caught *"a PRESS sets the news in a
+  narrow COLUMN"* — naming NEWS, two squares away — within a minute of being
+  taught to look. E10 in particular gets *harder*, not easier, on a back: a
+  plainer sentence is by nature a vaguer one, and vaguer sentences fit
+  neighbours.
+- **E16b — The back is not the easy answer. Sometimes it is only another
+  answer.** If every back is plainer than its front, then every solver turns
+  every gutter on the first move and the fronts become decoration — the mechanic
+  eats the board it was meant to help. The defence is that a solver must not be
+  able to predict what is behind. Board №6 aims at roughly a third plainer, a
+  third a different angle at the same difficulty, and a third *more specific
+  than the front*: *"a LIBRARY is the kind of building given a COLUMN"* turns
+  over to *"wears a portico held up by a"*, which is harder vocabulary and the
+  same joke. Turning is then a real choice rather than a free upgrade.
+- **E16c — A2d holds on both faces.** Both sentences live in the same gutter box,
+  and a back face is often the longer of the two because it is explaining more.
+  The measured budget in §17b is the budget for the pair, not for the front.
+
+**The cost, named.** This doubles the editorial load, and §3 E5 already makes
+editing the bottleneck of the whole game. Board №6 is sixty-eight sentences, not
+thirty-four, each passing E9 through E15. §8's H6 asks for a six-board bank and
+never shipping from empty; at two faces a board is twice the work to get there.
+That is the real price and it is not small. What it buys is that the front faces
+can go back to being lateral — the board no longer has to compromise between
+being clever and being fair, because it can be clever on the front and fair on
+the back.
+
+**Why this and not the category glyph.** The glyph proposed at 2.7 was rejected
+on three counts and the turn answers all three: it is **per-connection, not
+per-word**, so there is no ontology to break on PRINTER; it is **opt-in per
+gutter**, so it is not blanket furniture on twenty-five squares at once; and it
+**cannot leak the double-life thesis**, because a back face is a sentence, not a
+classification. The glyph told you what kind of thing the answer was. The turn
+tells you the same relation again in other words, which is what this game is
+made of.
+
+---
+
+## 19. Which English *(built at 2.9)*
+
+W1 said *answers are English, always*, and left out which English. It matters
+only where the two spellings are the **same length**, and that is a much smaller
+problem than it looks.
+
+**The letter count does most of the work already.** Every square prints how many
+letters it takes, so a solver typing the wrong dialect into a different-length
+word is stopped by the interface before they can submit. That retires the whole
+of the largest class — **-our/-or** (HARBOUR/HARBOR, COLOUR/COLOR,
+RUMOUR/RUMOR), **-ll-/-l-** (TRAVELLER/TRAVELER), **-ogue/-og**, **-ae-/-e-**,
+and PLOUGH/PLOW, CHEQUE/CHECK, STOREY/STORY, MOULD/MOLD. HARBOUR has been on
+board №3 the whole time and needs nothing.
+
+- **W1a — Boards and the lexicon are written in British English, and one entry
+  stands per word.** Not a preference: the house voice already is. `centre` is a
+  data key in every puzzle file, and the prose runs 23–0 on *centre*, with
+  *colour*, *harbour*, *grey*, *neighbour*, *fibre*, *travelling* and *rumour*
+  throughout. (The hundred-odd `color:` and `center` hits are CSS keywords, which
+  are the language and not the voice.) `check-boards.py` enforces it: a board
+  written in the variant spelling fails W1a by name.
+- **W1b — The American spelling is accepted on entry, and the board keeps what
+  was typed.** `CL.same()` sits at every point where a typed word meets a written
+  one — the error check, the noise a word makes, the win, and the used-once test
+  — and `CL.canon()` sits in front of the lexicon so one entry serves both. The
+  square is **not** rewritten to the canonical: A2f says entering a word does not
+  move it, and silently correcting somebody's own correct spelling is the same
+  discourtesy in a different place.
+- **W1c — Only same-length pairs are declared.** A variant of a different length
+  can never be typed, so an entry for one is dead data. Checked, and it caught
+  PLOUGHSHARE/PLOWSHARE within a minute of being written.
+
+### Why it is a list and not a rule
+
+The natural implementation is two substitutions — *-ISE == -IZE*, *-RE == -ER* —
+and it is **wrong**, on words already on the shelf:
+
+| rule | what it would also accept | why that is bad |
+|---|---|---|
+| `-RE == -ER` | **WIER** for WIRE, on board №1 | not a word. The board would go green on a misspelling |
+| | FIER for FIRE, EMPIER for EMPIRE | same |
+| `-ISE == -IZE` | RIZE for RISE, WIZE for WISE | same |
+| | **PRISE** for PRIZE | worse — these are *different words*, to lever open and an award, and no rule can tell which the square meant |
+
+Marking a misspelling correct is a worse failure than refusing a real variant,
+because the solver is told they are right and is not. So every pair is written
+down in `spelling.js` and nothing is accepted that is not on the list — the same
+instinct as **E5**: a generator may propose, it may never publish.
+
+**A note on which class actually bites.** *-ise/-ize* is the one that looks most
+like a rule and turns out to matter least, because **every answer in this game is
+a noun** and that ending is overwhelmingly verbal. It reaches only the long
+-ISATION forms. The classes that do the damage are **-re/-er** (CENTRE, METRE,
+FIBRE, THEATRE — all nouns, all same length) and **-ce/-se** (DEFENCE, LICENCE,
+OFFENCE), plus the singletons that belong to no class: **GREY/GRAY**, KERB/CURB,
+TYRE/TIRE, GAOL/JAIL. PRACTICE is deliberately not a pair: it is the noun in both
+Englishes, and the verb PRACTISE can never be an answer.
+
+---
+
+## 20. The equivalence, and the word-level connection *(built at 3.1)*
+
+§2 specced three kinds of line at 0.3 and built one. **R2 — Equivalence** (a
+plain line, no head) is now drawn, and the thing that finally asked for it was a
+pair of words rather than a pair of things.
+
+### R2, as built
+
+`{ verb, verb2, kind: "eq" }`. `dir` is not read: the two cells are peers, so
+there is no subject to resolve and no head to point, and the end-of-game sentence
+prints in board order — left before right, top before bottom — exactly as §2 said
+it should. A gutter without `kind` gets the directed relation it always had, so
+every existing board is untouched. The wire is drawn a shade heavier than a
+directed one, because a headless line has to read as *a deliberate kind of join*
+and not as an arrow that failed to render.
+
+**HEADLINE — DEADLINE** is the first, and it is the right first: an arrow between
+those two would be a lie about which way the fact runs.
+
+### E17 — a connection may be about the words, once
+
+Every other connection in this game is about the world: a river breaks its bank,
+a printer pulls a press. *"HEADLINE shares its last word with DEADLINE"* is not —
+it is about the spelling. That is a different kind of thought inside the same
+grid, and it is worth having and worth fencing.
+
+- **E17 — A connection may be about the words rather than the things, but never
+  more than one to a board, and never as a square's near-sufficient clue.**
+  The second half is the load-bearing half. *"shares its last word with
+  DEADLINE"* fits HEADLINE, GUIDELINE, BYLINE, PIPELINE, OUTLINE, HAIRLINE — it
+  finds nothing on its own. What it does, once you have both squares, is
+  **confirm them instantly and close a loop**, which is precisely the role E6
+  reserves for the non-sufficient clue: *"the rest confirming it."* A word-level
+  line is the best confirmer the format has and the worst finder, and a board
+  that forgets which is which has stopped being about meaning.
+
+**On the name.** *Internal rhyme* is a rhyme falling **within a single line of
+verse** — *"I bring fresh showers for the thirsting flowers"* — so it is not what
+these two words are doing. What they are doing is more interesting than a name
+for it: HEADLINE and DEADLINE are a **perfect rhyme**, and the rhyme lives
+entirely in the first element, because the second element is not rhyming at all —
+it is *identical*, and identical syllables are repetition rather than rhyme. So
+the two faces split the fact exactly along that seam: the front takes the
+repetition (*shares its last word with*) and the back takes the rhyme, counted
+rather than named (*is one letter away from*). Neither says "rhyme", and neither
+has to.
+
+### PROOF → CASE: the verb was the fault, not the fact
+
+The clue was withdrawn at 3.2 and is back at 3.4, which is the right outcome — the
+**type case** is a good thing to have on this board. It is the tray metal type is
+kept in, one compartment per letter, and it is where *upper case* and *lower case*
+come from.
+
+What was wrong was one verb. *"**sends** a wrong **letter** back to its —"* reads
+as correspondence: two postal words in a row, and the mind supplies ENVELOPE long
+before it supplies a printer's tray. Nothing was wrong with the fact. It reads
+now as *"a PROOF **drops** a wrong letter back into its CASE"* — a verb that can
+only be physical — and the back says plainly which letter and where it goes.
+
+**PLATE → CASE is out instead.** Stereotype plates did make standing type
+needless, and *"put a whole one out of work, a CASE"* had to contort itself to
+say so around a fact almost nobody holds. CASE keeps its two ways in from LEAD
+and PROOF, and both now arrive from something a solver already owns.
+
+CASE keeps two ways in, and both now arrive from something the solver already
+owns:
+
+| | |
+|---|---|
+| LEAD → CASE | *is melted and cast, letter by letter, for a* ↳ **is sorted, upper and lower, into a** |
+| PLATE → CASE | *put a whole one out of work, a* ↳ *made it needless to keep a* |
+
+The back of the first is the whole repair: **upper** and **lower** are words
+everybody types with, so the square is reachable by anyone who has ever held down
+a shift key, and the compositor's tray is the reward rather than the toll.
+
+**The board stayed at 34.** D4's ceiling on a 5×5 is 34 of 40 and board №6 was
+already at it, so the equivalence had to be paid for: PROOF→CASE and
+STORY→READER out, PLATE→CASE and HEADLINE—DEADLINE in. *"a STORY is written for
+one imagined READER"* was the other one to go, and it was named as soft when it
+was written — a piece of writing-craft received wisdom rather than a thing you
+can picture, which is E13 again at a lower temperature.
+
+---
+
+## 21. Three clues, and the rule under them *(at 3.2)*
+
+All three faults came from one playtest reading, and they turn out to be the same
+fault wearing three coats. Each clue was **true of its answer** and stopped there
+— and stopping there is not enough, because a clue is read against the words the
+solver is *actually* considering, not against a dictionary.
+
+- **E18 — A clue must name the thing that separates its answer from the nearest
+  wrong word.** Not merely a property the answer has: the property that the
+  near miss does *not*. E10 says a clue may not fit a neighbour better than its
+  own answer, and E18 is its other half — it may not fit a word that is not on
+  the board at all better than its own answer. The near miss is usually not a
+  neighbour. It is the ordinary word the sentence describes.
+
+### SCOOP → LIBEL
+
+*"a SCOOP that turns out to be wrong is a LIBEL"* describes an **ERROR**, and
+lands there, because wrongness is all it names.
+
+Correcting *why* is worth doing carefully: intent is **not** the separator, though
+it is the natural guess. In English law libel is effectively strict liability for
+the publisher — no intent is needed, and the defences are truth, honest opinion
+and public interest. Intent only enters in the United States, and only for public
+figures, where *New York Times v. Sullivan* requires actual malice. So a rule
+written on intent would be wrong in the English the game is written in (W1a).
+
+What actually separates libel from a mistake is **harm to a person**. So the clue
+names it: *"a SCOOP that ruins a good name is a LIBEL"*, with the back stating
+both halves plainly — *printed about a person, and false*. ERROR does not ruin a
+good name; that is the whole of the difference and now it is on the board.
+
+### FRANKLIN → BOOK
+
+*"opened the first place to borrow a BOOK"* parses two ways and the wrong one is
+the livelier: **a man opening a shop so that he could borrow**. The infinitive
+attaches to the subject, and the subject is a person, so the sentence hands him
+the motive. Moving the verb to the institution moves the reading with it —
+*"opened the first place that would **lend** a BOOK"*. Same fact, one voice
+changed, and the man is out of the way of it.
+
+### INK → HEADLINE
+
+The proposal was *"a HEADLINE cannot be written without INK"*, and the instinct
+was right — that gutter was bare and wanted filling — but the sentence fails E10
+as broadly as a sentence can. Nothing on this board can be written without ink:
+it fits PROOF, COPY, PAGE, COLUMN, STORY, BOOK and the answer equally. A clue
+that describes a whole category has told the solver nothing.
+
+The first repair was no better, and it took a second reading to see it.
+*"is laid on thickest in a"* and *"is blackest in a"* are **the same false claim
+twice**: ink is not blacker in a headline and it is not laid on thicker. The film
+is the same. There is simply *more of it*, because the letters are bigger. A clue
+may not be poetically true at the cost of being actually wrong.
+
+So the front takes INK's other life instead — **to get ink is to be printed
+about**, which is a real second sense and exactly what this board is for (E4) —
+and the back states the physical fact without embroidering it:
+
+> INK **is what you get for making a** HEADLINE
+>  ↳ INK **is spread over the biggest letter of a** HEADLINE
+
+**It was paid for, and then it was not.** The new connection first cost
+**BOOK → PAGE**, because D4's ceiling was enforced as a hard range and board №6
+was sitting on it. That was the tool being stricter than the rule: D4 says
+*roughly*. The ceiling is a note now (see §1), board №6 stands at **35 of 40**
+with five bars, and BOOK → PAGE is back. Nothing was worth losing to arithmetic —
+and the question that produced the amendment was simply *why does it cost
+anything*, which no one had asked in eleven revisions.

@@ -7,16 +7,45 @@
 
   // The context is built on the first click, because a browser will not let a
   // page make a noise before it has been touched.
+  //
+  // `latencyHint: "interactive"` asks for the smallest buffer the device will
+  // give. It is the default, and it is written out anyway, because it is the
+  // one thing in this file that decides how long after a key the sound arrives.
   function audio() {
     if (!on) return null;
     if (!ctx) {
       var A = window.AudioContext || window.webkitAudioContext;
       if (!A) return null;
-      ctx = new A();
+      try { ctx = new A({ latencyHint: "interactive" }); }
+      catch (e) { ctx = new A(); }
     }
     if (ctx.state === "suspended") ctx.resume();
     return ctx;
   }
+
+  // Wake the context on the first gesture of any kind, not on the first note.
+  //
+  // This is where the lag was. A suspended context has a stopped clock, so a
+  // note scheduled at `currentTime` is scheduled against a time that is not
+  // moving; `resume()` returns a promise, and by the time it settles the clock
+  // has jumped past the moment the note was booked for. The first sound after
+  // any suspension therefore arrived late, or not at all — and browsers suspend
+  // on their own whenever a tab goes to the background.
+  //
+  // Priming on the first click or keypress means the clock is already running
+  // before anything needs to be heard, and the visibility handler starts it
+  // again after the tab has been away.
+  function prime() {
+    if (!on) return;
+    audio();
+    document.removeEventListener("pointerdown", prime, true);
+    document.removeEventListener("keydown", prime, true);
+  }
+  document.addEventListener("pointerdown", prime, true);
+  document.addEventListener("keydown", prime, true);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && ctx && ctx.state === "suspended") ctx.resume();
+  });
 
   // One note: square wave, flat top, hard stop. `at` is seconds from now.
   // The envelope times are clamped, because the shortest sound here is 18ms and

@@ -1,6 +1,6 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
-  id: "05-landfall",
+  id: "03-landfall",
   title: "Landfall",
   standfirst: "Twenty-five words and thirty-four connections; six gutters are left bare. Every connection is shown, and every square is open from the start.",
   size: 5,

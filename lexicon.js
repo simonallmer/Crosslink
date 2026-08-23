@@ -7,7 +7,7 @@ window.CROSSLINK.lex = {
   ROE:      { pos: "n.",       senses: ["The eggs of a fish, taken in a mass from the female."] },
   JAPAN:    { pos: "n. prop.", senses: ["An island country in the western Pacific.", "japan: a hard black lacquer, named for the country it came from."] },
   OCEAN:    { pos: "n.",       senses: ["The body of salt water covering most of the earth; any of its named divisions."] },
-  NET:      { pos: "n.",       senses: ["An open mesh of knotted cord, used for catching.", "What is left after deductions have been made.", "The network itself — see the standfirst."] },
+  NET:      { pos: "n.",       senses: ["An open mesh of knotted cord, used for catching.", "What is left after deductions have been made.", "A network of connected things: a rail net, a telephone net, the Net."] },
   PACIFIC:  { pos: "n. prop.", senses: ["The largest of the oceans.", "adj. Peaceable. Magellan named the first for the second."] },
   PISCES:   { pos: "n. prop.", senses: ["The twelfth sign of the zodiac, drawn as two fishes bound at the tail.", "Latin: fishes."] },
   ZODIAC:   { pos: "n.",       senses: ["The belt of twelve constellations the sun appears to travel through in a year."] },

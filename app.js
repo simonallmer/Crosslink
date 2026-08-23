@@ -18,6 +18,9 @@
       puzzle: P,
       edges: CL.edgeList(P),
       filled: {}, status: {}, revealed: {}, surfaced: {}, mark: {},
+      // Which connections are showing their second face. Restart clears them
+      // with everything else; nothing else ever does.
+      flipped: {},
       selected: null, draft: [],
       check: document.getElementById("check").checked
     };
@@ -27,6 +30,17 @@
     say("");
     draw();
   }
+
+  // Turning a connection over. Free, uncounted, and reversible — see A11. The
+  // board redraws so the sentence in the script window follows the face that is
+  // showing, and so a turned gutter keeps its mark while you work elsewhere.
+  CL.onTurn = function (id) {
+    st.flipped[id] = !st.flipped[id];
+    if (CL.sfx && CL.sfx.key) CL.sfx.key();   // before the redraw, as everywhere
+    st.turning = id;   // only this gutter animates, and only on this redraw
+    draw();
+    st.turning = null;
+  };
 
   function draw() {
     CL.derive(st);
@@ -238,7 +252,8 @@
   var lexWord = null;
 
   function lexOpen(word) {
-    lexWord = word;
+    // One entry per word, whichever English it was typed in (W1a).
+    lexWord = CL.canon(word);
     document.getElementById("win-lex").hidden = false;
   }
 
@@ -336,7 +351,15 @@
   ].sort();
 
   function go(name, arg, back) {
-    if (here && !back) trail.push([here.name, here.arg]);
+    // Going to the page you are already on is not a step, and it must not leave
+    // one behind. It used to: clicking Puzzles while on Puzzles pushed Puzzles,
+    // so Back sent you to the page you were looking at, and the trail never
+    // emptied — nav-back was permanently enabled and, after enough of them,
+    // Back from the front page walked you *forward* into a stale board. The
+    // button always had this; binding Escape to it is what made it obvious.
+    if (here && !back && !(here.name === name && here.arg === arg)) {
+      trail.push([here.name, here.arg]);
+    }
     here = { name: name, arg: arg };
     Object.keys(VIEWS).forEach(function (k) {
       document.getElementById(VIEWS[k].el).hidden = (k !== name);
@@ -447,11 +470,13 @@
     };
   });
 
-  document.getElementById("nav-back").onclick = function () {
+  function navBack() {
     if (!trail.length) return;
+    if (CL.sfx) CL.sfx.click();                 // the key sounds like the button
     var p = trail.pop();
     go(p[0], p[1], true);
-  };
+  }
+  document.getElementById("nav-back").onclick = navBack;
   document.getElementById("nav-home").onclick = function () { go("menu"); };
 
   // Light or dark, by the sun and moon in the toolbar. The system's preference
@@ -529,7 +554,22 @@
   }
   siteArrow.onclick = function (ev) { ev.stopPropagation(); sites(siteList.hidden); };
   document.addEventListener("click", function () { sites(false); });
-  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") sites(false); });
+  // Escape unwinds, innermost thing first: the site list if it is open, then the
+  // square you are standing on, then the page you are on. Only the last of those
+  // is new — the other two were already bound, and putting "go back" underneath
+  // them rather than over them is the whole of the design. Escape should never
+  // take the page out from under someone who only meant to shut a menu.
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Escape") return;
+    if (ev.defaultPrevented) return;            // something nearer already took it
+    if (!siteList.hidden) { sites(false); return; }
+    // The square, whether or not the hidden input happens to hold focus. When it
+    // does, its own handler has already run and preventDefault kept us out.
+    if (here && here.name === "play" && st && st.selected) {
+      st.selected = null; st.draft = []; draw(); return;
+    }
+    navBack();
+  });
 
   document.getElementById("x-script").onclick = function () { show("win-script", false); };
   document.getElementById("x-lex").onclick = function () { show("win-lex", false); };
@@ -566,18 +606,23 @@
 
     if (!draftFull()) { say("That square takes " + ans.length + " letters."); return; }
     var w = st.draft.join("").toUpperCase();
-    var dup = Object.keys(st.filled).filter(function (kk) { return st.filled[kk] === w; });
+    // Compared as one word, so CENTER cannot be set down beside CENTRE.
+    var dup = Object.keys(st.filled).filter(function (kk) { return CL.same(st.filled[kk], w); });
     if (dup.length) { say("Each word is used once, and " + w + " is already on the board."); return; }
 
     st.filled[k] = w;
     st.status[k] = st.mark[k] || "clean";
     st.selected = null; st.draft = [];
     say("");
-    draw();
+    // The noise first, then the board. A full redraw of a 5x5 is eighty-one
+    // elements and some six milliseconds, and it used to sit between the key
+    // going down and the sound coming out for no reason at all: the sound is
+    // the answer to what you just did, the redraw is only its consequence.
     if (CL.sfx) {
-      if (st.check) CL.sfx[w === ans ? "good" : "bad"]();
+      if (st.check) CL.sfx[CL.same(w, ans) ? "good" : "bad"]();
       else CL.sfx.place();
     }
+    draw();
     checkWin();
   }
 
@@ -604,7 +649,7 @@
 
   function checkWin() {
     for (var r = 0; r < P.size; r++) for (var c = 0; c < P.size; c++) {
-      if (st.filled[CL.K(r, c)] !== CL.answer(st, r, c)) return;
+      if (!CL.same(st.filled[CL.K(r, c)], CL.answer(st, r, c))) return;
     }
     finish();
   }
@@ -675,10 +720,13 @@
   });
 
   ghost.addEventListener("keydown", function (ev) {
-    // S gives the board up. While a square is selected it needs the shift key,
-    // because there you are spelling a word and S is a letter like any other.
-    if (ev.key === "s" || ev.key === "S") {
-      if (ev.shiftKey || !st.selected) { ev.preventDefault(); giveUp(); return; }
+    // Shift+S gives the board up, and it is Shift+S everywhere — with a square
+    // selected or without one. A bare S used to do it while nothing was
+    // selected, which meant one stray keystroke before you had clicked anywhere
+    // threw the whole board away. Giving up is the one move that cannot be
+    // taken back, so it is the one move that asks for two keys.
+    if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) {
+      ev.preventDefault(); giveUp(); return;
     }
     if (!st.selected) return;
     if (ev.key === "Backspace") { ev.preventDefault(); back(); }
@@ -688,7 +736,7 @@
 
   document.addEventListener("keydown", function (ev) {
     if (document.activeElement === ghost) return;
-    if ((ev.key === "s" || ev.key === "S") && !st.selected) { ev.preventDefault(); giveUp(); return; }
+    if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) { ev.preventDefault(); giveUp(); return; }
     if (!st.selected) return;
     if (/^[a-zA-Z]$/.test(ev.key)) {
       ghost.focus();

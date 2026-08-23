@@ -25,7 +25,10 @@ def load(path):
     centre = [int(x) for x in re.search(r"centre:\s*\[(\d+),\s*(\d+)\]", t).groups()]
     nouns_src = re.search(r"nouns:\s*\[(.*?)\n  \],", t, re.S).group(1)
     nouns = [re.findall(r'"([A-Z]+)"', r) for r in nouns_src.split("\n") if '"' in r]
-    verbs = re.findall(r'verb:\s*"([^"]*)"', t)
+    # Both faces. A connection's back must pass E9 exactly as its front does —
+    # it is the same gutter and the same board, and a back face that names a
+    # neighbour gives the square away just as completely.
+    verbs = re.findall(r'verb2?:\s*"([^"]*)"', t)
     # gutters: walk the h and v blocks entry by entry, counting nulls in order
     def slots(block):
         src = re.search(block + r":\s*\[(.*?)\n  \]", t, re.S).group(1)
@@ -83,7 +86,7 @@ def two_disjoint(nodes, es, src, dst):
     return all(connected(e) for e in es)
 
 def check(p, already):
-    n, bad = p["size"], []
+    n, bad, warn = p["size"], [], []
     es = edges(p)
     nodes = [(r, c) for r in range(n) for c in range(n)]
     word = lambda rc: p["nouns"][rc[0]][rc[1]]
@@ -99,10 +102,18 @@ def check(p, already):
 
     if len(es) < len(nodes): bad.append("D3 fails: no cycle (%d links, %d words)" % (len(es), len(nodes)))
 
+    # D4's floor is hard and its ceiling is not, because they are not the same
+    # kind of rule. Below the floor D2 stops being satisfiable — that is a fact
+    # about the graph, and a board that breaks it is broken. The ceiling is a
+    # matter of taste about density, the rule itself says "roughly", and a 3x3
+    # is allowed to be 12 of 12 while a 5x5 was capped at 34 of 40 for no reason
+    # anyone wrote down. It warns now, and does not fail.
     possible = 2 * n * (n - 1)
     lo, hi = (10, 12) if n == 3 else (28, 34)
-    if not (lo <= len(es) <= hi):
-        bad.append("D4 fails: %d of %d, wanted %d-%d" % (len(es), possible, lo, hi))
+    if len(es) < lo:
+        bad.append("D4 fails: %d of %d, below the floor of %d" % (len(es), possible, lo))
+    elif len(es) > hi:
+        warn.append("D4 note: %d of %d, above the usual %d - dense, not wrong" % (len(es), possible, hi))
 
     onboard = set(w for row in p["nouns"] for w in row)
     named = sorted({(v, w) for v in p["verbs"] for w in onboard
@@ -110,11 +121,27 @@ def check(p, already):
     if named:
         bad.append("E9 fails: " + "; ".join('"%s" names %s' % (v, w) for v, w in named))
 
+    variant = {v: k for k, vs in SPELL.items() for v in vs}
+    wrong_side = sorted(w for row in p["nouns"] for w in row if w in variant)
+    if wrong_side:
+        bad.append("W1a fails: " + ", ".join(
+            "%s is the variant spelling; boards are written %s" % (w, variant[w]) for w in wrong_side))
+
     ws = [word(rc) for rc in nodes]
     if len(set(ws)) != len(ws): bad.append("a word is repeated on this board")
     clash = sorted(set(ws) & already)
     if clash: bad.append("H2 fails: %s already set on an earlier board" % ", ".join(clash))
-    return bad, set(ws), len(es), possible
+    return bad, warn, set(ws), len(es), possible
+
+def spellings():
+    """canonical -> [accepted variants], read straight out of spelling.js."""
+    path = os.path.join(ROOT, "spelling.js")
+    if not os.path.exists(path): return {}
+    t = io.open(path, encoding="utf-8").read()
+    out = {}
+    for k, body in re.findall(r"^  ([A-Z]+):\s*\[([^\]]*)\]", t, re.M):
+        out[k] = re.findall(r'"([A-Z]+)"', body)
+    return out
 
 def known_words():
     ks = set()
@@ -125,9 +152,12 @@ def known_words():
             ks |= set(re.findall(pat, io.open(path, encoding="utf-8").read(), re.M))
     return ks
 
-# Boards 01 and 02 were built before §1 existed, and are kept as they are:
-# board 02's thin links are the evidence the rules were written from.
-LEGACY = {"01-fish", "02-salt"}
+# There is no legacy list any more. The two boards it held — The Centre Is a
+# Fish and Worth Its Weight, built before §1 existed — were withdrawn at 2.5
+# rather than kept as exceptions, and every board in puzzles/ is now expected to
+# pass on its own account. A board that fails is a board that does not ship.
+LEGACY = set()
+SPELL = spellings()
 
 def main():
     files = sorted(glob.glob(os.path.join(ROOT, "puzzles", "puzzle-*.js")))
@@ -136,7 +166,7 @@ def main():
     print("-" * 78)
     for f in files:
         p = load(f)
-        bad, ws, ne, possible = check(p, already)
+        bad, warn, ws, ne, possible = check(p, already)
         missing = sorted(ws - known)
         if missing: bad.append("L1 fails: no entry for %s" % ", ".join(missing))
         already |= ws
@@ -146,8 +176,19 @@ def main():
         for b in bad:
             print("      - " + b)
             if not legacy: fails += 1
+        for w in warn:
+            print("      . " + w)
     print("-" * 78)
     print("%d words set across %d boards, none twice." % (len(already), len(files)))
+    dead = [(k, v) for k, vs in SPELL.items() for v in vs if len(v) != len(k)]
+    if dead:
+        fails += len(dead)
+        print("W1b fails: a variant of a different length can never be typed, "
+              "because the square prints its letter count — " +
+              ", ".join("%s/%s" % (k, v) for k, v in dead))
+    else:
+        print("%d spellings, every variant the same length as its canonical."
+              % sum(len(v) for v in SPELL.values()))
     if fails: print("%d rule failures." % fails)
     return 1 if fails else 0
 
