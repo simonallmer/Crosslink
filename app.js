@@ -72,17 +72,26 @@
   }
   window.addEventListener("resize", function () { if (st) fit(); });
 
+  // The hidden input is what a phone or tablet raises its keyboard for, so it
+  // must not be focused while the demonstration is driving. Blurring it after
+  // the fact is not enough — the keyboard has already begun to come up, and what
+  // you see is it flickering open and shut. Nothing focuses it during a demo.
+  function takeFocus() {
+    if (typeof DEMO !== "undefined" && DEMO && DEMO.on) return;
+    ghost.focus();
+  }
+
   function pick(r, c) {
     if (st.filled[CL.K(r, c)] !== undefined) {
       st.selected = [r, c]; st.draft = freshDraft(r, c); say("");
       lexOpen(st.filled[CL.K(r, c)]);
-      draw(); ghost.focus(); return;
+      draw(); takeFocus(); return;
     }
     st.selected = [r, c];
     st.draft = freshDraft(r, c);
     say("");
     draw();
-    ghost.focus();
+    takeFocus();
   }
 
   function lift(r, c) {
@@ -91,7 +100,7 @@
     st.draft = freshDraft(r, c);
     say("");
     draw();
-    ghost.focus();
+    takeFocus();
   }
 
   // ---- the draft: one slot per letter ---------------------------------
@@ -579,6 +588,7 @@
   function demoStop(why) {
     DEMO.on = false;
     if (DEMO.timer) { clearTimeout(DEMO.timer); DEMO.timer = null; }
+    ghost.removeAttribute("inputmode");
     if (why) say("");
   }
 
@@ -588,7 +598,11 @@
   function demoStart() {
     if (!st || !here || here.name !== "play") return;
     DEMO.on = true;
-    ghost.blur();                       // no caret blinking in the recording
+    // Belt and braces on top of takeFocus(): if anything at all reaches the
+    // hidden input while this is running, inputmode="none" stops a soft keyboard
+    // coming up for it. Blur once here in case it already had focus.
+    ghost.setAttribute("inputmode", "none");
+    ghost.blur();
     wait(700, demoWord);
   }
 
@@ -631,7 +645,6 @@
     if (!rc) { demoStop(); return; }
     var ans = CL.answer(st, rc[0], rc[1]);
     pick(rc[0], rc[1]);
-    ghost.blur();
     // A beat to read the square's clues, longer for a longer word.
     wait(jitter(520 + ans.length * 45, 220), function () { demoLetter(ans, 0); });
   }
@@ -641,7 +654,6 @@
     if (i >= ans.length) {
       wait(jitter(560, 200), function () {
         submit();
-        ghost.blur();
         if (Object.keys(st.filled).length >= P.size * P.size) { demoStop(); return; }
         wait(jitter(760, 320), demoWord);
       });
@@ -649,7 +661,6 @@
     }
     if (!/[A-Z]/.test(ans.charAt(i))) { demoLetter(ans, i + 1); return; }   // seated already
     typeIn(ans.charAt(i));
-    ghost.blur();
     // Most letters come quickly; now and then the hand stops.
     var pause = Math.random() < 0.13 ? jitter(620, 260) : jitter(155, 65);
     wait(Math.max(70, pause), function () { demoLetter(ans, i + 1); });

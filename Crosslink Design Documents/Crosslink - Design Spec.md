@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 3.9 · 23 August 2026**
+**Revision 4.0 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,8 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*3.9 → 4.0: the demonstration stops raising the soft keyboard on a tablet
+(A13d).*
 *3.8 → 3.9: **H2 is repealed** — a word may be set in more than one board, and a
 crossing is a feature rather than a warning (§8); **E19**, the scale has no term
 for how much a clue asks you to know, and board №7 takes two stars by hand;
@@ -1824,6 +1826,20 @@ which is a watchable length for a screen recording.
   the board being solved, which is the only version worth publishing.
 - **A13c — Leaving or restarting ends it.** `go()` and `reset()` both stop it, so
   it cannot be left running under a different board.
+- **A13d — Nothing focuses the hidden input while it runs.** *Fixed at 4.0, from
+  a tablet.* Typing goes through an off-screen `<input>`, and `pick()` focuses it
+  so a keystroke lands somewhere — which on a touch device is the thing that
+  raises the soft keyboard. The demonstration called `pick()` for every square
+  and blurred immediately after, and blurring after the fact is **not** a fix: the
+  keyboard has already started coming up, so what a viewer sees is it flickering
+  open and shut once a word. Fatal for a screen recording, which is the one thing
+  this feature exists for.
+
+  Focus now goes through a single gate that declines while the demonstration is
+  running, and the input carries `inputmode="none"` for the duration as well, so
+  that a path nobody thought of still cannot raise a keyboard. Verified: **zero
+  focus events across a full run**, and a human click still focuses it the moment
+  the demonstration stops.
 
 *A note on how this was nearly got wrong:* the first attempt hooked the stop by
 reassigning `reset`, which could never have worked — the Restart button was bound
