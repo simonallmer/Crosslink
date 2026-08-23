@@ -50,7 +50,7 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
-*4.0 → 4.1: board №4 is retitled **God's Batch and the Devil's Crust**, and the
+*4.0 → 4.1: board №4 is retitled **God's Batch and Devil's Crust**, and the
 acceptance test learns to read titles — which reports the retitling as a T-rule
 leak on its first run (§7).*
 *3.9 → 4.0: the demonstration stops raising the soft keyboard on a tablet
@@ -630,7 +630,7 @@ titles suggestive, never literal — a title that names a grid word is a leak.
 *Checked from 4.1, and reported rather than failed.* `check-boards.py` now reads
 the title and says so when it contains a word from the grid. It is a note and not
 a failure because this is an editorial judgement and a constructor may want the
-leak: **God's Batch and the Devil's Crust** names CRUST, and CRUST is a corner of
+leak: **God's Batch and Devil's Crust** names CRUST, and CRUST is a corner of
 board №4 with two connections. The square is free to anyone who reads the title
 first.
 
@@ -639,6 +639,15 @@ a reason: on a nine-word board, one square given away is a ninth of the puzzle.
 Whether the title is worth a corner is the constructor's call and not the tool's
 — but the tool should say what is being spent. **A title that wants the word can
 have it; it should not have it by accident.**
+
+**Board №4 spends it deliberately**, and the reasoning is sound enough to write
+down as a general licence: it is the **easiest board in the game on purpose** —
+one star, nine things you could draw, no word doing a second job. A board built
+to be walked through has the least to lose from an open corner, and CRUST is a
+corner with two connections rather than an edge with three: the cheapest square
+on the cheapest board. *A leak costs what the board can afford, which is why this
+is a note and not a rule. On a three-star board it would not be affordable at
+all.*
 
 **Themes — proposed.** A theme declares the body of knowledge the puzzle draws
 on, so the solver knows which shelf to reach for.
