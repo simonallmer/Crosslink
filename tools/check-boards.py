@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Acceptance test for Crosslink boards — the rules of the design spec, §1 and §8.
 
+  E9  no connection names a word that is on its own board
   D1  every word has at least 2 connections
   D2  every word is reachable from the centre by two link-disjoint paths
   D3  the board contains at least one cycle
@@ -24,6 +25,7 @@ def load(path):
     centre = [int(x) for x in re.search(r"centre:\s*\[(\d+),\s*(\d+)\]", t).groups()]
     nouns_src = re.search(r"nouns:\s*\[(.*?)\n  \],", t, re.S).group(1)
     nouns = [re.findall(r'"([A-Z]+)"', r) for r in nouns_src.split("\n") if '"' in r]
+    verbs = re.findall(r'verb:\s*"([^"]*)"', t)
     # gutters: walk the h and v blocks entry by entry, counting nulls in order
     def slots(block):
         src = re.search(block + r":\s*\[(.*?)\n  \]", t, re.S).group(1)
@@ -50,7 +52,7 @@ def load(path):
             out.append([None if i.strip().startswith("null") else i for i in items if i.strip()])
         return out
     return dict(path=os.path.basename(path), id=js_field(t, "id"), title=js_field(t, "title"),
-                size=size, centre=centre, nouns=nouns, h=slots("h"), v=slots("v"))
+                size=size, centre=centre, nouns=nouns, verbs=verbs, h=slots("h"), v=slots("v"))
 
 def edges(p):
     n = p["size"]
@@ -101,6 +103,12 @@ def check(p, already):
     lo, hi = (10, 12) if n == 3 else (28, 34)
     if not (lo <= len(es) <= hi):
         bad.append("D4 fails: %d of %d, wanted %d-%d" % (len(es), possible, lo, hi))
+
+    onboard = set(w for row in p["nouns"] for w in row)
+    named = sorted({(v, w) for v in p["verbs"] for w in onboard
+                    if re.search(r"\b" + w + r"\b", v.upper())})
+    if named:
+        bad.append("E9 fails: " + "; ".join('"%s" names %s' % (v, w) for v, w in named))
 
     ws = [word(rc) for rc in nodes]
     if len(set(ws)) != len(ws): bad.append("a word is repeated on this board")

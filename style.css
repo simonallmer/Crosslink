@@ -36,8 +36,11 @@
   --mono:  "Courier New", Courier, monospace;
   --sans:  Verdana, Geneva, Tahoma, Arial, Helvetica, sans-serif;
 }
+/* Dark is offered two ways: the system asks for it, or the sun/moon in the
+   toolbar says so. A manual choice wins over the system either way, which is
+   why the media query steps aside for [data-theme="light"]. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --page:      #0E0E0D;
     --sheet:     #232320;
     --card:      #121212;
@@ -64,6 +67,32 @@
     --navy:      #8AA4E8;   --navy-pale:  #1A1F33;
   }
 }
+:root[data-theme="dark"] {
+    --page:      #0E0E0D;
+    --sheet:     #232320;
+    --card:      #121212;
+    --face:      #2E2E2E;
+    --bevel-hi:  #565656;
+    --bevel-lo:  #000000;
+    --bevel-lo2: #000000;
+    --ink:       #E8E8E4;
+    --ink-soft:  #BDBDB8;
+    --ink-faint: #8A8A84;
+    --link:      #6FA8FF;
+    --visited:   #C79BFF;
+    --active:    #FF7B7B;
+    --hl:        #3A3620;
+    --rule:      #3C3C38;
+    --barred:    #4A4A44;
+    --wrong:     #FF8A8A;
+    --wrong-bg:  #3A1616;
+    --wire:      #55554E;
+    --caught:    #63CE90;
+    --red:       #E58A84;   --red-pale:   #33201F;
+    --gold:      #D9AE4A;   --gold-pale:  #322A16;
+    --green:     #6FC684;   --green-pale: #16281A;
+    --navy:      #8AA4E8;   --navy-pale:  #1A1F33;
+  }
 
 * { box-sizing: border-box; }
 body {
@@ -199,17 +228,15 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
 .board { display: grid; gap: 2px; width: max-content; }
 .board > div { display: flex; align-items: center; justify-content: center; text-align: center; }
 
-/* a square nothing reaches yet is not a box — it is a place where a box could go */
-.noun { position: relative; background: transparent; border: 1px dotted var(--rule); }
-.noun.dark { border: 1px dotted var(--barred); opacity: .4; }
-
-/* a square you can reach: a raised link box, white paper on the grey */
-.noun.reachable, .noun.done-clean, .noun.done-partial, .noun.done-given {
-  background: var(--card); border: 2px solid;
+/* Every square can be written in, so every square is a box: white paper on the
+   grey, raised, waiting. There is no longer such a thing as a square you cannot
+   reach — only one you have not reached yet. */
+.noun {
+  position: relative; background: var(--card); border: 2px solid;
   border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
 }
-.noun.reachable { }
-.noun.centre-open { outline: 1px dashed var(--link); outline-offset: -4px; }
+/* the frontier: squares a word you have placed already touches */
+.noun.reachable { outline: 1px dashed var(--link); outline-offset: -4px; }
 .noun.selected {
   background: var(--hl);
   border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
@@ -358,6 +385,11 @@ footer p::before { content: "\2691 "; }
 .tool.arrow { padding: 3px 6px; font-size: 8px; line-height: 1; }
 #sound-toggle { min-width: 54px; }
 #sound-toggle.off { color: var(--ink-faint); }
+.tool.ico { padding: 2px 6px; line-height: 0; }
+.tool.ico svg { width: 13px; height: 13px; display: block; fill: var(--ink); shape-rendering: crispEdges; }
+#theme-toggle .ico-moon { display: none; }
+#theme-toggle.is-dark .ico-sun { display: none; }
+#theme-toggle.is-dark .ico-moon { display: block; }
 .sitelist {
   position: absolute; z-index: 20; right: 8px; top: 100%; margin: 0; padding: 3px;
   list-style: none; min-width: 236px; background: var(--card);
@@ -391,17 +423,12 @@ footer p::before { content: "\2691 "; }
 }
 .banner-art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .banner-art .rays { fill: #2A6E96; opacity: .30; }
-.banner-kicker::before, .banner-kicker::after,
 .banner-sub::before, .banner-sub::after {
   content: ""; display: inline-block; vertical-align: middle;
   width: 34px; height: 2px; background: #E7C45A; opacity: .8;
 }
-.banner-kicker::before, .banner-sub::before { margin-right: 14px; }
-.banner-kicker::after,  .banner-sub::after  { margin-left: 6px; }
-.banner-art .c-mag  { fill: #C4438B; stroke: #C4438B; }
-.banner-art .c-gold { fill: #E7C45A; stroke: #E7C45A; }
-.banner-art .c-cyan { fill: #4FC2D8; stroke: #4FC2D8; }
-.banner-art .conf { opacity: .9; }
+.banner-sub::before { margin-right: 14px; }
+.banner-sub::after  { margin-left: 6px; }
 
 .banner-type { position: relative; }
 .banner-kicker, .banner-name, .banner-sub {
@@ -470,6 +497,8 @@ footer p::before { content: "\2691 "; }
   color: var(--ink-soft); border-top: 2px ridge var(--bevel-hi); padding-top: 14px;
 }
 .front-out { margin: 8px 0 0; text-align: center; }
+/* the bullet is furniture, not part of the link: it is neither blue nor clickable */
+.front-out .dot { color: var(--ink-faint); font-size: 11px; vertical-align: 1px; }
 .front-note .out, .front-out .out { color: var(--link); white-space: nowrap; font-family: var(--serif); font-size: 15px; }
 
 

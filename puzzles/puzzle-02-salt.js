@@ -2,7 +2,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "02-salt",
   title: "Worth Its Weight",
-  standfirst: "Twenty-five words, twenty-six connections. Four of them point at the middle, and nothing else on the board exists yet.",
+  standfirst: "Twenty-five words and twenty-six connections, every one of them shown. Fourteen gutters are bare, which is the trouble with this one.",
   size: 5,
   centre: [2, 2],
 

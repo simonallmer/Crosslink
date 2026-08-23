@@ -58,7 +58,12 @@
     click:  function () { note(1320, 0, 0.035, 0.05); },        // a button going down
     tick:   function () { note(760,  0, 0.028, 0.035); },       // a square picked up
     key:    function () { note(1040, 0, 0.018, 0.022); },       // a letter set down
-    place:  function () { note(560, 0, 0.05, 0.05); note(840, 0.05, 0.07, 0.05); },
+    // With error check off the board says nothing about whether a word is right,
+    // and neither may the speakers. This is a question, not a verdict: two notes
+    // a whole tone apart, the second quieter — the shape of "is that right?", not
+    // the rising fifth of "well done", which is what it used to be and which read
+    // as a small win every time a word went down.
+    place:  function () { note(392, 0, 0.05, 0.04); note(440, 0.055, 0.06, 0.028); },
     good:   function () { note(659, 0, 0.06, 0.055); note(880, 0.06, 0.06, 0.055); note(1319, 0.12, 0.10, 0.05); },
     bad:    function () { note(180, 0, 0.10, 0.06, "sawtooth"); note(120, 0.11, 0.16, 0.06, "sawtooth"); },
     open:   function () { slide(300, 900, 0.10, 0.04); },        // a window opening

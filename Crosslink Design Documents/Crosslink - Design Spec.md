@@ -1,6 +1,6 @@
-# Crosslink — Design Spec
+# CrossLink — Design Spec
 
-**Revision 0.4 · 22 August 2026**
+**Revision 1.8 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -30,14 +30,64 @@ background (A7); the game makes a noise (A8).*
 difficulty; boards №6 and №7 are built, both at one star, one of them a 5×5.*
 *1.3 → 1.4: **A3 is reversed** — connections stay written out; cursors.css owns
 the cursor outright; board №6 is rewritten, and breaks a new rule, E8.*
+*1.4 → 1.5: **the reveal is gone** — every connection is shown from the first
+moment (§0, R0); the banner loses its confetti; the arrow gets a continuity test.*
+*1.5 → 1.6: the arrow and the two theme icons are drawn by hand rather than
+derived (A2e); light and dark become a choice, by a sun and a moon (A9).*
+*1.6 → 1.7: **the last gate goes** — any square may be written in, in any order
+(R0b); Peek ahead is retired with it.*
+*1.7 → 1.8: the game is styled **CrossLink** (A10); both cursors are redrawn at
+full detail and shown at their true size, one art pixel to one screen pixel.*
+*1.8 → 1.9: board №7 is rewritten against E6, and **E9** joins the acceptance
+test — no connection may name a word that is on its own board.*
+*1.9 → 2.0: the arrow is traced from a reference instead of remembered.*
+*2.0 → 2.1: error check is **on** by default (H6); the sound a word makes when
+the check is off becomes a question rather than a small win (A8b).*
+*2.1 → 2.2: three rules out of one playtest — **E10** a clue may not fit a
+neighbour better than its own answer, **E11** hedge a clue that reads as a
+universal law, **E12** no plurals. Board №7 rewritten against all three.*
+*2.2 → 2.3: the hand is traced from a reference like the arrow; **E13** — a clue
+may not require an argument to see.*
+*2.3 → 2.4: the words on the closing page open the lexicon like every other word
+in the game (N3b).*
 
 ---
 
 ## 0. What the game is
 
-Words in the cells. **Connections** in the gutters. A connection surfaces only
-when one of its two words is known. You start at the centre and walk outward
-along sentences.
+Words in the cells. **Connections** in the gutters. **Every connection is shown
+from the first moment**; you start at the centre and walk outward along
+sentences, writing where you can reach.
+
+- **R0 — The map is open; only the writing is gated.** *Changed at 1.5.* A
+  connection used to surface only when one of its two words was known, which made
+  the entire board hostage to a single square: fail to see the centre and there
+  was nothing else on the page to think about, and no second way in. Now the
+  whole network is legible at once — every sentence, and every word's length in
+  the clue panel and the written form — while **where you may write** still grows
+  outward from the middle. Deduction is unlimited from the first second; entry is
+  earned. That is the trade the format was actually asking for.
+  *What it costs:* the small pleasure of a connection appearing as you solve, and
+  the first rung of the hint ladder — *Surface a link* has nothing left to do and
+  no longer appears. Worth it.
+
+- **R0b — Any square may be written in, in any order.** *Changed at 1.7, and it
+  is the other half of R0.* Opening the map without opening the writing left the
+  lock half on: you could deduce the far corner and still not be allowed to set
+  it down. Now nothing is locked. The squares a placed word already touches are
+  still **marked** — a dashed blue frontier — because that is usually where the
+  next word comes easiest, but a mark is not a gate.
+  *What went with it:* **Peek ahead**, which lit the ring beyond the reachable
+  squares. With every connection shown and every square open it had nothing left
+  to reveal, and a switch that does nothing is worse than no switch. One switch
+  remains, Error check.
+  *What it costs:* the board no longer visibly grows outward from the middle —
+  every square is a box from the first second. That was a real pleasure and it is
+  gone. What replaces it is that no one is ever stuck, which is worth more.
+  *What it does not fix:* you may deduce a far square before you can reach it, and
+  you will still have to walk to it. If that turns out to be the real complaint,
+  the answer is to let any square be written in and keep the lit ones as a
+  suggestion — one line in `pick`, and a different game.
 
 **The name matters.** The game is *Crosslink — A Game of Connections*, and what
 sits in a gutter is a **connection**, never a "verb". A verb is what a connection
@@ -188,6 +238,33 @@ one word. That is the standard.
   square; on a hard board the near-sufficient clue may be the wordplay itself.
   The test does not mean *on the nose*: "is the dust-blown capital of" narrows to
   a dry country without naming the desert.
+- **E10 — A clue may not fit a neighbour better than its own answer.** This is
+  the one that costs boards. *"BARK is the skin of a TRUNK"* is true, and hopeless
+  with TREE sitting one square away — worse, **the lexicon's own entry for BARK
+  says "the skin of a tree", so the game was arguing with itself.** *"a BRANCH
+  reaches for the SKY"* fitted TREE and TRUNK as well as BRANCH, and both were on
+  the board. The test is not *is this true of the answer* but **is there anything
+  else on this board it is truer of**. E9 forbids naming a neighbour; E10 forbids
+  describing one.
+- **E11 — Hedge a clue that reads as a universal law.** *"a TREE bears an —"*
+  states a fact about trees, so the mind supplies the parts of a tree: trunk,
+  root, branch. *"a TREE may be the kind that bears an —"* is about one
+  particular tree, and the answer can be a fruit. Absolute phrasing invites the
+  **category**; hedged phrasing invites the **instance**. Where the answer is one
+  case of a general thing, hedge: *may*, *might*, *most of*, *for one week*.
+- **E13 — A clue may not require an argument to see.** *"a BEE is most of the
+  point of a BLOSSOM"* is defensible — the flower exists to be pollinated — and
+  it is not a clue, it is a thesis. A solver should be able to picture the thing
+  or know the fact; if getting there needs a chain of reasoning about why the
+  world is arranged as it is, rewrite it. It is now *"BLOSSOM smells sweet to
+  bring in a BEE"*, which anyone who has walked past a fruit tree already knows.
+- **E12 — No plurals, in the clue or the answer.** A square holds one word, so a
+  clue is written for one thing. *"a thousand of these"* is out; *"is carried a
+  thousand times into a"* says the same and stays singular.
+- **E9 — No connection may name a word that is on its own board.** A clue that
+  contains its own neighbourhood is not a clue. `tools/check-boards.py` enforces
+  it, and it caught board 02 red-handed on the first run: *CRYSTAL of salt is
+  always a CUBE*, on a board whose middle square is SALT.
 - **E7 — Write the connections to different shapes.** A board that reads *rides a
   / carries a / is hauled by a / drops an* is a board nobody can quote a line
   from afterwards. Vary the grammar deliberately: a bare verb, a verb with a
@@ -226,7 +303,8 @@ definition.
 Keep it, but pay for it. A definition is the one hint that answers a square
 *without using the lattice* — a door out of the game's own logic.
 
-- **H1 — Third rung of the hint ladder:** Surface a link (free) → Reveal a letter
+- **H1 — Second rung of the hint ladder** (the first, *Surface a link*, was
+  retired at 1.5 with the reveal): Reveal a letter
   (*partial*) → **Read the definition** (*partial*, once per square) → Reveal the
   word (*given*).
 - **H2 — One square at a time**, never printed for a square you are not standing
@@ -244,8 +322,12 @@ below "Reveal the word" or cut it.
 
 ### Error check *(built)*
 
-- **H6 — Nothing on the board is ever red unless the solver asked for red.**
-  Error check is a switch beside *Peek ahead*, off by default.
+- **H6 — Error check is on by default.** *Reversed at 2.1.* It used to be off,
+  on the principle that nothing should go red unless the solver asked for red.
+  That principle protects the wrong person: the default should be the one a
+  first-time solver wants, and a first-time solver wants to know. Turning it off
+  is now the deliberate act — and it is a real one, worth having, because a board
+  that never contradicts you is a different and harder game.
 - **H7 — On, it is immediate and local.** A wrong word goes red and struck
   through the moment it is entered, in its own square. It says *this word*, not
   *something around here*.
@@ -292,19 +374,78 @@ newspaper-puzzle look was borrowed, not ours.
      plain `button` selector here by specificity, and that control silently drops
      back to the system arrow — which is what happened to Restart, Enter and the
      hint button, and is invisible in a screenshot.
-  1. **A coarse grid, blown up whole.** The arrow is eleven pixels across, the
+  1. **A coarse grid, blown up whole.** The arrow is twelve pixels across, the
      hand eleven, each enlarged by two for an ordinary screen and four for a
      retina one. Whole-number scaling only: the pixels stay square and visible,
      which is the entire point. A one-pixel outline on a twelve-pixel arrow just
      looks like the system cursor.
      *The arrow was drawn on a smaller grid than the hand at first, and because
      it is the thinner shape the outline ate its fill: it read as half the size
-     of the hand and mostly black. The two now finish at 22×32 and 22×30 css
+     of the hand and mostly black. The two now finish at 24×36 and 22×30 css
      pixels, which is the test — not the grid they were drawn on, but the weight
      they carry on screen next to each other.*
   2. **Bone, not white.** #F6F0DC. White reads as a modern cursor; bone reads as
      a cursor that was drawn by somebody.
-  3. **They cover everything.** The rule is on `*`, not on a list of containers.
+  3. **Small pixel art is drawn, not derived.** Three attempts at deriving the
+     arrow from a polygon and an erosion outline all came out crooked: at twelve
+     pixels the erosion ate the heel into fragments and stepped the tail at
+     uneven intervals, so it read as a flag on a bent pole. The arrow is now
+     eighteen rows of hand-placed pixels in `ARROW_ART` — `X` outline, `.` bone,
+     space nothing — and it is a classic arrow because somebody put each pixel
+     where it goes.
+     *The tail took four goes.* The first two were twisted because the two ink
+     walls stepped right at different rates and the end was never closed. The
+     third was closed and still wrong, for a subtler reason: **the tail was
+     running at 45°, parallel to the head's own hypotenuse**, so it read as a
+     lightning bolt rather than a pointer. A real arrow's tail is close to
+     upright — it moves right one pixel every two rows — and it hugs the head
+     instead of shooting away from it.
+     *The fourth go fixed the end.* A tail closed with a lid the full width of
+     the tail has a flat bottom, and a flat bottom stops the lean dead. The cap
+     is now two pixels wide, sitting under the bone only, so the two walls finish
+     diagonally and the tail ends the way it was travelling.
+     *Then the enlargement itself turned out to be the mistake.* Shrinking the
+     **drawings** to keep the cursor small cost exactly the detail that makes a
+     cursor look like one: at nine pixels across there is no room for a heel,
+     three folded fingers, or a tail that leans. And blowing a small drawing up
+     two-fold does not put the detail back — it makes clip art.
+     *And then the tail went altogether.* It took four attempts and three
+     separate rules — lean evenly, close the end on the diagonal, keep two
+     pixels of bone so it stays connected — and it was still the first thing
+     anyone noticed as wrong. **So it is not drawn from memory any more. It is
+     traced.**
+     The Windows 95 arrow at normal size sits on Wikimedia Commons as
+     `Windows_95_ARROW_M_32x32-4.png`, which Commons holds to be public domain —
+     *"simple geometry ... ineligible for copyright"*. `tools/make-cursors.py`
+     records how it was read: loaded into a canvas, sampled at the centre of each
+     of the 32×32 logical cells, printed as X and dot. The result is
+     `ARROW_ART`, fifteen by twenty-five, pixel for pixel.
+     **Five attempts from memory produced five wrong arrows, and every one was
+     wrong the same way: too short.** The real head is fourteen rows of fill, not
+     ten. The tail is three pixels wide, not two. The heel takes five rows to
+     come back to the left edge. Proportion is the whole of it, and proportion is
+     exactly what memory does not keep — which is a general lesson about drawing
+     anything from a description, including a description you wrote yourself.
+     **The hand was traced next, and needed to be.** `Cursor_Hand.png`, 19×24,
+     public domain on the same grounds. The remembered version had *two* folded
+     fingers where the real one has three, and stood two rows shorter than the
+     arrow — which is exactly why it read as the smaller of a mismatched pair.
+     A cursor set is a set: they have to have been drawn to the same height.
+     **One art pixel is one screen pixel.** The arrow is twelve by twelve, the
+     hand fourteen by nineteen —
+     which is what a cursor was in 1994 and roughly what the system cursor still
+     is. On a retina screen the 2× asset gives each art pixel a crisp 2×2 block,
+     so it is sharp without being large. If it is ever wanted bigger the only
+     clean move is exactly double: anything between resamples, and a resampled
+     pixel cursor is worse than no pixel cursor at all. The same lesson applies to the sun and moon in §A9: the first
+     pair were drawn from circles and rays and came out a rifle target and a
+     letter C.
+     **The bone must still be one connected region**, and the generator checks it:
+     `bone_is_whole` flood-fills the fill colour and fails the build if it is in
+     two pieces. One black pixel across the middle of the arrow is the first thing
+     the eye finds, and no screenshot will ever show it to you, because a
+     screenshot does not capture the cursor. It has to be a test, not a look.
+  4. **They cover everything.** The rule is on `*`, not on a list of containers.
      The first version missed the SVG in the middle of the front page, and the
      cursor changed back to the system arrow the moment you crossed the emblem —
      which is worse than never having drawn one.
@@ -331,6 +472,12 @@ newspaper-puzzle look was borrowed, not ours.
   that replaced it covered the square next door. Solved connections now fade to
   55% and stay where they are — the eye still goes to the open ones first, which
   was the only thing the folding was ever for.
+- **A3b — The status bar is one line, and the line has an end.** It truncates
+  with an ellipsis, so anything written for it must fit: the idle text is now
+  *"Words in the cells. Connections in the gutters. Any square, any order."* The
+  previous one ran off the edge and said nothing after *"Everything is shown from
+  the start, and any square may be"* — a rule the reader could not finish reading
+  is not a rule they have been told.
 - **A4 — The status bar reads out link targets.** Hovering a square writes
   `http://simonallmer.com/crosslink/02-salt/salt.html` into the footer —
   `?????.html` for a square you have not solved. The real domain, so the joke is
@@ -344,7 +491,7 @@ newspaper-puzzle look was borrowed, not ours.
 - **A6 — Dark mode stays.** Same structure, terminal palette. 1994 had no dark
   mode; 2026 phones do, and the mapping holds.
 
-- **A7 — Controls are named short.** *Peek ahead*, *Error check*, *Restart*.
+- **A7 — Controls are named short.** *Error check*, *Restart*.
 
 **Open:** themes (§7) recolour the links and the wire heads. A themed board
 should change its accent, never its furniture.
@@ -365,6 +512,11 @@ and two more windows may be opened either side of it. Each has an **X**.
   links; unknown ones are their own count in underscores. Opened by clicking the
   sentence block in the clue panel (there is a *Read every sentence →* line to
   say so), closed by its X.
+- **N3b — Every word set in type opens its entry.** On the board, in the written
+  form, in the word list — and now on the closing page, which is the one place a
+  solver reads all their sentences at once and the likeliest place to wonder what
+  a word actually means. They were already coloured and underlined like links,
+  which made not being clickable a small lie.
 - **N3 — Right: Lexicon.** Opened by clicking any word you have placed, on the
   board or in the written form. The entry stays until you click another one, and
   a **Collected this session** list holds every word you have placed, each one
@@ -536,7 +688,29 @@ doing a second job.
   that needs the trade to be understood fails E6 for everyone outside it. Cut,
   along with the knife.
 
-**№7 — *From the Ground Up*, 5×5, ★.** Sky along the top, the tree through the
+**№7 — *From the Ground Up*, 5×5, ★.** *Rewritten twice.* First at 1.9, having
+failed E6 in the field — a solver could not place a single word. Then at 2.2,
+from a longer playtest, and that round produced E10, E11 and E12 above. The
+particular kills: blossom breaking out of a BRANCH (a stem or a stalk fits as
+well), a BEE *dusted yellow* by blossom (which reads as an explanation of why
+bees are yellow, and that is genetics), a SQUIRREL and a TWIG (no association at
+all), and a SPADE that *turns up* a WORM (which sounds like a volume knob).
+**A clue that survives the constructor is not the same as a clue that survives a
+solver.**
+
+*Also from that playtest:* ORCHARD dropped from ease 3 to 2. It is an ordinary
+English word and it is not an ordinary word for everyone — the reader of a board
+is not always a native speaker, and the ease scale is the only place that fact
+can live. Its lexicon entry now carries the German, French and Italian for it. The first draft was written
+to be true and stopped there — *gets inside an*, *works over*, *ends as* — and
+true is not enough, because each of those fits fifty words. Every connection now
+carries the one fact that belongs to its answer and to nothing else: a BEE
+**dances directions inside** a HIVE, a SQUIRREL **runs head first down** a TRUNK,
+MOSS **gathers on a still** STONE, a GARDENER **plants, for someone else,** an
+ORCHARD. **E6 is not a rule about difficulty. It is the rule that decides whether
+the board can be solved at all.**
+
+ Sky along the top, the tree through the
 middle, the ground along the bottom: TWIG · NEST · SKY · HONEY · HIVE / SQUIRREL ·
 BIRD · BRANCH · BLOSSOM · BEE / TRUNK · BARK · TREE · APPLE · BASKET / MOSS ·
 GRASS · ROOT · WORM · ORCHARD / STONE · SOIL · SEED · SPADE · GARDENER.
@@ -559,12 +733,18 @@ seven boards**, none of them twice.
   54px at .14em, 13px at .38em. That is how a title page has been set for two
   hundred years, and it is the cheapest coherence there is.
 - **A7b — The banner is designed, not defaulted.** Behind the type: a night-blue
-  gradient, six broad rays from below, a dither pattern at eight per cent, and
-  Memphis confetti — magenta triangles, gold squares, cyan zigzags — in the
-  corners where the crop cannot lose them. Gold rules flank the two small lines.
-  It is what a designer with two days, a 256-colour palette and a deadline in
-  1994 would have made, and it does the job a masthead is for: it says this was
-  worth making.
+  gradient, six broad rays from below, and a dither pattern at eight per cent.
+  Gold rules flank the two small lines. It is what a designer with two days, a
+  256-colour palette and a deadline in 1994 would have made, and it does the job
+  a masthead is for: it says this was worth making.
+  *The Memphis confetti — magenta triangles, gold squares, cyan zigzags in the
+  corners — was cut at 1.5.* Two ideas were competing behind one title: the light
+  and the litter. The light won. A background that is doing one thing carries the
+  type; a background doing two argues with it.
+  *The gold rules either side of the kicker went at 1.6*, and only those: the
+  same flourish on both small lines made the masthead look like it was being
+  presented twice. It belongs on the subtitle, which is the line that closes the
+  block.
   *Rules drawn inside the artwork were struck* — the banner crops as it scales,
   so anything meant to sit near the type has to be drawn in CSS, next to the type.
 - **A8 — The game makes a noise, and it is synthesised.** `sound.js` builds every
@@ -586,15 +766,47 @@ seven boards**, none of them twice.
   - **A8a — One listener, not fifty.** A single capturing click handler on the
     document gives every button, link, tile and square its noise, so no handler
     anywhere else has to remember to make one.
-  - **A8b — The verdict noises follow the switch.** With error check off nothing
-    on the board contradicts you, and nothing in the speakers may either: the
-    entry sound is the same whether the word is right or wrong. A game that says
-    nothing on screen and everything in sound has not kept its promise.
+  - **A8b — The verdict noises follow the switch, and silence is not enough.**
+    With error check off nothing on the board contradicts you, so nothing in the
+    speakers may either: the entry sound is identical whether the word is right
+    or wrong. But identical is only half of it — **the sound must also not
+    congratulate.** It was a rising fifth, and a rising fifth is what a game plays
+    when you have done something right; every word set down felt like a small win
+    it had no business promising. It is now two notes a whole tone apart, the
+    second quieter: the shape of *is that right?* rather than *well done*.
+  - **A8e — The fanfare belongs to a board you closed, not one you gave up.**
+    Pressing S used to play the closing four-note run as well as the falling
+    give-up slide, which is the same lie in the other direction.
   - **A8c — There is an off switch, in the toolbar, and it is honest.** Default
     on, because the noise is half the period; one click to silence, and the
     control does not itself make a sound when it is turning sound off.
   - **A8d — The audio context is built on the first click**, because a browser
     will not let a page make a noise before it has been touched.
+
+- **A9 — Light or dark is a choice, by a sun and a moon.** The system's
+  preference is the default and always has been; what is new is that the toolbar
+  carries a thirteen-pixel sun (in light) or crescent moon (in dark), and one
+  click overrides the system in either direction. The tokens are declared twice —
+  once under `prefers-color-scheme: dark` guarded by `:not([data-theme="light"])`,
+  once under `[data-theme="dark"]` — so a manual choice beats the machine's
+  either way, which is the only arrangement that lets someone say *no, light,
+  now* at ten at night.
+  *Kept for the session, in `sessionStorage`, and no longer.* A display
+  preference is not progress (H4), and a tab is about the right length of memory
+  for it: long enough to survive a reload, short enough not to be a promise.
+
+- **A10 — The game is styled *CrossLink*.** The intercap is the house style of
+  exactly this period — HotWired, WebCrawler, InfoSeek, AltaVista, GeoCities,
+  QuickTime, HyperCard, PageMaker — inherited from identifier conventions and
+  worn openly in logotypes for about five years. *CrossLinks* would be wrong:
+  plurals then belonged to magazines and sections, and the game is one lattice.
+  **The URL stays lowercase** — `simonallmer.com/crosslink/` — which was equally
+  the convention. The masthead is set in capitals, so the intercap is invisible
+  there and shows where it should: the title bar, the eyebrow, the prose.
+- **A10b — A bullet before a link is furniture, not part of it.** The dot in
+  *● Back to Simon Allmer* sits outside the anchor: grey, unclickable, no
+  underline. Anything blue on this page is a thing you can go to, and a
+  decoration that borrows the link colour spends that promise for nothing.
 
 ---
 

@@ -1,4 +1,4 @@
-// Crosslink — state, typing, the hint ladder, and the quiet error check.
+// CrossLink — state, typing, the hint ladder, and the quiet error check.
 (function () {
   var CL = window.CROSSLINK, P = null;
   var st, ghost = document.getElementById("ghost-input");
@@ -6,7 +6,7 @@
   function load(i) {
     P = CL.puzzles[i];
     document.getElementById("eyebrow").textContent =
-      "Crosslink \u00b7 No. " + (+P.id.split("-")[0]) + " \u00b7 " + CL.starText(CL.stars(P));
+      "CrossLink \u00b7 No. " + (+P.id.split("-")[0]) + " \u00b7 " + CL.starText(CL.stars(P));
     document.getElementById("title").textContent = P.title;
     document.getElementById("standfirst").textContent = P.standfirst;
     document.body.classList.toggle("wide", P.size >= 5);
@@ -19,7 +19,6 @@
       edges: CL.edgeList(P),
       filled: {}, status: {}, revealed: {}, surfaced: {}, mark: {},
       selected: null, draft: [],
-      peek: document.getElementById("peek").checked,
       check: document.getElementById("check").checked
     };
     document.getElementById("finish").hidden = true;
@@ -64,8 +63,6 @@
       lexOpen(st.filled[CL.K(r, c)]);
       draw(); ghost.focus(); return;
     }
-    var open = st.reachable[CL.K(r, c)] || (st.peek && st.counted[CL.K(r, c)]);
-    if (!open) { say("Nothing on the board reaches that square yet."); return; }
     st.selected = [r, c];
     st.draft = freshDraft(r, c);
     say("");
@@ -133,7 +130,7 @@
     if (!st.selected) {
       empty.hidden = false; body.hidden = true;
       empty.textContent = Object.keys(st.filled).length
-        ? "Pick a lit square." : "Tap the centre square to begin.";
+        ? "Pick a square." : "Pick any square and begin. The middle is the usual way in.";
       return;
     }
     empty.hidden = true; body.hidden = false;
@@ -183,15 +180,16 @@
     btn.disabled = !h;
     btn.onclick = function () { if (h) { h.run(); say(h.note, true); draw(); ghost.focus(); } };
     document.getElementById("hint-note").textContent =
-      "A surfaced link costs you nothing. Letters mark the square.";
+      "A letter marks the square as partly solved. The word marks it as given.";
   }
 
   function term(xy, r, c) {
     var k = CL.K(xy[0], xy[1]);
     if (st.filled[k] !== undefined) return "<em>" + st.filled[k] + "</em>";
     if (xy[0] === r && xy[1] === c) return '<span class="gap">' + dashes(CL.answer(st, r, c).length) + "</span>";
-    var len = CL.answer(st, xy[0], xy[1]).length;
-    return '<span class="gap">' + (st.counted[k] ? dashes(len) : "something") + "</span>";
+    // Every sentence is public now, so every word's length is too: the clue panel
+    // and the written form must not disagree about what is knowable.
+    return '<span class="gap">' + dashes(CL.answer(st, xy[0], xy[1]).length) + "</span>";
   }
 
   function dashes(n) { var s = ""; for (var i = 0; i < n; i++) s += "_"; return s; }
@@ -257,7 +255,7 @@
     ol.innerHTML = "";
     note.textContent = "";
     if (!lexWord) note.textContent = "Click a word you have placed, or any word in the list.";
-    else if (!hand && !reg && !gen) note.textContent = "Not in the Crosslink word list.";
+    else if (!hand && !reg && !gen) note.textContent = "Not in the CrossLink word list.";
     else if (!hand && !reg && gen) {
       var li0 = document.createElement("li");
       li0.textContent = gen.d;
@@ -321,11 +319,11 @@
 
   var SITE = "http://simonallmer.com/crosslink/";
   var VIEWS = {
-    menu:    { el: "view-menu",    title: "Crosslink",             loc: "" },
-    play:    { el: "view-play",    title: "Crosslink",             loc: "" },
-    puzzles: { el: "view-puzzles", title: "Crosslink \u2014 Puzzles",   loc: "puzzles.html" },
-    words:   { el: "view-words",   title: "Crosslink \u2014 Word List", loc: "words.html" },
-    rules:   { el: "view-rules",   title: "Crosslink \u2014 Rulebook",  loc: "rulebook.html" }
+    menu:    { el: "view-menu",    title: "CrossLink",             loc: "" },
+    play:    { el: "view-play",    title: "CrossLink",             loc: "" },
+    puzzles: { el: "view-puzzles", title: "CrossLink \u2014 Puzzles",   loc: "puzzles.html" },
+    words:   { el: "view-words",   title: "CrossLink \u2014 Word List", loc: "words.html" },
+    rules:   { el: "view-rules",   title: "CrossLink \u2014 Rulebook",  loc: "rulebook.html" }
   };
   var here = null, trail = [];
 
@@ -353,12 +351,12 @@
 
   function chrome() {
     var v = VIEWS[here.name], title = v.title, loc = SITE + v.loc;
-    if (here.name === "play") { title = "Crosslink \u2014 " + P.title; loc = SITE + P.id + "/"; }
+    if (here.name === "play") { title = "CrossLink \u2014 " + P.title; loc = SITE + P.id + "/"; }
     document.getElementById("win-name").textContent = title;
     document.getElementById("loc").textContent = loc;
   }
 
-  // Every word Crosslink knows: the registry, plus anything set in a board.
+  // Every word CrossLink knows: the registry, plus anything set in a board.
   function vocabulary() {
     var map = {}, k;
     for (k in CL.registry) if (CL.registry.hasOwnProperty(k)) map[k] = { board: -1 };
@@ -455,6 +453,37 @@
     go(p[0], p[1], true);
   };
   document.getElementById("nav-home").onclick = function () { go("menu"); };
+
+  // Light or dark, by the sun and moon in the toolbar. The system's preference
+  // is the default; a choice made here outranks it, and is kept for the session
+  // only — long enough to matter, not long enough to be a promise.
+  var themeBtn = document.getElementById("theme-toggle");
+  function darkNow() {
+    var set = document.documentElement.getAttribute("data-theme");
+    if (set) return set === "dark";
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function paintTheme() {
+    var dark = darkNow();
+    themeBtn.className = "tool ico" + (dark ? " is-dark" : "");
+    themeBtn.setAttribute("aria-pressed", dark ? "true" : "false");
+    themeBtn.title = dark ? "Dark. Click for light." : "Light. Click for dark.";
+  }
+  try {
+    var kept = window.sessionStorage && sessionStorage.getItem("crosslink-theme");
+    if (kept) document.documentElement.setAttribute("data-theme", kept);
+  } catch (e) {}
+  themeBtn.onclick = function () {
+    var next = darkNow() ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { if (window.sessionStorage) sessionStorage.setItem("crosslink-theme", next); } catch (e) {}
+    paintTheme();
+  };
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", paintTheme);
+  }
+  paintTheme();
 
   var soundBtn = document.getElementById("sound-toggle");
   soundBtn.onclick = function () {
@@ -570,7 +599,7 @@
     say("The whole board, given.", true);
     if (CL.sfx) CL.sfx.giveup();
     draw();
-    finish();
+    finish(true);
   }
 
   function checkWin() {
@@ -580,7 +609,7 @@
     finish();
   }
 
-  function finish() {
+  function finish(gaveUp) {
     var clean = 0, partial = 0, given = 0;
     Object.keys(st.status).forEach(function (k) {
       if (st.status[k] === "clean") clean++;
@@ -599,9 +628,15 @@
       li.innerHTML = '<span class="n"></span> ' + e.verb + ' <span class="n"></span>.';
       li.children[0].textContent = st.filled[CL.K(e.subject[0], e.subject[1])];
       li.children[1].textContent = st.filled[CL.K(e.object[0], e.object[1])];
+      // Every word on the closing page opens its entry, the same as everywhere
+      // else a word is set in type. A word that looks like a link is one.
+      Array.prototype.forEach.call(li.children, function (n) {
+        n.title = "Look up " + n.textContent;
+        n.onclick = function () { lexOpen(n.textContent); refresh(); };
+      });
       ul.appendChild(li);
     });
-    if (CL.sfx) CL.sfx.close();
+    if (CL.sfx && !gaveUp) CL.sfx.close();
     document.getElementById("panel-empty").textContent = "";
     document.getElementById("panel").hidden = true;
     document.getElementById("finish").hidden = false;
@@ -661,9 +696,6 @@
     }
   });
 
-  document.getElementById("peek").addEventListener("change", function (ev) {
-    st.peek = ev.target.checked; draw();
-  });
   document.getElementById("check").addEventListener("change", function (ev) {
     st.check = ev.target.checked; draw();
   });

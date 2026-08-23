@@ -1,26 +1,26 @@
 /* The cursors, drawn as pixel art by tools/make-cursors.py. This file OWNS the
    cursor: style.css must not set one anywhere, because a rule like
    `button.ghost { cursor: pointer }` outranks the plain `button` here and drops
-   that control back to the system arrow. Both sizes are the
-   same drawing rendered twice, so a retina screen gets crisp edges and not a
-   blurred-up 12-pixel arrow. Every rule keeps a system keyword as the last
-   fallback, so a browser that refuses the image still has a cursor. */
+   that control back to the system arrow. Both sizes are the same drawing
+   enlarged twice, so a retina screen gets crisp edges and not a blurred-up
+   nine-pixel arrow. Every rule keeps a system keyword as the last fallback, so
+   a browser that refuses the image still has a cursor. */
 :root {
-  --arrow: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAgCAYAAAAWl4iLAAAAZklEQVR42tXWMQ4AEAxG4d7/jA5hspKIEQPvb5F0/d5EmZnVMfiRw3jADcYCWrjk1IcM+MBkwBcmAjHwTSAWPgnEwpurvwxo4dVM4OvXDYex51QO44tABp8ugsfhr7b45/+P8F9pA0ej/qAoQvlFAAAAAElFTkSuQmCC) 0 0;
-  --hand:  url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAeCAYAAAAo5+5WAAAAWUlEQVR42mNgwA3+48AUA9oa/O3DHTAeNXjUYLwGU5wM6WMwugVEWDhIDcZjAf0MRlEwdAxG1zioDMaaXAa/waQaMHQMJoTpZzCpkTigBhPbUCEV08/gwQ0A7e6S8sy+a30AAAAASUVORK5CYII=) 8 0;
+  --arrow: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAYAAADuWXTMAAAAb0lEQVR42tWTOw7AIAxDff8z9hBMrKnEgPgk4AQ6FIkJv8fgBAAEB0dOBJLTExYUOCqocETQwV7BBHsEKswKTJgRLOGdYAuvBBRsCWhYE7jgUcAErTuPZ6iqJuiragjwsPHI9fzFqt7d9R/+rrXyAlQF+sbxLc0sAAAAAElFTkSuQmCC) 0 0;
+  --hand:  url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAAZElEQVR42mNgwA3+QzFF4P+3D3fAmFLDRpBBZBuIYhAlhuI0CIuhlBuELQzRbSDaIHTDMJwM4+PCBA1CV0QMxvAetQxiQA5AqhhEKsaVDAbGIEKJcvAZxEBsoiQp41JsEJEYDAD/1pvyr28/nAAAAABJRU5ErkJggg==) 6 0;
 }
 
 /* Everything, including the SVG in the middle of the front page — an element
    the rules missed once, and the cursor changed back to the system one the
-   moment you crossed it. */
+   moment you crossed the emblem. */
 *, *::before, *::after { cursor: var(--arrow), default; }
-* { cursor: image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAgCAYAAAAWl4iLAAAAZklEQVR42tXWMQ4AEAxG4d7/jA5hspKIEQPvb5F0/d5EmZnVMfiRw3jADcYCWrjk1IcM+MBkwBcmAjHwTSAWPgnEwpurvwxo4dVM4OvXDYex51QO44tABp8ugsfhr7b45/+P8F9pA0ej/qAoQvlFAAAAAElFTkSuQmCC) 1x, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAABACAYAAABhspUgAAAAjElEQVR42u3ZMQqAQAxFwdz/jB7CylZrLVzCqgk4C9vPKwT9RkTsl9v+AAMPwO0DgIGT4HYBwMB34G1dTrdjADBwBtwxABh4BtwhABj4SXBFADDwm+AvAoCBix+66QBg4MkhJfvRWr78AP8e3G48BAYeANoP4sDAxYM4MHD4MQkMLAAY+MWXKWDgzDkAhQ/6qhKrIGEAAAAASUVORK5CYII=) 2x) 0 0, default; }
+* { cursor: image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAZCAYAAADuWXTMAAAAb0lEQVR42tWTOw7AIAxDff8z9hBMrKnEgPgk4AQ6FIkJv8fgBAAEB0dOBJLTExYUOCqocETQwV7BBHsEKswKTJgRLOGdYAuvBBRsCWhYE7jgUcAErTuPZ6iqJuiragjwsPHI9fzFqt7d9R/+rrXyAlQF+sbxLc0sAAAAAElFTkSuQmCC) 1x, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAyCAYAAABLXmvvAAAAj0lEQVR42u3YMQ6AQAhEUe5/Rg9hZauJsVw3rMIwEEwo3fdtjCgicj4Dv8JheEAsfOzbPcgADhgZwAUjAjhhzwBu2CMgB2wZkAu2CMgJ/wnIDX8JqAGvBNSCNQE14VlATniwEGiHFPb8GOSCBweaB3DAkwOKwQs3mgWEw/AlLwzuvbrhfvKG31692F+TWvgCJkHrQs2UybcAAAAASUVORK5CYII=) 2x) 0 0, default; }
 
-a, button, .tile, .tile *, .noun.reachable, .noun.reachable *, .win-x, .tool,
+a, button, .tile, .tile *, .noun, .noun *, .win-x, .tool,
 .toggle, .toggle *, select#which, .wordgrid button, .lex-list button, .lex-play,
 .ti-link, .routes, .routes *, .hero.numbered .cell, .hero.numbered .cell *,
-.script li em, .gut.spent, .gut.spent * {
-  cursor: image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAeCAYAAAAo5+5WAAAAWUlEQVR42mNgwA3+48AUA9oa/O3DHTAeNXjUYLwGU5wM6WMwugVEWDhIDcZjAf0MRlEwdAxG1zioDMaaXAa/waQaMHQMJoTpZzCpkTigBhPbUCEV08/gwQ0A7e6S8sy+a30AAAAASUVORK5CYII=) 1x, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAA8CAYAAAAdUliaAAAAgklEQVR42u3aMQrAIBAEQP//xjwilW1Sp1EueqgwC9vqXKWgpcTzBLs8wMAtcL2vT4GBgYGBgYGBJ4OXX5aAgSPg3gATBgQG3gr8YwBg4Ci4uQAw8Gng3obAwAvAocsHMPDu4GwAMPBp4NECA0fB2QcJMHACePaHjuwCA+/27icykheCsEvj0t5PhgAAAABJRU5ErkJggg==) 2x) 8 0, pointer;
+.script li em, .sentences li .n, .gut.spent, .gut.spent * {
+  cursor: image-set(url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAAZElEQVR42mNgwA3+QzFF4P+3D3fAmFLDRpBBZBuIYhAlhuI0CIuhlBuELQzRbSDaIHTDMJwM4+PCBA1CV0QMxvAetQxiQA5AqhhEKsaVDAbGIEKJcvAZxEBsoiQp41JsEJEYDAD/1pvyr28/nAAAAABJRU5ErkJggg==) 1x, url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAsCAYAAAANUxr1AAAAhUlEQVR42u3XQQrAIAwEQP//Rh/RU68WemsoRtvVJLqBvSjIgItgSv1TRMzHDegGnEd+xBJGEEEEESRA0x/MWCAL6BqgBihB1fU/sOkgrYRDQDWYT5BWQrnfm/VA2kGohAB9Ku+WoFcYQa1XR5AVjCAExC1oKIygrUBQGPLjSFBMEDC+QRc1hW/j7Uq7LAAAAABJRU5ErkJggg==) 2x) 6 0, pointer;
 }
 button:disabled, .tool:disabled, .hero.numbered .cell.empty,
 .hero.numbered .cell.empty * { cursor: var(--arrow), default; }

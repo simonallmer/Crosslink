@@ -1,16 +1,92 @@
 #!/usr/bin/env python3
 """Draws the two cursors as pixel art and writes them into cursors.css as data URIs.
 
-The drawing is done on a deliberately coarse grid — nine pixels across for the
-arrow — and then blown up by a whole number, so the pixels stay square and
-visible. That coarseness is the whole point: a 1-pixel outline on a 12-pixel
-arrow just looks like the system cursor wearing a coat.
+Both are drawn by hand, pixel by pixel. Deriving them from polygons and an
+erosion outline was tried four times and failed four times: at this size erosion
+eats the arrow's heel into fragments, steps the tail unevenly, and turns the
+hand's fingers into a mitten. An arrow is a couple of hundred pixels. Place them.
 
-Fill is bone rather than white, and the outline is two device pixels at 1x.
+  X  outline (black)
+  .  bone (#F6F0DC — white reads as a modern cursor, bone reads as drawn)
+     space is nothing
+
+Each drawing is enlarged by a whole number — two for an ordinary screen, four
+for a retina one — so the pixels stay square and visible. Nothing is ever
+resampled.
 """
 import io, os, zlib, struct, base64
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+FILL = (246, 240, 220, 255)
+INK  = (0, 0, 0, 255)
+
+# Traced pixel for pixel from the Windows 95 arrow, normal size — the file on
+# Wikimedia Commons (Windows_95_ARROW_M_32x32-4.png), which Commons holds to be
+# public domain: "simple geometry ... ineligible for copyright". Loaded into a
+# canvas, sampled at the centre of each of the 32x32 logical cells, printed.
+#
+# Five goes at drawing this from memory produced five wrong arrows, and every
+# one of them was wrong in the same way: too short. The real head is fourteen
+# rows of fill, not ten; the tail is three pixels wide, not two; and the heel
+# takes five rows to come back to the left edge. Proportion is the whole thing,
+# and proportion is exactly what memory does not keep.
+ARROW_ART = [
+    "X              ",
+    "XX             ",
+    "X.X            ",
+    "X..X           ",
+    "X...X          ",
+    "X....X         ",
+    "X.....X        ",
+    "X......X       ",
+    "X.......X      ",
+    "X........X     ",
+    "X.........X    ",
+    "X..........X   ",
+    "X...........X  ",
+    "X............X ",
+    "X.......XXXXXXX",
+    "X...X...X      ",
+    "X..X X...X     ",
+    "X.X  X...X     ",
+    "XX    X...X    ",
+    "X     X...X    ",
+    "       X...X   ",
+    "       X...X   ",
+    "        X...X  ",
+    "        X...X  ",
+    "         XXX   ",
+]
+
+# Traced the same way, from Cursor_Hand.png on Wikimedia Commons — 19x24, and
+# public domain on the same grounds. Four fingers, not two: the drawn-from-memory
+# version had three too few and sat two rows shorter than the arrow, which is
+# what made it look like the smaller of the pair.
+HAND_ART = [
+    "      XX          ",
+    "     X..X         ",
+    "     X..X         ",
+    "     X..X         ",
+    "     X..X         ",
+    "     X..XXX       ",
+    "     X..X..XXX    ",
+    "     X..X..X..XX  ",
+    "     X..X..X..X.X ",
+    " XXX X..X..X..X..X",
+    " X..XX........X..X",
+    " X...X...........X",
+    "  X..X...........X",
+    "   X.X...........X",
+    "   X.............X",
+    "    X............X",
+    "    X...........X ",
+    "     X..........X ",
+    "     X..........X ",
+    "      X........X  ",
+    "      X........X  ",
+    "      XXXXXXXXXX  ",
+]
 
 def png(pixels, w, h):
     raw = b""
@@ -24,107 +100,74 @@ def png(pixels, w, h):
             + chunk(b"IDAT", zlib.compress(raw, 9))
             + chunk(b"IEND", b""))
 
-def in_poly(pt, poly):
-    x, y = pt
-    inside = False
-    j = len(poly) - 1
-    for i in range(len(poly)):
-        xi, yi = poly[i]; xj, yj = poly[j]
-        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi:
-            inside = not inside
-        j = i
-    return inside
-
-FILL = (246, 240, 220, 255)   # bone
-INK  = (0, 0, 0, 255)
+def from_art(art):
+    h, w = len(art), max(len(r) for r in art)
+    px = [[(0, 0, 0, 0) for _ in range(w)] for _ in range(h)]
+    for y, row in enumerate(art):
+        for x, ch in enumerate(row):
+            if ch == "X": px[y][x] = INK
+            elif ch == ".": px[y][x] = FILL
+    return px, w, h
 
 def blow(px, w, h, k):
     """Nearest-neighbour upscale by a whole number: square pixels, hard edges."""
     return [[px[y // k][x // k] for x in range(w * k)] for y in range(h * k)]
 
-def render(hit, w, h, thick, cuts=()):
-    """hit(x, y) -> True inside the shape. Outline by erosion, fill white.
-    `cuts` are black lines drawn inside the shape — the knuckles of the hand,
-    which no amount of outlining will give you, because they are not edges."""
-    inside = [[hit(x + 0.5, y + 0.5) for x in range(w)] for y in range(h)]
-    px = [[(0, 0, 0, 0) for _ in range(w)] for _ in range(h)]
-    for y in range(h):
-        for x in range(w):
-            if not inside[y][x]: continue
-            edge = False
-            for dy in range(-thick, thick + 1):
-                for dx in range(-thick, thick + 1):
-                    nx, ny = x + dx, y + dy
-                    if not (0 <= nx < w and 0 <= ny < h) or not inside[ny][nx]:
-                        edge = True
-            px[y][x] = INK if edge else FILL
-    for x0, y0, x1, y1 in cuts:
-        for t in range(0, 400):
-            f = t / 399.0
-            x = int(round(x0 + (x1 - x0) * f)); y = int(round(y0 + (y1 - y0) * f))
-            for k in range(thick):
-                for j in range(thick):
-                    if 0 <= y + j < h and 0 <= x + k < w and inside[y + j][x + k]:
-                        px[y + j][x + k] = INK
-    return px
-
-# --- the arrow: one polygon, on a twelve-pixel grid ---
-# Wide head, thick tail. A narrow arrow at this scale is all outline and no
-# bone, which is why the first one looked half the size of the hand.
-ARROW = [(0, 0), (0, 12.9), (3.1, 9.9), (5.3, 15.6), (7.7, 14.5), (5.6, 9.2), (10.2, 9.2)]
-
-def arrow_hit(s):
-    poly = [(x * s, y * s) for x, y in ARROW]
-    return lambda x, y: in_poly((x, y), poly)
-
-# --- the pointing hand: blocks for the fingers, lines for the knuckles ---
-HAND = [(3,  0, 6, 8),    # index finger, standing up
-        (6,  4, 9, 10),   # second finger, folded
-        (9,  5, 11, 10),  # third finger, folded
-        (2,  7, 11, 14),  # the palm
-        (0,  9, 3, 13)]   # thumb
-HAND_CUTS = [(6, 5, 6, 10), (9, 6, 9, 10), (3, 10, 3, 13)]
-
-def hand_hit(s):
-    boxes = [(a * s, b * s, c * s, d * s) for a, b, c, d in HAND]
-    def hit(x, y):
-        return any(a <= x < c and b <= y < d for a, b, c, d in boxes)
-    return hit
+def bone_is_whole(px):
+    """The bone must be one connected region. Where the shape narrows the two
+    outlines can meet and pinch the white line shut, and one black pixel across
+    the middle of a cursor is the first thing the eye finds — and the last thing
+    a screenshot will ever show you, because a screenshot has no cursor in it.
+    So it is a test, not a look."""
+    h, w = len(px), len(px[0])
+    seeds = [(y, x) for y in range(h) for x in range(w) if px[y][x] == FILL]
+    if not seeds: return False, 0
+    seen, stack = {seeds[0]}, [seeds[0]]
+    while stack:
+        y, x = stack.pop()
+        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            n = (y + dy, x + dx)
+            if 0 <= n[0] < h and 0 <= n[1] < w and px[n[0]][n[1]] == FILL and n not in seen:
+                seen.add(n); stack.append(n)
+    return len(seen) == len(seeds), len(seeds)
 
 def uri(px, w, h):
     return "data:image/png;base64," + base64.b64encode(png(px, w, h)).decode()
 
-def build(hit_for, w, h, cuts=()):
-    """One drawing, blown up by 2 for the ordinary screen and 4 for a retina one."""
-    art = render(hit_for(1), w, h, 1, cuts)
-    return uri(blow(art, w, h, 2), w * 2, h * 2), uri(blow(art, w, h, 4), w * 4, h * 4)
+def build(art, name):
+    px, w, h = from_art(art)
+    whole, count = bone_is_whole(px)
+    print("%-6s %dx%d art = %dx%d css px, %d bone pixels, %s"
+          % (name, w, h, w, h, count,
+             "unbroken" if whole else "BROKEN — a black pixel splits the white"))
+    return uri(px, w, h), uri(blow(px, w, h, 2), w * 2, h * 2), px, w, h
 
-a1, a2 = build(arrow_hit, 11, 16)
-h1, h2 = build(hand_hit, 11, 15, HAND_CUTS)
+a1, a2, apx, aw, ah = build(ARROW_ART, "arrow")
+h1, h2, hpx, hw, hh = build(HAND_ART, "hand")
 
 css = """/* The cursors, drawn as pixel art by tools/make-cursors.py. This file OWNS the
    cursor: style.css must not set one anywhere, because a rule like
    `button.ghost { cursor: pointer }` outranks the plain `button` here and drops
-   that control back to the system arrow. Both sizes are the
-   same drawing rendered twice, so a retina screen gets crisp edges and not a
-   blurred-up 12-pixel arrow. Every rule keeps a system keyword as the last
-   fallback, so a browser that refuses the image still has a cursor. */
+   that control back to the system arrow. Both sizes are the same drawing
+   enlarged twice, so a retina screen gets crisp edges and not a blurred-up
+   nine-pixel arrow. Every rule keeps a system keyword as the last fallback, so
+   a browser that refuses the image still has a cursor. */
 :root {
   --arrow: url(%s) 0 0;
-  --hand:  url(%s) 8 0;
+  --hand:  url(%s) 6 0;
 }
 
 /* Everything, including the SVG in the middle of the front page — an element
    the rules missed once, and the cursor changed back to the system one the
-   moment you crossed it. */
+   moment you crossed the emblem. */
 *, *::before, *::after { cursor: var(--arrow), default; }
 * { cursor: image-set(url(%s) 1x, url(%s) 2x) 0 0, default; }
 
-a, button, .tile, .tile *, .noun.reachable, .noun.reachable *, .win-x, .tool,
+a, button, .tile, .tile *, .noun, .noun *, .win-x, .tool,
 .toggle, .toggle *, select#which, .wordgrid button, .lex-list button, .lex-play,
 .ti-link, .routes, .routes *, .hero.numbered .cell, .hero.numbered .cell *,
-.script li em, .gut.spent, .gut.spent * {
-  cursor: image-set(url(%s) 1x, url(%s) 2x) 8 0, pointer;
+.script li em, .sentences li .n, .gut.spent, .gut.spent * {
+  cursor: image-set(url(%s) 1x, url(%s) 2x) 6 0, pointer;
 }
 button:disabled, .tool:disabled, .hero.numbered .cell.empty,
 .hero.numbered .cell.empty * { cursor: var(--arrow), default; }
@@ -132,12 +175,14 @@ button:disabled, .tool:disabled, .hero.numbered .cell.empty,
 """ % (a1, h1, a1, a2, h1, h2)
 
 io.open(os.path.join(ROOT, "cursors.css"), "w", encoding="utf-8").write(css)
-print("wrote cursors.css — arrow %d bytes, hand %d bytes (1x)" % (len(a1), len(h1)))
+print("wrote cursors.css")
 
-# a sheet to look at them enlarged
 io.open(os.path.join(ROOT, "tools", "cursor-preview.html"), "w", encoding="utf-8").write(
  '<body style="background:#C6C6BE;padding:20px;font:12px sans-serif">'
- '<p>arrow 1x / 2x, hand 1x / 2x — shown at 8&times;, nearest neighbour</p>'
+ '<p>arrow 1x / 2x, hand 1x / 2x &mdash; shown at 8&times;, nearest neighbour</p>'
  + "".join('<img src="%s" style="image-rendering:pixelated;width:%dpx;margin-right:24px;'
            'background:#fff;outline:1px solid #999">' % (u, w)
-           for u, w in ((a1, 96), (a2, 96), (h1, 128), (h2, 128))) + '</body>')
+           for u, w in ((a1, aw * 8), (a2, aw * 8), (h1, hw * 8), (h2, hw * 8))) +
+ '<p style="margin-top:24px">and at their real size, 1&times;:</p>'
+ + "".join('<img src="%s" style="margin-right:24px;background:#fff;outline:1px solid #999">' % u
+           for u in (a1, h1)) + '</body>')

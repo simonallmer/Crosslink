@@ -1,4 +1,4 @@
-// Crosslink engine — the lattice, the edges, and the rendering of both.
+// CrossLink engine — the lattice, the edges, and the rendering of both.
 // A board of size N is a (2N-1) x (2N-1) lattice: nouns on even coordinates,
 // verb gutters on the mixed ones, structural corners on the odd ones.
 (function () {
@@ -58,14 +58,14 @@
     var p = st.puzzle, ctr = p.centre;
     var solved = function (r, c) { return st.filled[K(r, c)] !== undefined; };
 
+    // Every connection is shown from the first moment. It used to surface only
+    // when one of its two words was known, which made the whole board hostage to
+    // the centre: miss the first word and there was nothing else to think about.
+    // Now the map is open and only the walking is gated.
     st.verbVisible = {};
-    st.edges.forEach(function (e) {
-      var touchesCentre = e.cells.some(function (x) { return x[0] === ctr[0] && x[1] === ctr[1]; });
-      var endpointSolved = e.cells.some(function (x) { return solved(x[0], x[1]); });
-      if (touchesCentre || endpointSolved || st.surfaced[e.id]) st.verbVisible[e.id] = true;
-    });
+    st.edges.forEach(function (e) { st.verbVisible[e.id] = true; });
 
-    // Reachable: the centre, or any cell with a visible verb whose other end is solved.
+    // Reachable: the centre, or any cell with a connection whose other end is solved.
     st.reachable = {};
     st.reachable[K(ctr[0], ctr[1])] = true;
     for (var r = 0; r < p.size; r++) {
@@ -78,17 +78,6 @@
       }
     }
 
-    st.counted = {};
-    Object.keys(st.reachable).forEach(function (k) { st.counted[k] = true; });
-    if (st.peek) {
-      Object.keys(st.reachable).forEach(function (k) {
-        var xy = k.split(",");
-        CL.edgesAt(st, +xy[0], +xy[1]).forEach(function (e) {
-          var o = CL.other(e, +xy[0], +xy[1]);
-          st.counted[K(o[0], o[1])] = true;
-        });
-      });
-    }
 
     // Nothing on the board goes red unless error check is on; then a wrong word
     // says so the moment it is entered, and says it about itself.
@@ -215,11 +204,11 @@
       return;
     }
 
-    if (!st.counted[k]) { d.classList.add("dark"); wire(st, d, r, c, false); return; }
-
-    if (st.reachable[k] || st.peek) d.classList.add("reachable");
+    // Every square can be written in. `reachable` is no longer a gate, only a
+    // mark: it says which squares a word you have placed already touches, which
+    // is where the next one most easily comes from.
+    if (st.reachable[k]) d.classList.add("reachable");
     if (st.selected && st.selected[0] === r && st.selected[1] === c) d.classList.add("selected");
-    else if (st.puzzle.centre[0] === r && st.puzzle.centre[1] === c) d.classList.add("centre-open");
 
     // The draft holds one slot per letter, revealed letters already seated in
     // theirs; the caret marks the next slot the solver still owes.

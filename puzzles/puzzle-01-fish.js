@@ -2,7 +2,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "01-fish",
   title: "The Centre Is a Fish",
-  standfirst: "Four connections, one four-letter unknown. Nothing else on the board exists yet.",
+  standfirst: "Nine connections, all of them shown, and a four-letter unknown in the middle to start from.",
   size: 3,
   centre: [1, 1],
 

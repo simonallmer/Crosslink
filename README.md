@@ -1,4 +1,4 @@
-# Crosslink
+# CrossLink
 
 A game of connections. Nouns sit in the cells; the relations between them sit in
 the gutters. The board is a (2N−1)² lattice: for N = 3 that is 5 × 5 — nine nouns,

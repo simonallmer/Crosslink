@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crosslink</title>
+<title>CrossLink</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="cursors.css">
 </head>
@@ -12,7 +12,7 @@
 
 <main>
   <div class="win-bar main-bar">
-    <span class="win-title" id="win-name">Crosslink</span>
+    <span class="win-title" id="win-name">CrossLink</span>
     <button class="win-x" id="x-main" title="Close" aria-label="Close">&#10006;</button>
   </div>
 
@@ -23,6 +23,29 @@
     <span class="loc" id="loc"></span>
     <button class="tool arrow" id="loc-arrow" title="Other sites" aria-haspopup="true" aria-expanded="false">&#9660;</button>
     <button class="tool" id="sound-toggle" title="Sound" aria-pressed="true">&#9834; On</button>
+    <button class="tool ico" id="theme-toggle" title="Light or dark" aria-pressed="false">
+      <svg class="ico-sun" viewBox="0 0 13 13" aria-hidden="true">
+        <rect x="6" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/>
+        <rect x="6" y="1" width="1" height="1"/><rect x="11" y="1" width="1" height="1"/>
+        <rect x="2" y="2" width="1" height="1"/><rect x="10" y="2" width="1" height="1"/>
+        <rect x="6" y="3" width="1" height="1"/><rect x="4" y="4" width="5" height="1"/>
+        <rect x="4" y="5" width="5" height="1"/><rect x="0" y="6" width="2" height="1"/>
+        <rect x="3" y="6" width="7" height="1"/><rect x="11" y="6" width="2" height="1"/>
+        <rect x="4" y="7" width="5" height="1"/><rect x="4" y="8" width="5" height="1"/>
+        <rect x="6" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/>
+        <rect x="10" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/>
+        <rect x="6" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/>
+        <rect x="6" y="12" width="1" height="1"/>
+      </svg>
+      <svg class="ico-moon" viewBox="0 0 13 13" aria-hidden="true">
+        <rect x="4" y="1" width="3" height="1"/><rect x="2" y="2" width="4" height="1"/>
+        <rect x="2" y="3" width="3" height="1"/><rect x="1" y="4" width="4" height="1"/>
+        <rect x="1" y="5" width="3" height="1"/><rect x="1" y="6" width="3" height="1"/>
+        <rect x="1" y="7" width="3" height="1"/><rect x="1" y="8" width="4" height="1"/>
+        <rect x="2" y="9" width="3" height="1"/><rect x="2" y="10" width="4" height="1"/>
+        <rect x="4" y="11" width="3" height="1"/>
+      </svg>
+    </button>
     <ul class="sitelist" id="sitelist" hidden></ul>
   </div>
 
@@ -54,29 +77,12 @@
         <rect width="600" height="210" fill="url(#glow)"/>
         <rect width="600" height="210" fill="url(#dither)"/>
 
-        <!-- confetti: the two days the designer spent -->
-        <g class="conf">
-          <path class="c-mag" d="M44 30 L60 58 L28 58 Z"/>
-          <circle class="c-gold" cx="96" cy="24" r="7"/>
-          <path class="c-cyan" d="M22 96 h10 v10 h-10 Z"/>
-          <path class="c-mag" d="M18 150 l9 -9 9 9 -9 9 Z"/>
-          <path class="c-gold" d="M62 170 h34 v6 h-34 Z"/>
-          <circle class="c-cyan" cx="118" cy="186" r="5"/>
-          <path class="c-cyan" d="M556 34 L572 62 L540 62 Z"/>
-          <circle class="c-mag" cx="512" cy="26" r="7"/>
-          <path class="c-gold" d="M566 104 h12 v12 h-12 Z"/>
-          <path class="c-cyan" d="M574 152 l9 -9 9 9 -9 9 Z"/>
-          <path class="c-mag" d="M506 172 h34 v6 h-34 Z"/>
-          <circle class="c-gold" cx="470" cy="188" r="5"/>
-          <path class="c-gold" d="M150 60 l8 8 8 -8 8 8 8 -8" fill="none" stroke-width="4"/>
-          <path class="c-cyan" d="M418 148 l8 8 8 -8 8 8 8 -8" fill="none" stroke-width="4"/>
-        </g>
 
       </svg>
 
       <div class="banner-type">
         <p class="banner-kicker">Simon Allmer Presents</p>
-        <h1 class="banner-name">Crosslink</h1>
+        <h1 class="banner-name">CrossLink</h1>
         <p class="banner-sub">A Game of Connections</p>
       </div>
     </div>
@@ -130,32 +136,31 @@
       </div>
     </div>
 
-    <p class="front-note">Welcome to the Crosslink Home Page on the World Wide Web.</p>
-    <p class="front-out"><a href="https://simonallmer.com" class="out">&#9679; Back to Simon Allmer</a></p>
+    <p class="front-note">Welcome to the CrossLink Home Page on the World Wide Web.</p>
+    <p class="front-out"><span class="dot" aria-hidden="true">&#9679;</span> <a href="https://simonallmer.com" class="out">Back to Simon Allmer</a></p>
   </section>
 
   <!-- ===================== the board ===================== -->
   <section class="view" id="view-play" hidden>
     <header>
-      <p class="eyebrow" id="eyebrow">Crosslink</p>
+      <p class="eyebrow" id="eyebrow">CrossLink</p>
       <h1 id="title">The Centre Is a Fish</h1>
       <p class="standfirst" id="standfirst"></p>
     </header>
 
     <div class="controls">
-      <label class="toggle"><input type="checkbox" id="peek"> Peek ahead</label>
-      <label class="toggle"><input type="checkbox" id="check"> Error check</label>
+      <label class="toggle"><input type="checkbox" id="check" checked> Error check</label>
       <button id="restart" class="ghost">Restart</button>
     </div>
 
     <div class="board-scroll">
-      <div id="board" class="board" role="grid" aria-label="Crosslink board"></div>
+      <div id="board" class="board" role="grid" aria-label="CrossLink board"></div>
     </div>
 
     <input id="ghost-input" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-hidden="true">
 
     <section id="panel" class="panel">
-      <p class="panel-empty" id="panel-empty">Tap the centre square to begin.</p>
+      <p class="panel-empty" id="panel-empty">Pick any square and begin. The middle is the usual way in.</p>
       <div id="panel-body" hidden>
         <p class="panel-head"><span id="panel-count"></span></p>
         <ul id="routes" class="routes"></ul>
@@ -178,7 +183,7 @@
   <!-- ===================== the index of boards ===================== -->
   <section class="view" id="view-puzzles" hidden>
     <h1 class="page-title">Puzzles</h1>
-    <p class="page-sub">Every Crosslink so far. No word appears on two boards.</p>
+    <p class="page-sub">Every CrossLink so far. No word appears on two boards.</p>
     <table class="index" id="puzzle-index"></table>
     <p class="page-foot" id="puzzle-foot"></p>
   </section>
@@ -210,10 +215,12 @@
       the tail, the connection, the word at the head.</p>
 
       <h2>What you can see</h2>
-      <p>At the start, only the four connections touching the centre are shown, and only the
-      centre square can be filled. A connection appears the moment one of its two words is
-      known, and a square opens the moment a connection reaches it from a word you have
-      placed. The board grows outward from the middle, the way the web did.</p>
+      <p>Every connection on the board is shown from the start. Nothing is hidden: the whole
+      network is there to be read, and you can work out any square in it from where you are
+      sitting.</p>
+      <p>You may write in any square, in any order. The squares a placed word already touches
+      are marked, because that is usually where the next one comes easiest — but nothing is
+      locked, and if you can see a word in the far corner you may set it down at once.</p>
 
       <h2>Entering a word</h2>
       <p>Click a lit square and type. Each letter has its own line, so you can count what the
@@ -221,16 +228,17 @@
       Nothing is final, and a square you take back keeps any mark it earned.</p>
 
       <h2>Help, and what it costs</h2>
-      <p><em>Surface a link</em> opens another route into the square and costs nothing.
-      <em>Reveal a letter</em> seats a letter you did not type, and marks the square as
+      <p><em>Reveal a letter</em> seats a letter you did not type, and marks the square as
       partly solved. <em>Reveal the word</em> marks it as given, not solved. The board keeps
       the count and reads it back to you at the close.</p>
       <p>Pressing <em>S</em> gives up the whole board at once, and says so in the report.</p>
 
-      <h2>Two switches</h2>
-      <p><em>Peek ahead</em> lights the ring of squares beyond the ones you can reach, so you
-      can see where the board is going. <em>Error check</em> turns a wrong word red the moment
-      you enter it. With error check off, nothing on the board ever contradicts you.</p>
+      <h2>The switch</h2>
+      <p><em>Error check</em> is on to begin with: a wrong word goes red the moment you enter
+      it. Turn it off and nothing on the board ever contradicts you — a word you set down is
+      simply taken, and you find out at the close. The board sounds different that way too:
+      with the check off it will not tell you in a noise what it is refusing to tell you on
+      the page.</p>
 
       <h2>The two windows</h2>
       <p>Clicking the sentences in the clue panel opens the <em>Written form</em>, which holds
@@ -252,7 +260,7 @@
   </section>
 
   <footer>
-    <p>Words in the cells. Connections in the gutters. A connection appears only when one of its two words is known.</p>
+    <p>Words in the cells. Connections in the gutters. Any square, any order.</p>
   </footer>
 </main>
 

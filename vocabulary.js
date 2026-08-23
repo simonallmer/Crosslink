@@ -319,7 +319,7 @@ window.CROSSLINK.words = {
   OCTOPUS: { e: 3, k: "animal", d: "Eight arms, three hearts, and a talent for escape." },
   ONION: { e: 3, k: "food", d: "The vegetable in layers, and the reason for the tears." },
   ORANGE: { e: 3, k: "food", d: "A citrus fruit, and the colour named after it." },
-  ORCHARD: { e: 3, k: "nature", d: "A field of fruit trees, planted in rows." },
+  ORCHARD: { e: 2, k: "nature", d: "A field of fruit trees, planted in rows. Obstgarten, verger, frutteto." },
   OVEN: { e: 3, k: "food", d: "The hot box that makes bread out of dough." },
   OWL: { e: 3, k: "animal", d: "The night hunter, silent in flight." },
   PAINT: { e: 2, k: "art", d: "Colour in a liquid, and to put it on." },

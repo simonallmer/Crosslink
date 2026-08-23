@@ -2,7 +2,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "05-landfall",
   title: "Landfall",
-  standfirst: "Twenty-five words and thirty-four connections; six gutters are left bare. Four connections point at the middle, and nothing else on the board exists yet.",
+  standfirst: "Twenty-five words and thirty-four connections; six gutters are left bare. Every connection is shown, and every square is open from the start.",
   size: 5,
   centre: [2, 2],
 
