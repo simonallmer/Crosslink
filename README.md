@@ -78,7 +78,7 @@ below renumbered up into the gap.
 | 1 | Everything Flows | 3×3 | 12/12 | ★★ | The riddle. Three words down the middle lead two lives — a river to the west, money to the east, the same letters either way. |
 | 2 | The Gift of the River | 3×3 | 12/12 | ★ | The net. No wordplay anywhere on it; every connection is a plain fact, and the only difficulty is which fact goes where. |
 | 3 | Landfall | 5×5 | 34/40 | ★ | The long one. |
-| 4 | Half Past Four | 3×3 | 12/12 | ★ | The easiest board in the game on purpose: nine things you could draw, and no word doing a second job. |
+| 4 | God’s Batch and the Devil’s Crust | 3×3 | 12/12 | ★ | The easiest board in the game on purpose: nine things you could draw, and no word doing a second job. |
 | 5 | From the Ground Up | 5×5 | 34/40 | ★ | A garden, which is already a network before anyone puts a grid on it. |
 | 6 | Set, Inked and Pulled | 5×5 | 35/40 | ★★★ | The press, both senses. Metal in the west, newsprint in the east, PRESS in the middle meaning both — and every connection turns over. |
 | 7 | A Fire That Learned to Push | 5×5 | 32/40 | ★ | A subject board at full size. Five bands and four arms, with STEAM in the middle. |

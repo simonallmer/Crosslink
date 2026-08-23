@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 4.0 · 23 August 2026**
+**Revision 4.1 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,9 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*4.0 → 4.1: board №4 is retitled **God's Batch and the Devil's Crust**, and the
+acceptance test learns to read titles — which reports the retitling as a T-rule
+leak on its first run (§7).*
 *3.9 → 4.0: the demonstration stops raising the soft keyboard on a tablet
 (A13d).*
 *3.8 → 3.9: **H2 is repealed** — a word may be set in more than one board, and a
@@ -623,6 +626,19 @@ and two more windows may be opened either side of it. Each has an **X**.
 
 **Titles — confirmed.** Every puzzle carries a title and a standfirst. Keep
 titles suggestive, never literal — a title that names a grid word is a leak.
+
+*Checked from 4.1, and reported rather than failed.* `check-boards.py` now reads
+the title and says so when it contains a word from the grid. It is a note and not
+a failure because this is an editorial judgement and a constructor may want the
+leak: **God's Batch and the Devil's Crust** names CRUST, and CRUST is a corner of
+board №4 with two connections. The square is free to anyone who reads the title
+first.
+
+That is a real cost and it is worth stating plainly, because the rule exists for
+a reason: on a nine-word board, one square given away is a ninth of the puzzle.
+Whether the title is worth a corner is the constructor's call and not the tool's
+— but the tool should say what is being spent. **A title that wants the word can
+have it; it should not have it by accident.**
 
 **Themes — proposed.** A theme declares the body of knowledge the puzzle draws
 on, so the solver knows which shelf to reach for.

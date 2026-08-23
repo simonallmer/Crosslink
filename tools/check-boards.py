@@ -17,7 +17,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def js_field(text, name):
     m = re.search(name + r':\s*"([^"]*)"', text)
-    return m.group(1) if m else None
+    if not m: return None
+    # Board files write non-ASCII as \uXXXX escapes, so a title printed straight
+    # out of the source reads as "God\u2019s Batch" rather than "God's Batch".
+    # Substitute the escapes only; a file that already holds real UTF-8 is left
+    # alone, which the encode/decode round-trip would have thrown on.
+    return re.sub(r"\\u([0-9a-fA-F]{4})",
+                  lambda esc: chr(int(esc.group(1), 16)), m.group(1))
 
 def load(path):
     t = io.open(path, encoding="utf-8").read()
@@ -120,6 +126,13 @@ def check(p, already):
                     if re.search(r"\b" + w + r"\b", v.upper())})
     if named:
         bad.append("E9 fails: " + "; ".join('"%s" names %s' % (v, w) for v, w in named))
+
+    title = (p.get("title") or "").upper()
+    leaked = sorted({w for row in p["nouns"] for w in row
+                     if re.search(r"\b" + w + r"\b", title)})
+    if leaked:
+        warn.append("T-rule note: the title names %s, which is on the board"
+                    % ", ".join(leaked))
 
     variant = {v: k for k, vs in SPELL.items() for v in vs}
     wrong_side = sorted(w for row in p["nouns"] for w in row if w in variant)
