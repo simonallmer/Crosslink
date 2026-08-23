@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 3.6 · 23 August 2026**
+**Revision 3.7 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,8 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*3.6 → 3.7: board №7 gets its thirty-two second faces, written to E16b's split
+rather than to a blanket softening (§18).*
 *3.5 → 3.6: the trade idiom is restored to INK—HEADLINE and **W2 is read
 properly at last** — the language rule governs answers, not connectors, so trade
 colour belongs in a gutter by right (§21).*
@@ -1359,6 +1361,30 @@ so you can see at a glance which gutters you have been into.
 - **E16c — A2d holds on both faces.** Both sentences live in the same gutter box,
   and a back face is often the longer of the two because it is explaining more.
   The measured budget in §17b is the budget for the pair, not for the front.
+
+**Both 5×5 boards carry a full set as of 3.7** — sixty-seven second faces across
+№6 and №7 — and writing the second set was the test of whether E16b survives
+contact with a whole board. It does, but only if the split is written *on
+purpose*:
+
+| | on board №7 | |
+|---|---|---|
+| **plainer** | most of them | *"sends its heat up a"* for *"will not draw without a"*; *"is dug down to reach a"* for *"is sunk straight down until it meets a"* |
+| **different** | same difficulty, another angle | a CHIMNEY that *"stands tall for no reason but"* SMOKE; an ENGINE that *"chokes its own driver in a"* TUNNEL rather than blackening its roof |
+| **harder** | the mill, deliberately | COTTON *"is strung as warp across a"* LOOM; THREAD *"is woven, warp and weft, into"* CLOTH; a LOOM that *"beats each row tight into"* CLOTH, which is what the reed actually does |
+
+Turn everything on №7 and you get an easier board in most places and a technical
+one in the mill. That is the point: you cannot know in advance what is behind, so
+turning stays a choice rather than a free upgrade.
+
+**Four of the thirty-two were rewritten before they shipped**, and the faults are
+worth naming because they are the ones a second face invites. Two repeated a
+phrase already used elsewhere on the board — *carried* on both of LAMP's clues,
+*nothing but* on a third gutter — which is **E7** failing quietly, because a back
+face is easy to write in the rhythm of the last one. One claimed a motive it
+cannot support: chimneys were not *"raised to spare a LUNG"*, they were raised to
+disperse, and the sparing was a consequence rather than an intention. **E13** does
+not stop applying because a sentence is on the back.
 
 **The cost, named.** This doubles the editorial load, and §3 E5 already makes
 editing the bottleneck of the whole game. Board №6 is sixty-eight sentences, not

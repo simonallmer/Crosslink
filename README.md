@@ -53,8 +53,9 @@ clicking it turns the sentence over to another way of saying the same join —
 sometimes plainer, sometimes only different, sometimes harder. It is free and
 counted nowhere: a board solved with every connection turned is solved outright.
 That is a category distinction, not leniency — revealing a letter short-circuits
-the deduction, and a second sentence about the same relation does not. Board 6
-carries the first thirty-four; boards without second faces render as before.
+the deduction, and a second sentence about the same relation does not. Boards 6
+and 7 carry a full set — sixty-seven between them; boards without second faces
+render as before.
 
 ## The boards
 
