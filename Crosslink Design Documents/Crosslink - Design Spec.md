@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 3.4 · 23 August 2026**
+**Revision 3.6 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,11 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*3.5 → 3.6: the trade idiom is restored to INK—HEADLINE and **W2 is read
+properly at last** — the language rule governs answers, not connectors, so trade
+colour belongs in a gutter by right (§21).*
+*3.4 → 3.5: INK—HEADLINE again, and the over-correction undone — the quantity
+claim was the true half all along.*
 *3.3 → 3.4: PROOF—CASE comes back with the misreading taken out of it; PLATE—CASE
 goes; INK—HEADLINE stops claiming ink is blacker in a headline, which it is not
 (§21).*
@@ -1569,18 +1574,52 @@ as broadly as a sentence can. Nothing on this board can be written without ink:
 it fits PROOF, COPY, PAGE, COLUMN, STORY, BOOK and the answer equally. A clue
 that describes a whole category has told the solver nothing.
 
-The first repair was no better, and it took a second reading to see it.
-*"is laid on thickest in a"* and *"is blackest in a"* are **the same false claim
-twice**: ink is not blacker in a headline and it is not laid on thicker. The film
-is the same. There is simply *more of it*, because the letters are bigger. A clue
-may not be poetically true at the cost of being actually wrong.
+It took two more passes to land, and the second was an over-correction worth
+recording, because the error in it is a common one.
 
-So the front takes INK's other life instead — **to get ink is to be printed
-about**, which is a real second sense and exactly what this board is for (E4) —
-and the back states the physical fact without embroidering it:
+*"is blackest in a"* is false: the ink is the same black everywhere on the sheet.
+*"is laid on thickest in a"* is the wrong word for the right idea — thickness is
+film depth, and the film is constant too. But **the quantity claim underneath
+both was true**, and the second pass threw it out along with them, replacing the
+whole connection with INK's other life: *to get ink is to be printed about*.
+That is a real second sense, and the clue built on it — *"is what you get for
+making a HEADLINE"* — still failed, on two counts. The idiom is largely American,
+which W5 and V2 both frown on; and it inverted the relation, because one gets ink
+*by* being newsworthy rather than as payment for it. It needed explaining to its
+first reader, and **a clue that needs explaining has failed E13** whatever else
+is right about it.
+
+The true thing was there the whole time: a headline takes **more** ink, because
+the letters are bigger. That is the back face, said in a word that means quantity
+rather than depth. And the idiom keeps the front, because rejecting it was a
+misreading of the rules:
 
 > INK **is what you get for making a** HEADLINE
->  ↳ INK **is spread over the biggest letter of a** HEADLINE
+>  ↳ INK **is used up fastest on a** HEADLINE
+
+**W2 was applied backwards.** *"The rule governs answers, not connectors. No
+answer is ever a foreign word. Connectors are where other languages belong, and
+they are welcome there… A connector that carries a foreign word is doing the work
+the format is for."* Trade slang is that case exactly. V2 and W5 govern the
+**quarry** — what may be set in a square — and neither reaches into a gutter. On
+a board called *Set, Inked and Pulled*, whose whole subject is the trade, the
+trade's own idiom in a connector is not a licence being taken; it is the licence
+W2 was written to grant.
+
+**And the second face is what makes a lateral front safe.** This is A11 and E16
+doing the job they were built for, on the first clue to need it. *To get ink* is
+opaque if you have not met it — that is a real E13 objection to a clue standing
+alone, and it was the right objection before the turn existed. With a back that
+says *used up fastest*, nobody is stranded on it: the solver who knows the idiom
+gets the better sentence, the solver who does not turns the card. **The front can
+be lateral because the back is fair**, which is precisely the trade §18 said the
+mechanic would buy.
+
+**Two lessons, for the next time.** When one half of a clue is wrong, check
+whether the other half was carrying something true before rewriting the whole
+sentence — a false embellishment on a sound observation is repaired by deleting
+the embellishment, not the observation. And before rejecting a connector for its
+register, check which rule actually governs connectors.
 
 **It was paid for, and then it was not.** The new connection first cost
 **BOOK → PAGE**, because D4's ceiling was enforced as a hard range and board №6

@@ -56,7 +56,7 @@ window.CROSSLINK = window.CROSSLINK || {};
       { verb: "waits for the blue pencil of an", verb2: "is cut and changed by an",   dir: "right" } ],
     [ { verb: "is set once and cast as a", verb2: "is frozen in metal as a", dir: "right" },
       null,
-      { verb: "is what you get for making a", verb2: "is spread over the biggest letter of a", dir: "right" },
+      { verb: "is what you get for making a", verb2: "is used up fastest on a", dir: "right" },
       // R2, and the board's one word-level connection (E17). No arrow: it
       // reads the same from either end, which is what §2 wanted this for.
       { verb: "shares its last word with", verb2: "is one letter away from", kind: "eq" } ],
