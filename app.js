@@ -14,6 +14,7 @@
   }
 
   function reset() {
+    if (typeof demoStop === "function") demoStop();
     st = {
       puzzle: P,
       edges: CL.edgeList(P),
@@ -304,18 +305,22 @@
     var where = document.getElementById("lex-where");
     where.innerHTML = "";
     if (lexWord) {
-      var on = -1;
+      // Every board it is set in, since 3.9 allows more than one.
+      var on = [];
       CL.puzzles.forEach(function (p, i) {
-        p.nouns.forEach(function (row) { if (row.indexOf(lexWord) >= 0) on = i; });
+        p.nouns.forEach(function (row) { if (row.indexOf(lexWord) >= 0 && on.indexOf(i) < 0) on.push(i); });
       });
-      if (on < 0) where.textContent = "Not yet set in a board.";
+      if (!on.length) where.textContent = "Not yet set in a board.";
       else {
-        var b = document.createElement("button");
-        b.type = "button"; b.className = "lex-play";
-        b.textContent = "\u2116" + (on + 1) + " \u2014 " + CL.puzzles[on].title;
-        b.onclick = function () { go("play", on); };
-        where.appendChild(document.createTextNode("Set in "));
-        where.appendChild(b);
+        where.appendChild(document.createTextNode(on.length > 1 ? "Set in " : "Set in "));
+        on.forEach(function (i, n) {
+          if (n) where.appendChild(document.createTextNode(" and "));
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "lex-play";
+          b.textContent = "\u2116" + (i + 1) + " \u2014 " + CL.puzzles[i].title;
+          b.onclick = function () { go("play", i); };
+          where.appendChild(b);
+        });
       }
     }
 
@@ -351,14 +356,20 @@
   var here = null, trail = [];
 
   // The sites this one belongs to, offered from the location bar.
+  // Not alphabetical, because alphabetical is a filing order and this is a
+  // masthead: the group first, then the person, then the six studios in the
+  // order they are always named, and only then the rest of the network A-Z.
   var SITES = [
-    "allmercomics.com", "allmergames.com", "allmergroup.com", "allmerjournals.com",
-    "allmermusic.com", "allmersnacks.com", "casinocamino.com", "colbu.com",
-    "futory.com", "lunyra.com", "scaretales.com", "sevenwondersgames.com",
-    "simonallmer.com", "societyreview.org"
-  ].sort();
+    "allmergroup.com", "simonallmer.com",
+    "allmercomics.com", "allmerfilms.com", "allmermusic.com",
+    "allmergames.com", "allmerjournals.com", "allmersnacks.com"
+  ].concat([
+    "casinocamino.com", "colbu.com", "futory.com", "lunyra.com",
+    "scaretales.com", "sevenwondersgames.com", "societyreview.org"
+  ].sort());
 
   function go(name, arg, back) {
+    if (typeof demoStop === "function") demoStop();
     // Going to the page you are already on is not a step, and it must not leave
     // one behind. It used to: clicking Puzzles while on Puzzles pushed Puzzles,
     // so Back sent you to the page you were looking at, and the trail never
@@ -388,14 +399,20 @@
   }
 
   // Every word CrossLink knows: the registry, plus anything set in a board.
+  // H2 was repealed at 3.9: a word may be set on more than one board. So a word
+  // knows every board it is on, not the last one that happened to claim it —
+  // which is what the old `board: -1` single slot silently did.
   function vocabulary() {
     var map = {}, k;
-    for (k in CL.registry) if (CL.registry.hasOwnProperty(k)) map[k] = { board: -1 };
-    for (k in CL.words) if (CL.words.hasOwnProperty(k) && !map[k]) map[k] = { board: -1 };
-    for (k in CL.lex) if (CL.lex.hasOwnProperty(k) && !map[k]) map[k] = { board: -1 };
+    for (k in CL.registry) if (CL.registry.hasOwnProperty(k)) map[k] = { boards: [] };
+    for (k in CL.words) if (CL.words.hasOwnProperty(k) && !map[k]) map[k] = { boards: [] };
+    for (k in CL.lex) if (CL.lex.hasOwnProperty(k) && !map[k]) map[k] = { boards: [] };
     CL.puzzles.forEach(function (p, i) {
       p.nouns.forEach(function (row) {
-        row.forEach(function (w) { (map[w] || (map[w] = { board: -1 })).board = i; });
+        row.forEach(function (w) {
+          var e = map[w] || (map[w] = { boards: [] });
+          if (e.boards.indexOf(i) < 0) e.boards.push(i);
+        });
       });
     });
     return map;
@@ -407,27 +424,28 @@
     var ul = document.getElementById("word-index");
     ul.innerHTML = "";
     words.forEach(function (w) {
-      var board = map[w].board;
-      if (board >= 0) onBoards++;
+      var boards = map[w].boards;
+      if (boards.length) onBoards++;
       var li = document.createElement("li");
-      li.className = board >= 0 ? "open" : "none";
+      li.className = boards.length ? "open" : "none";
       var b = document.createElement("button");
       b.type = "button"; b.className = "w"; b.textContent = w;
       b.onclick = function () { lexOpen(w); refresh(); };
       li.appendChild(b);
-      if (board >= 0) {
+      boards.forEach(function (board) {
         var a = document.createElement("button");
         a.type = "button"; a.className = "b";
         a.textContent = "\u2116" + (board + 1);
         a.title = "Play " + CL.puzzles[board].title;
         a.onclick = function () { go("play", board); };
         li.appendChild(a);
-      }
+      });
       ul.appendChild(li);
     });
     document.getElementById("words-sub").textContent =
       words.length + " words in the quarry. " + onBoards +
-      " have been set in a board so far; the rest are waiting for one.";
+      " have been set in a board so far; the rest are waiting for one. " +
+      "A word may be set in more than one, and carries a number for each.";
   }
 
   function puzzleIndex() {
@@ -458,15 +476,20 @@
       t.appendChild(tr);
     });
 
-    var seen = {}, dup = [];
+    // No longer a warning. A word on two boards is a crossing between them, and
+    // the footer says how many there are rather than complaining about them.
+    var seen = {}, shared = [];
     CL.puzzles.forEach(function (p) {
       p.nouns.forEach(function (row) { row.forEach(function (w) {
-        if (seen[w]) dup.push(w); else seen[w] = true;
+        if (seen[w] === 1) shared.push(w);
+        seen[w] = (seen[w] || 0) + 1;
       }); });
     });
-    document.getElementById("puzzle-foot").textContent = dup.length
-      ? "Warning: " + dup.join(", ") + " appears on more than one board."
-      : Object.keys(seen).length + " words set so far, each in one board only.";
+    var total = Object.keys(seen).length;
+    document.getElementById("puzzle-foot").textContent = shared.length
+      ? total + " words set so far. " + shared.length +
+        " of them cross two boards or more: " + shared.sort().join(", ") + "."
+      : total + " words set so far, none yet on two boards.";
   }
 
   // N3b generalised: anything printed with a `data-lex` opens that entry. The
@@ -520,7 +543,121 @@
     document.documentElement.setAttribute("data-theme", next);
     try { if (window.sessionStorage) sessionStorage.setItem("crosslink-theme", next); } catch (e) {}
     paintTheme();
+    demoTap();
   };
+
+  // ---- the demonstration ------------------------------------------------
+  //
+  // Four clicks on the sun-and-moon inside four seconds and the board solves
+  // itself; four more and it stops. It is for recording the game being played,
+  // so the whole design brief is that it must not look like a machine:
+  //
+  //   * it starts at the middle, because that is where a person starts
+  //   * it works outward along what it has already placed, but not always —
+  //     roughly one word in five is a jump to somewhere else on the board,
+  //     which is what a solver does when a far square suddenly occurs to them
+  //   * within the frontier it prefers squares with more solved neighbours,
+  //     because those are the ones that would actually come easiest
+  //   * letters do not arrive at a constant rate, and every so often it stops
+  //     mid-word for as long as it takes to think
+  //   * it pauses before a word as well as during it, and longer before a long
+  //     one, as though reading the clues around it first
+  //
+  // The randomness is bounded on purpose: the pace has to stay steady enough to
+  // watch, so the jitter is a spread around a rhythm rather than free.
+  var DEMO = { on: false, timer: null, taps: [] };
+
+  function demoTap() {
+    var now = Date.now();
+    DEMO.taps.push(now);
+    DEMO.taps = DEMO.taps.filter(function (t) { return now - t < 4000; });
+    if (DEMO.taps.length < 4) return;
+    DEMO.taps = [];
+    if (DEMO.on) demoStop("stopped"); else demoStart();
+  }
+
+  function demoStop(why) {
+    DEMO.on = false;
+    if (DEMO.timer) { clearTimeout(DEMO.timer); DEMO.timer = null; }
+    if (why) say("");
+  }
+
+  function wait(ms, fn) { DEMO.timer = setTimeout(function () { if (DEMO.on) fn(); }, ms); }
+  function jitter(base, spread) { return base + Math.round((Math.random() - 0.5) * 2 * spread); }
+
+  function demoStart() {
+    if (!st || !here || here.name !== "play") return;
+    DEMO.on = true;
+    ghost.blur();                       // no caret blinking in the recording
+    wait(700, demoWord);
+  }
+
+  // Which square a person would go to next.
+  function demoPick() {
+    var open = [], r, c;
+    for (r = 0; r < P.size; r++) for (c = 0; c < P.size; c++)
+      if (st.filled[CL.K(r, c)] === undefined) open.push([r, c]);
+    if (!open.length) return null;
+
+    var done = Object.keys(st.filled).length;
+    if (!done) return P.centre.slice();
+
+    // How many placed words each open square already touches.
+    var scored = open.map(function (rc) {
+      var n = CL.edgesAt(st, rc[0], rc[1]).filter(function (e) {
+        var o = CL.other(e, rc[0], rc[1]);
+        return st.filled[CL.K(o[0], o[1])] !== undefined;
+      }).length;
+      return { rc: rc, n: n };
+    });
+    var touching = scored.filter(function (x) { return x.n > 0; });
+
+    // One word in five, go somewhere else entirely — but only if there is
+    // somewhere else, and never at the very start.
+    var elsewhere = scored.filter(function (x) { return x.n === 0; });
+    if (elsewhere.length && done > 1 && Math.random() < 0.2)
+      return pickOne(elsewhere).rc;
+    if (!touching.length) return pickOne(scored).rc;
+
+    // Otherwise the best-connected square, with the near-misses still in play.
+    var best = Math.max.apply(null, touching.map(function (x) { return x.n; }));
+    var top = touching.filter(function (x) { return x.n >= best - (Math.random() < 0.35 ? 1 : 0); });
+    return pickOne(top).rc;
+  }
+
+  function demoWord() {
+    if (!DEMO.on) return;
+    var rc = demoPick();
+    if (!rc) { demoStop(); return; }
+    var ans = CL.answer(st, rc[0], rc[1]);
+    pick(rc[0], rc[1]);
+    ghost.blur();
+    // A beat to read the square's clues, longer for a longer word.
+    wait(jitter(520 + ans.length * 45, 220), function () { demoLetter(ans, 0); });
+  }
+
+  function demoLetter(ans, i) {
+    if (!DEMO.on) return;
+    if (i >= ans.length) {
+      wait(jitter(560, 200), function () {
+        submit();
+        ghost.blur();
+        if (Object.keys(st.filled).length >= P.size * P.size) { demoStop(); return; }
+        wait(jitter(760, 320), demoWord);
+      });
+      return;
+    }
+    if (!/[A-Z]/.test(ans.charAt(i))) { demoLetter(ans, i + 1); return; }   // seated already
+    typeIn(ans.charAt(i));
+    ghost.blur();
+    // Most letters come quickly; now and then the hand stops.
+    var pause = Math.random() < 0.13 ? jitter(620, 260) : jitter(155, 65);
+    wait(Math.max(70, pause), function () { demoLetter(ans, i + 1); });
+  }
+
+  // Leaving the board or restarting it ends the demonstration. Hooked at the
+  // source rather than by reassigning `reset`, which could never have worked:
+  // the Restart button was bound to the original function long before this line.
   if (window.matchMedia) {
     var mq = window.matchMedia("(prefers-color-scheme: dark)");
     if (mq.addEventListener) mq.addEventListener("change", paintTheme);

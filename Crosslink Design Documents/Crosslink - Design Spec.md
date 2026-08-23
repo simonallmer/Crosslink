@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 3.8 · 23 August 2026**
+**Revision 3.9 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,11 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*3.8 → 3.9: **H2 is repealed** — a word may be set in more than one board, and a
+crossing is a feature rather than a warning (§8); **E19**, the scale has no term
+for how much a clue asks you to know, and board №7 takes two stars by hand;
+the location bar is ordered as a masthead rather than a filing cabinet (S6);
+**A13**, the demonstration (§23).*
 *3.7 → 3.8: **V1 admits the hyphen** and the board seats it for the solver;
 **V6** opens the quarry to brands and companies on a two-part test; the rulebook
 documents the turn and stops publishing Shift+S; the epigraph's attribution
@@ -642,10 +647,29 @@ that still plays in twenty-five years. So the frame is not a calendar. It is a
 **hunt**.
 
 - **H1 — Fifty boards, 3×3.** Four hundred and fifty squares in the whole game.
-- **H2 — Every word is set once, in the entire game.** No word appears on two
-  boards, ever. A word caught is caught for good, and the Word List is the whole
-  quarry. This is now checked live on the Puzzles page, which will say so out loud
-  if a constructor breaks it.
+- **H2 — No word is set twice on one board. Across the game, a word may repeat.**
+  *Repealed and rewritten at 3.9.* It used to read *every word is set once, in the
+  entire game* — a word caught was caught for good. The rule was written to make
+  the Word List feel like a collection, and it cost more than it bought:
+
+  1. **It burned the useful words first.** CITY, WATER, HEAT, IRON, STONE are the
+     words a hundred boards want. Under H2 the first board to reach one took it
+     out of circulation for the other ninety-nine, and the constructor's problem
+     got harder with every board shipped rather than easier.
+  2. **It made the quarry a countdown.** Fifty boards at nine words is 450 of a
+     688-word list. The rule guaranteed the last boards would be built from
+     whatever was left, which is a rule that degrades the game as it goes.
+  3. **A repeat is a crossing, not a collision.** The same word on two boards in
+     two different senses is the thing this format is *about*. Forbidding it
+     forbade the best move available.
+
+  What stays is the part that was doing real work: **a word may not appear twice
+  on the same board.** A solver holding a word would be asked to find it again
+  four squares away, which is a trick of memory rather than a connection — and
+  `submit` refuses it anyway. `check-boards.py` still fails a board that repeats
+  itself, and now *reports* a crossing instead of failing it. The Puzzles page
+  says how many words cross boards rather than warning about them, and the Word
+  List gives a word one number per board it is set in.
 - **H3 — The registry is the quarry.** The 149 polysemous words in
   *Crosslink — Polysemous Words* are the backbone the boards are built out from;
   the words they pull in around them join the list as they are set. The Word List
@@ -992,6 +1016,22 @@ next ones should be written for the top of the scale.
 - **S7 — A puzzle may override with `stars`.** The reckoning is a default; a
   constructor who has watched someone play knows more than an arithmetic.
 
+- **E19 — The scale has no term for how much a clue asks you to know.** *New at
+  3.9, from a playtest.* `ease` measures how easily a word can be **pictured**,
+  and every word on board №7 scores well on that and should: a LOOM, a BOILER, a
+  SHAFT, a FURNACE are all things you can see at once. But picturing a loom is not
+  knowing what a loom does, and that board asks the second thing of nearly every
+  square — that a seam is a band of coal, that a mill stood beside a river before
+  steam, that a wheel needs a lip to hold a rail. A non-technical reader meets a
+  board of familiar objects joined by unfamiliar facts, and the reckoning cannot
+  see the difference because it only ever looks at the words.
+
+  The board is **★★ by hand** under S7. A reader who found it hard is a better
+  instrument than a formula that was never measuring this. Whether the repair is a
+  third per-word term — *how much must be known to place it* — or a per-board
+  declaration is open; the first is more honest and much more work, since it means
+  a second number against all 688 words.
+
 **Open, at 2.6: `twist` over-counts on a board with a declared theme.** Board №6
 is a print shop — the title says so, the standfirst says so, and all nine words
 sit in their printing sense. The reckoning gives it ★★ anyway, and the whole of
@@ -1036,8 +1076,13 @@ the way a 1994 browser navigates: a **toolbar** under the title bar with *Back*,
   linked to its board number when it has been set in one; grey when it is waiting
   for a board. Clicking any word opens the **Lexicon** — the same window, the same
   function as in the game — and clicking its number plays the board it was set in.
-- **S6 — The location bar carries the network.** An arrow beside the Location
-  field drops the fourteen Allmer sites, alphabetical, each opening in a new tab.
+- **S6 — The location bar carries the network, in masthead order.** *Amended at
+  3.9.* An arrow beside the Location field drops the Allmer sites, each opening in
+  a new tab. They were alphabetical, which is a filing order and put
+  allmercomics.com above the group it belongs to. They now run as they are always
+  named: **allmergroup.com**, then **simonallmer.com**, then the six studios in
+  house order — Comics, Films, Music, Games, Journals, Snacks — and only then the
+  rest of the network A–Z.
   It is period-correct (every browser of 1994 had that arrow), it puts Crosslink
   inside the group rather than beside it, and it costs one line of chrome.
 - **S4a — The Rulebook opens with the passage the game comes from**, quoted whole
@@ -1741,3 +1786,46 @@ repair §14 already sketched is the right one — discount `twist` where a board
 words cluster in one field, which the quarry's `k` almost supports already. Until
 then V6 is a rule with nothing standing on it, which is the safe state for it to
 be in.
+
+---
+
+## 23. The demonstration *(built at 3.9)*
+
+- **A13 — Four clicks on the sun-and-moon inside four seconds and the board
+  solves itself. Four more stop it.** It is for recording the game being played,
+  and it is deliberately undocumented in the Rulebook, like Shift+S: a player who
+  finds it has found a toy, not a shortcut, because it is no use for solving.
+
+**The whole brief is that it must not look like a machine.** A solver that fills
+squares in reading order at a constant rate is unwatchable and, worse, it teaches
+the viewer that the board has an order. So:
+
+- **It starts at the middle**, because that is where a person starts.
+- **It works outward along what it has placed** — the frontier — preferring
+  squares with more solved neighbours, because those are the ones that would
+  genuinely come easiest.
+- **But not always.** Roughly one word in five is a jump to somewhere else on the
+  board entirely, which is what a solver does when a far square suddenly occurs
+  to them. Within the frontier it will also take a second-best square about a
+  third of the time, so it never looks like it is following a rule.
+- **Letters do not arrive at a constant rate**, and about one in eight is
+  followed by a real pause, as though the hand had stopped to think.
+- **It pauses before a word as well as during it**, and longer before a long one,
+  as though reading the clues around the square first.
+
+The randomness is bounded on purpose. The pace has to stay steady enough to
+watch, so every delay is a spread around a rhythm rather than a free roll.
+Measured on the shelf: **3.3 seconds a word, about 81 seconds for a full 5×5**,
+which is a watchable length for a screen recording.
+
+- **A13b — It solves; it does not give up.** Every word goes down through the
+  same `submit` a player uses, so the closing report reads **"9 solved
+  outright"** and not *given*. A recording of the demonstration is a recording of
+  the board being solved, which is the only version worth publishing.
+- **A13c — Leaving or restarting ends it.** `go()` and `reset()` both stop it, so
+  it cannot be left running under a different board.
+
+*A note on how this was nearly got wrong:* the first attempt hooked the stop by
+reassigning `reset`, which could never have worked — the Restart button was bound
+to the original function long before that line ran. Hook at the source, not at
+the name.

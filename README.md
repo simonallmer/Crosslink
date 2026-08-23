@@ -34,7 +34,9 @@ and the mark is on the board in paler ink, not in a statistics panel.
 nouns are down and the pair cannot both be right. It never says which side is
 wrong, and it says nothing at all while a neighbour is still empty.
 
-**Words are used once.** Entering a word already on the board is refused.
+**Words are used once on a board.** Entering a word already on the board is
+refused — but a word may be set in more than one board across the game, and the
+Word List carries a number for each place it appears.
 
 **A hyphen is seated for you.** The board only takes A–Z from the keyboard, so a
 slot holding anything else — the hyphen in BERNERS-LEE or COCA-COLA — is printed

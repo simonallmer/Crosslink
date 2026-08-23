@@ -6,6 +6,24 @@ window.CROSSLINK = window.CROSSLINK || {};
   size: 5,
   centre: [2, 2],
 
+  // S7 override, up from the one star the reckoning gives it, and the reason is
+  // a hole in the scale rather than a quarrel with this board.
+  //
+  // `ease` measures how easily a word can be PICTURED. Every word here scores
+  // well on that and should: a LOOM, a BOILER, a SHAFT, a FURNACE are all things
+  // you can see at once. But picturing a loom is not knowing what a loom does,
+  // and this board asks the second thing of nearly every square — that a seam is
+  // a band of coal, that a boiler feeds an engine, that a mill stood by a river
+  // before steam, that a wheel needs a lip to hold a rail. A reader who is not
+  // technical meets a board of familiar objects joined by unfamiliar facts, and
+  // the arithmetic cannot see the difference because it only ever looks at the
+  // words.
+  //
+  // Two stars, by hand, from a playtest: the first reader found it hard, and a
+  // reader is a better instrument than a formula that was never measuring this.
+  // Logged in §14 as E19 — the scale has no term for domain knowledge.
+  stars: 2,
+
   // The second kind of board (E4a), at the largest size the format admits, and
   // built so that the layout itself is the argument. Read it as five bands:
   //

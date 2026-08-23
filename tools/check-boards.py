@@ -6,7 +6,7 @@
   D2  every word is reachable from the centre by two link-disjoint paths
   D3  the board contains at least one cycle
   D4  10-12 of 12 connections on a 3x3; 28-34 of 40 on a 5x5
-  H2  no word is set on two boards
+  H2  no word is set twice on ONE board (across the game is allowed since 3.9)
   L1  every word has a lexicon, registry or vocabulary entry
 
 Run:  python3 tools/check-boards.py
@@ -128,9 +128,13 @@ def check(p, already):
             "%s is the variant spelling; boards are written %s" % (w, variant[w]) for w in wrong_side))
 
     ws = [word(rc) for rc in nodes]
+    # Twice on ONE board is still wrong — a solver holding a word would be asked
+    # to find it again, and the used-once check in `submit` refuses it anyway.
     if len(set(ws)) != len(ws): bad.append("a word is repeated on this board")
+    # Twice across the GAME is fine since 3.9. It is reported, because a word
+    # that crosses boards is worth knowing about, but it is not a failure.
     clash = sorted(set(ws) & already)
-    if clash: bad.append("H2 fails: %s already set on an earlier board" % ", ".join(clash))
+    if clash: warn.append("crosses an earlier board: %s" % ", ".join(clash))
     return bad, warn, set(ws), len(es), possible
 
 def spellings():
@@ -182,7 +186,7 @@ def main():
         for w in warn:
             print("      . " + w)
     print("-" * 78)
-    print("%d words set across %d boards, none twice." % (len(already), len(files)))
+    print("%d distinct words set across %d boards." % (len(already), len(files)))
     dead = [(k, v) for k, vs in SPELL.items() for v in vs if len(v) != len(k)]
     if dead:
         fails += len(dead)
