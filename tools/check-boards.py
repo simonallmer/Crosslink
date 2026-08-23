@@ -145,8 +145,11 @@ def spellings():
 
 def known_words():
     ks = set()
-    for f, pat in (("lexicon.js", r"^  ([A-Z]+):"), ("registry.js", r"^  ([A-Z]+):"),
-                   ("vocabulary.js", r"^  ([A-Z]+):")):
+    # Keys may be bare (COAL) or quoted, and may carry a hyphen, because a name
+    # like BERNERS-LEE is not a valid bare JS identifier. L1 has to see both, or
+    # the first hyphenated word to reach a board fails for not existing.
+    key = r'^  "?([A-Z][A-Z-]*)"?:'
+    for f, pat in (("lexicon.js", key), ("registry.js", key), ("vocabulary.js", key)):
         path = os.path.join(ROOT, f)
         if os.path.exists(path):
             ks |= set(re.findall(pat, io.open(path, encoding="utf-8").read(), re.M))

@@ -97,9 +97,16 @@
   // A revealed letter already stands in its slot, so typing steps over it
   // instead of asking for a letter the board has handed over.
 
+  // A slot the solver cannot be asked to type is seated for them. Typing only
+  // ever admits A-Z (see the ghost's input handler), so a hyphen in COCA-COLA or
+  // BERNERS-LEE would otherwise be a slot nobody could fill. It is printed from
+  // the start, like a revealed letter that costs nothing, and `nextSlot` steps
+  // over it exactly as it steps over one.
+  function seated(ch) { return !/[A-Z]/.test(ch); }
+
   function freshDraft(r, c) {
     var ans = CL.answer(st, r, c), rev = st.revealed[CL.K(r, c)] || {}, d = [];
-    for (var i = 0; i < ans.length; i++) d.push(rev[i] ? ans[i] : null);
+    for (var i = 0; i < ans.length; i++) d.push((rev[i] || seated(ans[i])) ? ans[i] : null);
     return d;
   }
 
@@ -107,7 +114,8 @@
   function reseat(r, c) {
     var ans = CL.answer(st, r, c), rev = st.revealed[CL.K(r, c)] || {}, prev = st.draft, d = [];
     var keep = prev.length === ans.length;
-    for (var i = 0; i < ans.length; i++) d.push(rev[i] ? ans[i] : (keep ? prev[i] : null));
+    for (var i = 0; i < ans.length; i++)
+      d.push((rev[i] || seated(ans[i])) ? ans[i] : (keep ? prev[i] : null));
     return d;
   }
 
@@ -460,6 +468,15 @@
       ? "Warning: " + dup.join(", ") + " appears on more than one board."
       : Object.keys(seen).length + " words set so far, each in one board only.";
   }
+
+  // N3b generalised: anything printed with a `data-lex` opens that entry. The
+  // epigraph's attribution is the first — a name set in type on the rulebook page
+  // is a word in the game like any other, and it was the one word on that page
+  // you could not look up.
+  Array.prototype.forEach.call(document.querySelectorAll("[data-lex]"), function (el) {
+    el.title = "Look up " + el.getAttribute("data-lex");
+    el.onclick = function () { lexOpen(el.getAttribute("data-lex")); refresh(); };
+  });
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function (a) {
     a.onclick = function (ev) {

@@ -1,6 +1,6 @@
 # CrossLink — Design Spec
 
-**Revision 3.7 · 23 August 2026**
+**Revision 3.8 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,10 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*3.7 → 3.8: **V1 admits the hyphen** and the board seats it for the solver;
+**V6** opens the quarry to brands and companies on a two-part test; the rulebook
+documents the turn and stops publishing Shift+S; the epigraph's attribution
+becomes a word you can look up (§22).*
 *3.6 → 3.7: board №7 gets its thirty-two second faces, written to E16b's split
 rather than to a blanket softening (§18).*
 *3.5 → 3.6: the trade idiom is restored to INK—HEADLINE and **W2 is read
@@ -911,7 +915,17 @@ each, in `vocabulary.js`:
 
 Rules the list is kept to:
 
-- **V1 — One word, no hyphens, no spaces.** A cell holds one word.
+- **V1 — One word, no spaces — and hyphens are admitted.** *Amended at 3.8.* A
+  cell holds one word, and that has not changed: no spaces, ever. But the ban on
+  hyphens was banning a class of word the format wants — **BERNERS-LEE**, whose
+  own quotation opens the rulebook, and COCA-COLA under V6 — for a reason that
+  turned out to be mechanical rather than editorial. The board only ever admits
+  A–Z from the keyboard, so a hyphen was a slot nobody could fill.
+  *So the board fills it.* A slot whose character is not a letter is **seated
+  from the start**, printed like a revealed letter that costs nothing, and the
+  caret steps over it exactly as it steps over one. The solver types COCACOLA and
+  the hyphen is already there. Nothing else about V1 changes: still one word,
+  still no spaces, and still a single square.
 - **V2 — Only what a reader would know without looking it up.** FRANCE, not
   Uzbekistan; PARIS, not Rabat. The test is whether a general reader could place
   it, not whether it is important.
@@ -922,6 +936,22 @@ Rules the list is kept to:
   only reason a living person earns a square.
 - **V4 — Facts round and checkable.** "About 68 million people", never a number
   that pretends to be current.
+- **V6 — Brands and companies are admitted, on a two-part test.** *New at 3.8.*
+  A name earns a square if it is **either hugely influential or has survived
+  twenty-five years** — and it may satisfy the second test later, which is the
+  point of writing it that way: a company founded this year is not eligible now
+  and may be in 2051, without the rule needing to be rewritten. This is W4's test
+  for people, applied to the things people build, and it serves the same master:
+  **W5, the 25-year test**, which outranks everything else about vocabulary.
+  A brand that is merely large is out. A brand nobody under forty will recognise
+  in a quarter-century is out.
+
+  It fits the format better than it might look. The best of these names are
+  already common words wearing a second coat — **APPLE**, SHELL, ORACLE, AMAZON,
+  ORANGE, GAP, VISA — which is exactly the case E4 calls the best square on any
+  board, and W4 calls the ideal person for the same reason: the square works
+  whether or not you know the company.
+
 - **V5 — Every word carries an *ease*.** 3 = a word you can picture at once
   (MOUSE, BREAD, PARIS). 2 = ordinary but less concrete (INCOME, PRAGUE, EDISON).
   1 = abstract or needing a fact to place (GRAVITY, EMPIRE, MEMORY).
@@ -1654,3 +1684,60 @@ was sitting on it. That was the tool being stricter than the rule: D4 says
 with five bars, and BOOK → PAGE is back. Nothing was worth losing to arithmetic —
 and the question that produced the amendment was simply *why does it cost
 anything*, which no one had asked in eleven revisions.
+
+---
+
+## 22. The hyphen, the brands, and what the rulebook says *(at 3.8)*
+
+### The rulebook stops publishing a developer's key
+
+**Shift+S is out of the Rulebook.** It gives the whole board up at once, it is
+there so a constructor can see a finished grid without solving it, and printing
+it on the page a first-time solver reads is handing them the one move that
+cannot be taken back. It still works; §9 still documents it; it is simply not
+advertised. *Nothing is removed from the game — only from the page.*
+
+**The turn goes in, in its place.** A11 shipped at 2.8 with sixty-seven second
+faces across two boards and no word about it anywhere a player would look, which
+is a mechanic that does not exist. The Rulebook now says where the mark is (the
+faint dotted rule under a sentence), what turning does, and the two things about
+it that matter most: that it is **not always easier**, so it is worth turning to
+see; and that it **costs nothing and is counted nowhere**, so a board solved with
+every connection turned is solved outright and says so.
+
+### N3b reaches the epigraph
+
+- **N3c — Anything set in type with a `data-lex` opens that entry.** The rule was
+  already N3b — *every word set in type opens its entry* — but it was wired only
+  to words the solver had placed. The attribution under the epigraph was the one
+  word on the Rulebook page you could not look up, which on a page arguing that
+  words are defined by other words is a poor joke to leave standing.
+  **BERNERS-LEE** is in the quarry now, and clicking his name in the epigraph
+  opens him like any other word.
+
+### The brands, and the thing that blocks them
+
+**V6 is written and no brand has been added**, deliberately, because the first one
+to touch an existing board misrates it. Measured, not guessed:
+
+| *From the Ground Up* | raw | stars |
+|---|---|---|
+| as it stands | 0.29 | ★ |
+| if APPLE joins the registry with 2 domains | **0.31** | **★★** |
+| with 4 domains | 0.33 | ★★ |
+
+That board uses APPLE as the fruit and nothing else. Not one clue on it touches a
+company. It would gain a star for a meaning it never puts in play — which is the
+`twist` over-count §14 logged as an open question at 2.7, on board №6's 3×3.
+
+**Two instances make it a blocker rather than a curiosity.** The brand expansion
+is exactly the change that would make it common: V6's best candidates are the
+names that are *already common words* — APPLE, SHELL, ORACLE, AMAZON, ORANGE —
+so every one of them would silently re-rate every existing board carrying the
+ordinary sense. SHELL is on no board yet; APPLE is on №5, ORCHARD's neighbour.
+
+So the order of work is fixed: **fix `twist` first, add brands second.** The
+repair §14 already sketched is the right one — discount `twist` where a board's
+words cluster in one field, which the quarry's `k` almost supports already. Until
+then V6 is a rule with nothing standing on it, which is the safe state for it to
+be in.

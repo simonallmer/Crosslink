@@ -40,6 +40,7 @@ window.CROSSLINK.words = {
   BELL: { e: 2, k: "figure", d: "Scottish-American inventor, 1847-1922. The telephone." },
   BELT: { e: 3, k: "thing", d: "What holds trousers up; also a region, and a blow." },
   BERLIN: { e: 3, k: "city", d: "Germany's capital, cut in two by a wall from 1961 to 1989." },
+  "BERNERS-LEE": { e: 1, k: "figure", d: "English computer scientist, born 1955. Invented the World Wide Web at CERN in 1989 and gave it away unpatented." },
   BICYCLE: { e: 3, k: "travel", d: "Two wheels and a chain; the most efficient machine ever built." },
   BIRD: { e: 3, k: "animal", d: "A feathered animal with wings, most of which fly." },
   BLOOD: { e: 3, k: "body", d: "What the heart moves, and what family shares." },

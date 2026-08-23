@@ -36,6 +36,11 @@ wrong, and it says nothing at all while a neighbour is still empty.
 
 **Words are used once.** Entering a word already on the board is refused.
 
+**A hyphen is seated for you.** The board only takes A–Z from the keyboard, so a
+slot holding anything else — the hyphen in BERNERS-LEE or COCA-COLA — is printed
+from the start like a revealed letter that costs nothing. You type the letters
+and the hyphen is already there.
+
 **Either English is accepted.** Boards and the lexicon are written in British
 English; the American spelling is taken on entry and the square keeps whatever
 was typed. Only same-length pairs need declaring — CENTRE/CENTER, GREY/GRAY,
