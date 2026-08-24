@@ -54,10 +54,16 @@ ARROW_ART = [
     "X     X...X    ",
     "       X...X   ",
     "       X...X   ",
-    "        X...X  ",
-    "        X...X  ",
-    "         XXX   ",
+    "        XXX    ",
 ]
+
+# Two rows came off the tail at 3.12 — 25 rows to 23 — because beside the hand
+# at 18x22 the arrow read as the bigger of the pair, and a pointer that looks
+# heavier than the hand it alternates with makes the hand look like a state
+# rather than a shape. Only the TAIL is shortened: the head keeps all fourteen
+# rows of fill, which is the proportion the trace exists to protect and the one
+# thing five drawings from memory each got wrong. The tail loses one of its
+# five two-row steps and the terminator moves in a column to close it.
 
 # Traced the same way, from Cursor_Hand.png on Wikimedia Commons — 19x24, and
 # public domain on the same grounds. Four fingers, not two: the drawn-from-memory
@@ -166,7 +172,8 @@ css = """/* The cursors, drawn as pixel art by tools/make-cursors.py. This file 
 a, button, .tile, .tile *, .noun, .noun *, .win-x, .tool,
 .toggle, .toggle *, select#which, .wordgrid button, .lex-list button, .lex-play,
 .ti-link, .routes, .routes *, .hero.numbered .cell, .hero.numbered .cell *,
-.script li em, .sentences li .n, .gut.spent, .gut.spent * {
+.script li em, .sentences li .n, [data-lex], .gut.spent, .gut.spent *,
+.gut.turnable .label {
   cursor: image-set(url(%s) 1x, url(%s) 2x) 6 0, pointer;
 }
 button:disabled, .tool:disabled, .hero.numbered .cell.empty,

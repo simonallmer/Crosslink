@@ -1,4 +1,4 @@
-// CrossLink engine — the lattice, the edges, and the rendering of both.
+// Crosslink engine — the lattice, the edges, and the rendering of both.
 // A board of size N is a (2N-1) x (2N-1) lattice: nouns on even coordinates,
 // verb gutters on the mixed ones, structural corners on the odd ones.
 (function () {

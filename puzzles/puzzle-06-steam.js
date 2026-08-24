@@ -1,8 +1,9 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
-  id: "07-steam",
+  id: "06-steam",
   title: "A Fire That Learned to Push",
-  standfirst: "Twenty-five words and thirty-two connections, and every one of them has a back \u2014 click a connection to turn it over. Eight gutters are bare. One machine sits in the middle and the whole century arranges itself around it.",
+  standfirst: "Edited by Simon Allmer",
+  hue: "red",
   size: 5,
   centre: [2, 2],
 

@@ -1,4 +1,4 @@
-// CrossLink — state, typing, the hint ladder, and the quiet error check.
+// Crosslink — state, typing, the hint ladder, and the quiet error check.
 (function () {
   var CL = window.CROSSLINK, P = null;
   var st, ghost = document.getElementById("ghost-input");
@@ -6,10 +6,15 @@
   function load(i) {
     P = CL.puzzles[i];
     document.getElementById("eyebrow").textContent =
-      "CrossLink \u00b7 No. " + (+P.id.split("-")[0]) + " \u00b7 " + CL.starText(CL.stars(P));
+      "Crosslink \u00b7 No. " + (+P.id.split("-")[0]) + " \u00b7 " + CL.starText(CL.stars(P));
     document.getElementById("title").textContent = P.title;
     document.getElementById("standfirst").textContent = P.standfirst;
     document.body.classList.toggle("wide", P.size >= 5);
+    // A board carries its own colour. It goes on the body rather than on the
+    // view, so the paper, the side windows and the chips the wires run behind
+    // all turn together — one document, one colour, which is how a page of this
+    // period announced what it was about.
+    document.body.setAttribute("data-hue", P.hue || "");
     reset();
   }
 
@@ -288,7 +293,7 @@
     ol.innerHTML = "";
     note.textContent = "";
     if (!lexWord) note.textContent = "Click a word you have placed, or any word in the list.";
-    else if (!hand && !reg && !gen) note.textContent = "Not in the CrossLink word list.";
+    else if (!hand && !reg && !gen) note.textContent = "Not in the Crosslink word list.";
     else if (!hand && !reg && gen) {
       var li0 = document.createElement("li");
       li0.textContent = gen.d;
@@ -356,11 +361,12 @@
 
   var SITE = "http://simonallmer.com/crosslink/";
   var VIEWS = {
-    menu:    { el: "view-menu",    title: "CrossLink",             loc: "" },
-    play:    { el: "view-play",    title: "CrossLink",             loc: "" },
-    puzzles: { el: "view-puzzles", title: "CrossLink \u2014 Puzzles",   loc: "puzzles.html" },
-    words:   { el: "view-words",   title: "CrossLink \u2014 Word List", loc: "words.html" },
-    rules:   { el: "view-rules",   title: "CrossLink \u2014 Rulebook",  loc: "rulebook.html" }
+    menu:    { el: "view-menu",    title: "Crosslink",             loc: "" },
+    play:    { el: "view-play",    title: "Crosslink",             loc: "" },
+    puzzles: { el: "view-puzzles", title: "Crosslink \u2014 Puzzles",   loc: "puzzles.html" },
+    words:   { el: "view-words",   title: "Crosslink \u2014 Word List", loc: "words.html" },
+    rules:   { el: "view-rules",   title: "Crosslink \u2014 Rulebook",  loc: "rulebook.html" },
+    intro:   { el: "view-intro",   title: "Crosslink \u2014 Introduction", loc: "intro.html" }
   };
   var here = null, trail = [];
 
@@ -393,7 +399,8 @@
       document.getElementById(VIEWS[k].el).hidden = (k !== name);
     });
     if (name === "play") load(arg);
-    else if (name === "words") wordList();
+    else document.body.removeAttribute("data-hue");   // only a board is coloured
+    if (name === "words") wordList();
     else if (name === "puzzles") puzzleIndex();
     chrome();
     document.getElementById("nav-back").disabled = !trail.length;
@@ -402,12 +409,12 @@
 
   function chrome() {
     var v = VIEWS[here.name], title = v.title, loc = SITE + v.loc;
-    if (here.name === "play") { title = "CrossLink \u2014 " + P.title; loc = SITE + P.id + "/"; }
+    if (here.name === "play") { title = "Crosslink \u2014 " + P.title; loc = SITE + P.id + "/"; }
     document.getElementById("win-name").textContent = title;
     document.getElementById("loc").textContent = loc;
   }
 
-  // Every word CrossLink knows: the registry, plus anything set in a board.
+  // Every word Crosslink knows: the registry, plus anything set in a board.
   // H2 was repealed at 3.9: a word may be set on more than one board. So a word
   // knows every board it is on, not the last one that happened to claim it —
   // which is what the old `board: -1` single slot silently did.
@@ -772,7 +779,24 @@
     if (!draftFull()) { say("That square takes " + ans.length + " letters."); return; }
     var w = st.draft.join("").toUpperCase();
     // Compared as one word, so CENTER cannot be set down beside CENTRE.
-    var dup = Object.keys(st.filled).filter(function (kk) { return CL.same(st.filled[kk], w); });
+    //
+    // A word only counts as spent if it is RIGHT where it stands. A wrong word
+    // is an error occupying a square, not a word used up, and refusing to let
+    // you write it where it does belong was the board holding your own mistake
+    // against you — the one place in the game where being wrong once cost you
+    // something later.
+    //
+    // With the check off the rule stays structural, and deliberately: there,
+    // the board makes no claim about right and wrong, so any placement blocks.
+    // Dedupe against correct placements only and a refusal would announce that
+    // the word already down is correct, which is a verdict, and A8b says the
+    // speakers and the page are both silent on verdicts while the check is off.
+    var dup = Object.keys(st.filled).filter(function (kk) {
+      if (!CL.same(st.filled[kk], w)) return false;
+      if (!st.check) return true;
+      var rc = kk.split(",");
+      return CL.same(st.filled[kk], CL.answer(st, +rc[0], +rc[1]));
+    });
     if (dup.length) { say("Each word is used once, and " + w + " is already on the board."); return; }
 
     st.filled[k] = w;
@@ -893,7 +917,7 @@
     if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) {
       ev.preventDefault(); giveUp(); return;
     }
-    if (!st.selected) return;
+    if (!st || !st.selected) return;
     if (ev.key === "Backspace") { ev.preventDefault(); back(); }
     else if (ev.key === "Enter") { ev.preventDefault(); submit(); }
     else if (ev.key === "Escape") { ev.preventDefault(); st.selected = null; st.draft = []; draw(); }
@@ -901,8 +925,21 @@
 
   document.addEventListener("keydown", function (ev) {
     if (document.activeElement === ghost) return;
-    if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) { ev.preventDefault(); giveUp(); return; }
-    if (!st.selected) return;
+    // Shift+S does two things, and which one depends on where you are standing.
+    // On a board it gives the board up; on the front page it opens the note,
+    // which is the only way in to that page for now. The two never overlap —
+    // `giveUp` has always refused to run anywhere but `play` — so this is a
+    // second use of a free key rather than a key doing double duty.
+    if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) {
+      ev.preventDefault();
+      if (here && here.name === "menu") go("intro"); else giveUp();
+      return;
+    }
+    // `st` does not exist until a board has been loaded, so this has to test for
+    // the state before it tests the state. It threw on every keystroke made on
+    // the front page — harmless while nobody typed there, and not harmless now
+    // that the front page is somewhere you press a key on purpose (A14).
+    if (!st || !st.selected) return;
     if (/^[a-zA-Z]$/.test(ev.key)) {
       ghost.focus();
       typeIn(ev.key.toUpperCase());
@@ -913,6 +950,15 @@
     st.check = ev.target.checked; draw();
   });
   document.getElementById("restart").addEventListener("click", reset);
+
+  // The rulebook ends with the same drawing the note opens with. Cloned rather
+  // than repeated in the markup, so tools/make-figure.py stays the one source
+  // and a regenerated figure cannot land on one page and not the other.
+  (function () {
+    var src = document.querySelector("#view-intro .fig"),
+        dst = document.querySelector("#rules-fig .fig-scroll");
+    if (src && dst) dst.appendChild(src.cloneNode(true));
+  })();
 
   go("menu");
 })();

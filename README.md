@@ -1,4 +1,4 @@
-# CrossLink
+# Crosslink
 
 A game of connections. Nouns sit in the cells; the relations between them sit in
 the gutters. The board is a (2N−1)² lattice: for N = 3 that is 5 × 5 — nine nouns,
@@ -60,41 +60,76 @@ clicking it turns the sentence over to another way of saying the same join —
 sometimes plainer, sometimes only different, sometimes harder. It is free and
 counted nowhere: a board solved with every connection turned is solved outright.
 That is a category distinction, not leniency — revealing a letter short-circuits
-the deduction, and a second sentence about the same relation does not. Boards 6
-and 7 carry a full set — sixty-seven between them; boards without second faces
-render as before.
+the deduction, and a second sentence about the same relation does not. **Every
+board now carries a full set — 159 second faces in all.** Each board declares
+what kind of fact its backs hold, so that turning is worth something different
+on each: another fact (№1), what the crew knows and a passenger does not (№2),
+the working behind the picture (№3), the clock behind the moment (№4), the twist
+read from the other trade (№5), plain language for technical (№6).
 
 ## The boards
 
-Seven, and every one of them passes `tools/check-boards.py` on its own account.
-Two more used to stand in front of them — *The Centre Is a Fish* and *Worth Its
-Weight*, built before §1 of the spec existed — and they were withdrawn at 2.5
+Every board now opens with the same line — **Edited by Simon Allmer** — and
+nothing else. The standfirsts used to describe the subject, which handed over
+the first deduction a board offers before a square was filled. What replaces
+them is colour: each board tints the paper for as long as it is open, sand
+through to firebrick, which says a board has a character and says nothing about
+what it is. See E27 and A15.
+
+
+Six, and every one of them passes `tools/check-boards.py` on its own account.
+Three used to stand in front of them. *The Centre Is a Fish* and *Worth Its
+Weight* were built before §1 of the spec existed and were withdrawn at 2.5
 rather than kept as exceptions: between them they broke D1, D2, D4 and E9, and
-the first was built on the staged reveal that R0 took away at 1.5. The boards
-below renumbered up into the gap.
+the first was built on the staged reveal that R0 took away at 1.5.
+*Everything Flows* followed them at 3.9, for a different reason — not a rule
+broken but a board that did not cohere. Its standfirst promised two worlds,
+water and money, and the nine words ran to six: BANK kept the promise, but NOTE
+went to music, CURRENT to electricity, VAULT to church masonry, and ORGAN had
+no leg in either half at all. See E20. Each time, the boards below renumbered up
+into the gap.
 
-| № | Title | Size | Links | Stars | What it is |
-|---|---|---|---|---|---|
-| 1 | Everything Flows | 3×3 | 12/12 | ★★ | The riddle. Three words down the middle lead two lives — a river to the west, money to the east, the same letters either way. |
-| 2 | The Gift of the River | 3×3 | 12/12 | ★ | The net. No wordplay anywhere on it; every connection is a plain fact, and the only difficulty is which fact goes where. |
-| 3 | Landfall | 5×5 | 34/40 | ★ | The long one. |
-| 4 | God’s Batch and Devil’s Crust | 3×3 | 12/12 | ★ | The easiest board in the game on purpose: nine things you could draw, and no word doing a second job. |
-| 5 | From the Ground Up | 5×5 | 34/40 | ★ | A garden, which is already a network before anyone puts a grid on it. |
-| 6 | Set, Inked and Pulled | 5×5 | 35/40 | ★★★ | The press, both senses. Metal in the west, newsprint in the east, PRESS in the middle meaning both — and every connection turns over. |
-| 7 | A Fire That Learned to Push | 5×5 | 32/40 | ★ | A subject board at full size. Five bands and four arms, with STEAM in the middle. |
+| № | Title | Size | Links | Backs | Stars | What it is |
+|---|---|---|---|---|---|---|
+| 1 | The River of Life | 3×3 | 12/12 | 12 | ★ | The net. No wordplay anywhere on it; every connection is a plain fact, and the only difficulty is which fact goes where. |
+| 2 | Water World | 5×5 | 34/40 | 34 | ★ | The long one. Weather across the top, the ship through the middle, the seabed at the bottom. |
+| 3 | God’s Batch and Devil’s Crust | 3×3 | 12/12 | 12 | ★ | The easiest board in the game on purpose: nine things you could draw, and no word doing a second job. |
+| 4 | Human Nature | 5×5 | 34/40 | 34 | ★★ | A garden, which is already a network before anyone puts a grid on it — twenty-four squares of nature and one man in it with a spade. Turn it and it becomes a set of clocks: three days of blossom, six weeks of bee, a thousand years of topsoil. |
+| 5 | Set, Inked and Pulled | 5×5 | 35/40 | 35 | ★★★ | The riddle, and the hardest board here. Metal in the west, newsprint in the east, PRESS in the middle meaning both. |
+| 6 | A Fire That Learned to Push | 5×5 | 32/40 | 32 | ★★ | A subject board at full size. Five bands and four arms, with STEAM in the middle. Two stars by hand, not by the scale — see E19. |
 
-Boards 1 and 2 are the two kinds the format admits, and the spec names them as
-such under E4a: a *riddle*, where the pleasure is the twist, and a *net*, where
-the pleasure is that everything really is joined to everything. The second is
-not the lesser kind.
+Boards 1 and 5 are the two kinds the format admits, and the spec names them as
+such under E4a: a *net*, where the pleasure is that everything really is joined
+to everything, and a *riddle*, where the pleasure is the twist. Neither is the
+lesser kind — but the riddle is the harder one to build, which is the lesson of
+*Everything Flows*: a riddle that does not hold one twist all the way across is
+not a riddle, it is a pile of puns.
 
-Boards 6 and 7 are a third thing, and E14 names it: a **subject board**, where
-the layout itself is the argument. Board 7's rows are a sequence and its arms are
+Boards 5 and 6 are a third thing, and E14 names it: a **subject board**, where
+the layout itself is the argument. Board 6's rows are a sequence and its arms are
 branches, and both are legible before a single square is filled — solve it and
 you are not holding twenty-five facts about the industrial revolution, you are
 holding one shape. Every clue on a subject board carries the fact it depends on
 rather than testing for it, so a solver who knew none of them still reaches every
 square, and knows them afterwards.
+
+## The note
+
+Why the game exists, led by a figure: the argument drawn as a graph of labelled
+relations, in the manner of *Information Management: A Proposal* and in the
+board's own dress — nineteen squares, seventeen wires, every colour and face
+lifted from the game rather than invented, and BANK fanned out into four senses
+because four arrows off one word argue for polysemy where a sentence about it
+can only assert. There is no prose: the figure is the argument, and it fits one
+screen. Generated by `tools/make-figure.py`, which refuses to emit a drawing
+whose labels or wires collide. Reached by **Shift+S from the front page** and by
+nothing else for now. It is deliberately not a fifth tile: the four tiles
+are the game, and a note about why there is a game is a different kind of thing.
+See A14.
+
+Shift+S gives a board up while you are on one. The two never meet — giving up
+has always refused to run anywhere but a board — so the key was free on the
+front page.
 
 ## Known limitation, and what it implies
 

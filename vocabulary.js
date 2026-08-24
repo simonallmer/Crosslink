@@ -201,7 +201,7 @@ window.CROSSLINK.words = {
   GIANT: { e: 2, k: "people", d: "Very large, in stories and in industries." },
   GIRAFFE: { e: 3, k: "animal", d: "The tallest animal, built entirely around reaching." },
   GLACIER: { e: 3, k: "nature", d: "A river of ice, moving too slowly to watch." },
-  GLASS: { e: 3, k: "thing", d: "The clear hard material, and a vessel made of it." },
+  GLASS: { e: 3, k: "thing", d: "The clear hard material, and a vessel made of it. At sea, the barometer: the glass falls before bad weather, and falls fastest before wind." },
   GLOVE: { e: 3, k: "thing", d: "What the hand wears, and what is thrown down to challenge." },
   GOAT: { e: 3, k: "animal", d: "Kept for milk, and for eating what nothing else will." },
   GOLD: { e: 3, k: "nature", d: "The metal nobody has ever tired of." },

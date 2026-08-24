@@ -1,8 +1,9 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
-  id: "06-press",
+  id: "05-press",
   title: "Set, Inked and Pulled",
-  standfirst: "Twenty-five words and thirty-five connections, and every connection here has a back. Click one to turn it over: the other side is a different sentence about the same join \u2014 sometimes plainer, sometimes only different. It costs nothing and is counted nowhere. West of the middle is a trade in metal; east of it, a trade in what happened yesterday; the square between them is the same word twice.",
+  standfirst: "Edited by Simon Allmer",
+  hue: "grey",
   size: 5,
   centre: [2, 2],
 

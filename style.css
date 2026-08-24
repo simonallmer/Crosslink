@@ -94,6 +94,52 @@
     --navy:      #8AA4E8;   --navy-pale:  #1A1F33;
   }
 
+/* ---- one board, one colour ---------------------------------------- */
+
+/* Six boards, six papers. The tint lands on `--sheet` and nothing else, which
+   is enough: the sheet is the document, the two side windows, and the little
+   chips the wires pass behind, so all of it turns at once and nothing has to be
+   re-tinted by hand. `--card` stays white, because a square you write into is
+   paper and must not be tinted, and `--page` stays grey, because the desktop
+   the window sits on does not belong to the puzzle.
+
+   Every value is picked at roughly the luminance of the default #C6C6BE, so the
+   two-tone bevels keep working and black type keeps its contrast. A colour that
+   is merely darker reads as a different UI; a colour at the same weight reads
+   as different paper, which is the intention.
+
+   Specificity note. These sit on `body`, and the palettes sit on `:root`. Body
+   is a child of root, so its own declaration shadows the inherited one whatever
+   the selectors weigh — which means the dark rules cannot be left out, or a
+   dark board would inherit the light tint. They are written twice for the same
+   reason the palette is: once for the system preference, once for the toggle. */
+/* The desktop behind the window takes the same colour, carried down by the same
+   amount the default grey sits below the default paper — #C6C6BE over #8E8E86,
+   which is 0x38 off every channel. Applying the measured distance rather than
+   picking a second colour by eye is what keeps the pair reading as one surface
+   under another, and not as two colours that happen to be nearby. */
+body[data-hue="sand"]  { --sheet: #D6CBA4; --page: #9E936C; }   /* No. 1, the desert */
+body[data-hue="blue"]  { --sheet: #B6C4D2; --page: #7E8C9A; }   /* No. 2, the sea */
+body[data-hue="crust"] { --sheet: #C9B597; --page: #917D5F; }   /* No. 3, a baked crust */
+body[data-hue="green"] { --sheet: #B7C7AC; --page: #7F8F74; }   /* No. 4, the garden */
+body[data-hue="grey"]  { --sheet: #B9B9B6; --page: #81817E; }   /* No. 5, newsprint and lead */
+body[data-hue="red"]   { --sheet: #CDAFA6; --page: #95776E; }   /* No. 6, firebrick */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body[data-hue="sand"]  { --sheet: #272318; --page: #100E08; }
+  :root:not([data-theme="light"]) body[data-hue="blue"]  { --sheet: #1B2129; --page: #090C11; }
+  :root:not([data-theme="light"]) body[data-hue="crust"] { --sheet: #272019; --page: #100D09; }
+  :root:not([data-theme="light"]) body[data-hue="green"] { --sheet: #1D2620; --page: #0A100C; }
+  :root:not([data-theme="light"]) body[data-hue="grey"]  { --sheet: #242424; --page: #0F0F0F; }
+  :root:not([data-theme="light"]) body[data-hue="red"]   { --sheet: #2B1E1C; --page: #120C0B; }
+}
+:root[data-theme="dark"] body[data-hue="sand"]  { --sheet: #272318; --page: #100E08; }
+:root[data-theme="dark"] body[data-hue="blue"]  { --sheet: #1B2129; --page: #090C11; }
+:root[data-theme="dark"] body[data-hue="crust"] { --sheet: #272019; --page: #100D09; }
+:root[data-theme="dark"] body[data-hue="green"] { --sheet: #1D2620; --page: #0A100C; }
+:root[data-theme="dark"] body[data-hue="grey"]  { --sheet: #242424; --page: #0F0F0F; }
+:root[data-theme="dark"] body[data-hue="red"]   { --sheet: #2B1E1C; --page: #120C0B; }
+
 * { box-sizing: border-box; }
 body {
   margin: 0; padding: 0;
@@ -105,6 +151,13 @@ body {
     repeating-linear-gradient(0deg,  rgba(255,255,255,.05) 0 1px, transparent 1px 3px),
     repeating-linear-gradient(90deg, rgba(0,0,0,.05)       0 1px, transparent 1px 3px);
 }
+
+/* Anything printed with a `data-lex` opens the Lexicon when clicked, so it is
+   dressed as a link wherever it stands — blue and underlined, the unvisited
+   colour, because a name in the epigraph is not a word you have placed. The
+   sentences overrule this further down: a word set on the board is a link you
+   have been down, and goes purple. */
+[data-lex] { color: var(--link); text-decoration: underline; }
 
 /* The document sits on the grey like a window on a desktop, and two more
    windows may be opened either side of it. */
@@ -235,8 +288,12 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
   position: relative; background: var(--card); border: 2px solid;
   border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
 }
-/* the frontier: squares a word you have placed already touches */
-.noun.reachable { outline: 1px dashed var(--link); outline-offset: -4px; }
+/* The frontier used to be marked here — `outline: 1px dashed var(--link)` on
+   every square a placed word touched. Cut at 3.12. Inset four pixels and dashed,
+   it read as a ring of blue dots loose inside the box rather than as a property
+   of the square, and it was the only decoration on the board that was not
+   either a word or a wire. The class is still set on the element, so a hint
+   that wants those squares can have them without going back through app.js. */
 .noun.selected {
   background: var(--hl);
   border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
@@ -418,13 +475,26 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
 
 /* ---- status bar --------------------------------------------------- */
 
+/* Two panes, as a status bar of the period had: what the page is doing on the
+   left, whose page it is on the right. */
 footer {
+  display: flex; align-items: baseline; gap: 12px;
   margin: 22px -26px 0; background: var(--face); padding: 4px 8px;
   border-top: 2px solid; border-color: var(--bevel-lo) transparent transparent;
 }
 footer p { margin: 0; font-family: var(--mono); font-size: 10px; color: var(--ink-soft);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-footer p::before { content: "\2691 "; }
+footer p:first-child { flex: 1 1 auto; }
+footer .notice { flex: 0 0 auto; }
+/* A trailing space inside `content` is collapsed away, so the flag sat against
+   the first word with nothing between them. The gap has to be a margin. */
+footer p:first-child::before { content: "\2691"; margin-right: 7px; }
+
+@media (max-width: 640px) {
+  /* Two panes do not fit; the notice is the one that goes, being the one a
+     reader can find in the source and does not need on a phone. */
+  footer .notice { display: none; }
+}
 
 @media (max-width: 640px) {
   .desktop { padding: 0 0 30px; gap: 10px; }
@@ -655,6 +725,59 @@ footer p::before { content: "\2691 "; }
 .rules h2:first-child { margin-top: 0; }
 .rules p { font-family: var(--serif); font-size: 15px; line-height: 1.5; margin: 0 0 4px; max-width: 62ch; }
 .rules em { font-style: normal; font-weight: 700; }
+/* The line the whole note is walking towards. It gets a rule above it and room
+   to stand: on a page of two short paragraphs, a closing line set in the body
+   size is not a close, it is a fourth sentence. */
+.rules p.closer {
+  margin: 14px 0 2px; padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 17px; font-weight: 700;
+}
+
+/* ---- the note's figure: the argument, drawn as a board -------------- */
+
+/* Berners-Lee set his 1989 proposal as a graph of boxes joined by labelled
+   arrows, which is a Crosslink board four years before there was one. The
+   figure repeats that shape in this game's own dress, so every value here is
+   lifted from the board rather than invented: `--card` squares with the same
+   two-tone bevel, a `--wire` line, a `--link` head, and the verb printed on a
+   chip the wire passes behind. Nothing is hard-coded, so it turns over with
+   the rest of the page when the theme changes. */
+.fig-wrap { margin: 0 0 14px; }
+.fig-scroll {
+  overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+  background: var(--card); padding: 10px;
+  border: 2px solid; border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
+}
+/* It scales to whatever column it is given, down to a floor. Below that floor
+   the labels stop being readable and the panel scrolls instead — the same
+   bargain `.board-scroll` strikes for a 5x5, and for the same reason. The floor
+   was 660px and had to come down: the main column is about 630px, so the figure
+   scrolled on a full-size desktop and clipped HYPERMEDIA and A BROWSER off the
+   right-hand edge, which are two of the words the argument is made of. */
+.fig { display: block; width: 100%; min-width: 540px; height: auto; }
+
+.fig .cells rect {
+  fill: var(--card); stroke: var(--bevel-lo); stroke-width: 1.5;
+}
+.fig .cells .hub rect { stroke: var(--ink); stroke-width: 2.5; }
+.fig .cells text {
+  font-family: var(--serif); font-size: 13px; fill: var(--ink);
+  text-anchor: middle; letter-spacing: .04em;
+}
+.fig .cells .hub text { font-weight: 700; font-size: 15px; }
+
+.fig .wires line { stroke: var(--wire); stroke-width: 1; }
+.fig .head { fill: var(--link); }
+.fig .lbl rect { fill: var(--card); }
+.fig .lbl text {
+  font-family: var(--sans); font-size: 10px; fill: var(--ink); text-anchor: middle;
+}
+
+.fig-wrap figcaption {
+  margin: 6px 0 0; font-family: var(--sans); font-size: 11px;
+  color: var(--ink-faint); max-width: 62ch;
+}
 
 /* ---- lexicon: where the word lives ---- */
 

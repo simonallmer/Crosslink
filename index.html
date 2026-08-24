@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CrossLink</title>
+<title>Crosslink</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="cursors.css">
 </head>
@@ -12,7 +12,7 @@
 
 <main>
   <div class="win-bar main-bar">
-    <span class="win-title" id="win-name">CrossLink</span>
+    <span class="win-title" id="win-name">Crosslink</span>
     <button class="win-x" id="x-main" title="Close" aria-label="Close">&#10006;</button>
   </div>
 
@@ -82,7 +82,7 @@
 
       <div class="banner-type">
         <p class="banner-kicker">Simon Allmer Presents</p>
-        <h1 class="banner-name">CrossLink</h1>
+        <h1 class="banner-name">Crosslink</h1>
         <p class="banner-sub">A Game of Connections</p>
       </div>
     </div>
@@ -136,14 +136,14 @@
       </div>
     </div>
 
-    <p class="front-note">Welcome to the CrossLink Home Page on the World Wide Web.</p>
+    <p class="front-note">Welcome to the Crosslink Home Page on the World Wide Web.</p>
     <p class="front-out"><span class="dot" aria-hidden="true">&#9679;</span> <a href="https://simonallmer.com" class="out">Back to Simon Allmer</a></p>
   </section>
 
   <!-- ===================== the board ===================== -->
   <section class="view" id="view-play" hidden>
     <header>
-      <p class="eyebrow" id="eyebrow">CrossLink</p>
+      <p class="eyebrow" id="eyebrow">Crosslink</p>
       <h1 id="title">The Centre Is a Fish</h1>
       <p class="standfirst" id="standfirst"></p>
     </header>
@@ -154,7 +154,7 @@
     </div>
 
     <div class="board-scroll">
-      <div id="board" class="board" role="grid" aria-label="CrossLink board"></div>
+      <div id="board" class="board" role="grid" aria-label="Crosslink board"></div>
     </div>
 
     <input id="ghost-input" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-hidden="true">
@@ -183,7 +183,7 @@
   <!-- ===================== the index of boards ===================== -->
   <section class="view" id="view-puzzles" hidden>
     <h1 class="page-title">Puzzles</h1>
-    <p class="page-sub">Every CrossLink so far. A word may be set in more than one of them.</p>
+    <p class="page-sub">Every Crosslink so far. A word may be set in more than one of them.</p>
     <table class="index" id="puzzle-index"></table>
     <p class="page-foot" id="puzzle-foot"></p>
   </section>
@@ -199,6 +199,214 @@
     <ul class="wordgrid" id="word-index"></ul>
   </section>
 
+  <!-- ===================== the note ===================== -->
+  <!-- Reached by Shift+S from the front page and by nothing else, for now.
+       Berners-Lee drew his 1989 proposal as a graph of labelled relations,
+       which is a Crosslink board four years before there was one, so the
+       manifesto is set the same way and in this game's own dress.
+
+       There is no prose. The figure IS the argument, and a paragraph restating
+       it underneath was the page conceding the drawing had not worked. The
+       whole case is now readable in one screen without scrolling. What a
+       sighted reader gets from the layout, a screen reader gets from the
+       figure's `aria-label`, which carries every relation in order — that is
+       the only place the argument exists in sentences, and it has to. -->
+  <section class="view" id="view-intro" hidden>
+    <h1 class="page-title">Crosslink Introduction</h1>
+
+    <!-- No byline. His name is a square in the figure below, with an arrow off
+         it reading "invented" — printing it again above the drawing said the
+         same thing twice, and the weaker way round. -->
+    <figure class="fig-wrap">
+      <div class="fig-scroll">
+      <svg class="fig" viewBox="0 0 754 606" role="img" aria-label="The argument drawn as a board. The crossword is set in a newspaper, joins its words by spelling and asks for recall. The Web is hypertext, includes hypermedia, is read in a browser, and made the Crosslink possible. The Crosslink joins its words by meaning, runs on polysemy, is built on a database and is played on a computer. BANK, for example, means the edge of a river, where money is kept, a tier of seats, and to tilt a plane. Simon Allmer invented it.">
+        <g class="wires">
+          <line x1="185.0" y1="45.0" x2="240.0" y2="45.0"/>
+          <polygon class="head" points="249.0,45.0 239.0,49.5 239.0,40.5"/>
+          <g class="lbl">
+            <rect x="190.5" y="38.5" width="44.0" height="13" rx="1"/>
+            <text x="212.5" y="48.5">asks for</text>
+          </g>
+          <line x1="103.0" y1="67.0" x2="103.0" y2="118.0"/>
+          <polygon class="head" points="103.0,127.0 98.5,117.0 107.5,117.0"/>
+          <g class="lbl">
+            <rect x="78.8" y="86.0" width="48.5" height="13" rx="1"/>
+            <text x="103.0" y="96.0">is set in</text>
+          </g>
+          <line x1="144.9" y1="67.0" x2="251.1" y2="122.8"/>
+          <polygon class="head" points="259.1,127.0 248.2,126.3 252.4,118.4"/>
+          <g class="lbl">
+            <rect x="153.5" y="88.4" width="89.0" height="13" rx="1"/>
+            <text x="198.0" y="98.4">joins its words by</text>
+          </g>
+          <line x1="533.0" y1="45.0" x2="600.0" y2="45.0"/>
+          <polygon class="head" points="609.0,45.0 599.0,49.5 599.0,40.5"/>
+          <g class="lbl">
+            <rect x="535.5" y="38.5" width="62.0" height="13" rx="1"/>
+            <text x="566.5" y="48.5">extends with</text>
+          </g>
+          <line x1="471.0" y1="127.0" x2="471.0" y2="76.0"/>
+          <polygon class="head" points="471.0,67.0 475.5,77.0 466.5,77.0"/>
+          <g class="lbl">
+            <rect x="462.5" y="95.0" width="17.0" height="13" rx="1"/>
+            <text x="471.0" y="105.0">is</text>
+          </g>
+          <line x1="533.0" y1="149.0" x2="600.0" y2="149.0"/>
+          <polygon class="head" points="609.0,149.0 599.0,153.5 599.0,144.5"/>
+          <g class="lbl">
+            <rect x="540.0" y="142.5" width="53.0" height="13" rx="1"/>
+            <text x="566.5" y="152.5">is read in</text>
+          </g>
+          <line x1="454.9" y1="171.0" x2="406.1" y2="237.7"/>
+          <polygon class="head" points="400.8,245.0 403.0,234.3 410.3,239.6"/>
+          <g class="lbl">
+            <rect x="397.2" y="197.9" width="66.5" height="13" rx="1"/>
+            <text x="430.5" y="207.9">made possible</text>
+          </g>
+          <line x1="322.0" y1="299.0" x2="177.3" y2="365.3"/>
+          <polygon class="head" points="169.1,369.0 176.3,360.7 180.0,368.9"/>
+          <g class="lbl">
+            <rect x="205.1" y="325.6" width="89.0" height="13" rx="1"/>
+            <text x="249.6" y="335.6">joins its words by</text>
+          </g>
+          <line x1="380.1" y1="299.0" x2="378.0" y2="360.0"/>
+          <polygon class="head" points="377.7,369.0 373.6,358.9 382.6,359.2"/>
+          <g class="lbl">
+            <rect x="359.3" y="323.0" width="39.5" height="13" rx="1"/>
+            <text x="379.1" y="333.0">runs on</text>
+          </g>
+          <line x1="477.0" y1="271.6" x2="548.0" y2="271.3"/>
+          <polygon class="head" points="557.0,271.3 547.0,275.8 547.0,266.8"/>
+          <g class="lbl">
+            <rect x="483.8" y="265.0" width="57.5" height="13" rx="1"/>
+            <text x="512.5" y="275.0">is built on</text>
+          </g>
+          <line x1="458.3" y1="299.0" x2="558.5" y2="334.0"/>
+          <polygon class="head" points="567.0,337.0 556.1,337.9 559.1,329.5"/>
+          <g class="lbl">
+            <rect x="477.4" y="310.0" width="62.0" height="13" rx="1"/>
+            <text x="508.4" y="320.0">is played on</text>
+          </g>
+          <line x1="377.0" y1="413.0" x2="377.0" y2="440.0"/>
+          <polygon class="head" points="377.0,449.0 372.5,439.0 381.5,439.0"/>
+          <g class="lbl">
+            <rect x="348.2" y="420.0" width="57.5" height="13" rx="1"/>
+            <text x="377.0" y="430.0">for example</text>
+          </g>
+          <line x1="314.1" y1="493.0" x2="196.7" y2="534.0"/>
+          <polygon class="head" points="188.2,537.0 196.2,529.5 199.1,537.9"/>
+          <g class="lbl">
+            <rect x="240.1" y="507.0" width="30.5" height="13" rx="1"/>
+            <text x="255.4" y="517.0">means</text>
+          </g>
+          <line x1="360.6" y1="493.0" x2="333.3" y2="529.8"/>
+          <polygon class="head" points="327.9,537.0 330.2,526.3 337.5,531.7"/>
+          <g class="lbl">
+            <rect x="331.7" y="504.9" width="30.5" height="13" rx="1"/>
+            <text x="346.9" y="514.9">means</text>
+          </g>
+          <line x1="403.9" y1="493.0" x2="450.6" y2="531.3"/>
+          <polygon class="head" points="457.6,537.0 447.0,534.1 452.7,527.2"/>
+          <g class="lbl">
+            <rect x="412.0" y="505.6" width="30.5" height="13" rx="1"/>
+            <text x="427.2" y="515.6">means</text>
+          </g>
+          <line x1="441.0" y1="492.2" x2="568.0" y2="534.2"/>
+          <polygon class="head" points="576.5,537.0 565.6,538.1 568.5,529.6"/>
+          <g class="lbl">
+            <rect x="489.2" y="506.7" width="30.5" height="13" rx="1"/>
+            <text x="504.5" y="516.7">means</text>
+          </g>
+          <line x1="597.2" y1="417.0" x2="428.7" y2="304.0"/>
+          <polygon class="head" points="421.3,299.0 432.1,300.8 427.1,308.3"/>
+          <g class="lbl">
+            <rect x="491.0" y="354.0" width="44.0" height="13" rx="1"/>
+            <text x="513.0" y="364.0">invented</text>
+          </g>
+        </g>
+        <g class="cells">
+          <g class="cell">
+            <rect x="24" y="26" width="158" height="38"/>
+            <text x="103.0" y="50.0">THE CROSSWORD</text>
+          </g>
+          <g class="cell">
+            <rect x="24" y="130" width="158" height="38"/>
+            <text x="103.0" y="154.0">A NEWSPAPER</text>
+          </g>
+          <g class="cell">
+            <rect x="252" y="26" width="98" height="38"/>
+            <text x="301.0" y="50.0">RECALL</text>
+          </g>
+          <g class="cell">
+            <rect x="252" y="130" width="98" height="38"/>
+            <text x="301.0" y="154.0">SPELLING</text>
+          </g>
+          <g class="cell">
+            <rect x="412" y="26" width="118" height="38"/>
+            <text x="471.0" y="50.0">HYPERTEXT</text>
+          </g>
+          <g class="cell">
+            <rect x="612" y="26" width="122" height="38"/>
+            <text x="673.0" y="50.0">HYPERMEDIA</text>
+          </g>
+          <g class="cell">
+            <rect x="412" y="130" width="118" height="38"/>
+            <text x="471.0" y="154.0">THE WEB</text>
+          </g>
+          <g class="cell">
+            <rect x="612" y="130" width="122" height="38"/>
+            <text x="673.0" y="154.0">A BROWSER</text>
+          </g>
+          <g class="cell hub">
+            <rect x="288" y="248" width="186" height="48"/>
+            <text x="381.0" y="277.0">THE CROSSLINK</text>
+          </g>
+          <g class="cell">
+            <rect x="60" y="372" width="122" height="38"/>
+            <text x="121.0" y="396.0">MEANING</text>
+          </g>
+          <g class="cell">
+            <rect x="316" y="372" width="122" height="38"/>
+            <text x="377.0" y="396.0">POLYSEMY</text>
+          </g>
+          <g class="cell">
+            <rect x="316" y="452" width="122" height="38"/>
+            <text x="377.0" y="476.0">BANK</text>
+          </g>
+          <g class="cell">
+            <rect x="48" y="540" width="166" height="34"/>
+            <text x="131.0" y="562.0">THE EDGE OF A RIVER</text>
+          </g>
+          <g class="cell">
+            <rect x="230" y="540" width="166" height="34"/>
+            <text x="313.0" y="562.0">WHERE MONEY IS KEPT</text>
+          </g>
+          <g class="cell">
+            <rect x="412" y="540" width="140" height="34"/>
+            <text x="482.0" y="562.0">A TIER OF SEATS</text>
+          </g>
+          <g class="cell">
+            <rect x="568" y="540" width="138" height="34"/>
+            <text x="637.0" y="562.0">TO TILT A PLANE</text>
+          </g>
+          <g class="cell">
+            <rect x="560" y="252" width="140" height="38"/>
+            <text x="630.0" y="276.0">A DATABASE</text>
+          </g>
+          <g class="cell">
+            <rect x="560" y="340" width="140" height="38"/>
+            <text x="630.0" y="364.0">A COMPUTER</text>
+          </g>
+          <g class="cell">
+            <rect x="560" y="420" width="140" height="38"/>
+            <text x="630.0" y="444.0">SIMON ALLMER</text>
+          </g>
+        </g>
+      </svg>
+      </div>
+    </figure>
+  </section>
+
   <!-- ===================== the rulebook ===================== -->
   <section class="view" id="view-rules" hidden>
     <h1 class="page-title">Rulebook</h1>
@@ -206,7 +414,7 @@
       <p>&#8220;The dictionary defines words only in terms of other words. What matters is not
       the words themselves which are a collection of mostly arbitrary sounds, but the
       <em>relationships</em> between one word to the next.&#8221;</p>
-      <cite>Tim <span class="n" data-lex="BERNERS-LEE">Berners-Lee</span>, CERN, 1994</cite>
+      <cite><span class="n" data-lex="BERNERS-LEE">Tim Berners-Lee</span>, CERN, 1994</cite>
     </blockquote>
     <div class="rules">
       <h2>The board</h2>
@@ -218,9 +426,9 @@
       <p>Every connection on the board is shown from the start. Nothing is hidden: the whole
       network is there to be read, and you can work out any square in it from where you are
       sitting.</p>
-      <p>You may write in any square, in any order. The squares a placed word already touches
-      are marked, because that is usually where the next one comes easiest — but nothing is
-      locked, and if you can see a word in the far corner you may set it down at once.</p>
+      <p>You may write in any square, in any order. Working outward from a word you have
+      already placed is usually where the next one comes easiest — but nothing is locked, and
+      if you can see a word in the far corner you may set it down at once.</p>
 
       <h2>Turning a connection over</h2>
       <p>Some connections are written twice. Where one is, its sentence carries a faint dotted
@@ -267,12 +475,29 @@
       how ordinary they are, and how many of them are being used in a second sense. A board
       of plain facts earns one star. A board where half the words are wearing two coats
       earns three.</p>
+
+      <h2>Where this came from</h2>
+      <p>The same argument, drawn. Squares are the words and the wires between them carry
+      the sentence, which is what a board does and what a proposal written at CERN in 1989
+      did first.</p>
     </div>
+
+    <!-- The figure is not repeated in the markup: app.js clones the one on the
+         note into here at startup, so `tools/make-figure.py` stays the single
+         source and a regenerated drawing cannot land on one page and not the
+         other. -->
+    <figure class="fig-wrap" id="rules-fig"><div class="fig-scroll"></div></figure>
+
     <p class="credit">Game Design: Simon Allmer</p>
   </section>
 
+  <!-- Two panes, the way a status bar of the period had them. The left one is
+       live — engine.js writes hints into `footer p` and puts the idle line back
+       afterwards, and it takes the FIRST p, so the notice on the right is never
+       touched by it. -->
   <footer>
     <p>Words in the cells. Connections in the gutters. Any square, any order.</p>
+    <p class="notice">&#169; 2026 Simon Allmer Entertainment</p>
   </footer>
 </main>
 
@@ -311,13 +536,12 @@
 <script src="vocabulary.js"></script>
 <script src="spelling.js"></script>
 <script src="lexicon.js"></script>
-<script src="puzzles/puzzle-01-flow.js"></script>
-<script src="puzzles/puzzle-02-nile.js"></script>
-<script src="puzzles/puzzle-03-landfall.js"></script>
-<script src="puzzles/puzzle-04-bread.js"></script>
-<script src="puzzles/puzzle-05-orchard.js"></script>
-<script src="puzzles/puzzle-06-press.js"></script>
-<script src="puzzles/puzzle-07-steam.js"></script>
+<script src="puzzles/puzzle-01-nile.js"></script>
+<script src="puzzles/puzzle-02-landfall.js"></script>
+<script src="puzzles/puzzle-03-bread.js"></script>
+<script src="puzzles/puzzle-04-orchard.js"></script>
+<script src="puzzles/puzzle-05-press.js"></script>
+<script src="puzzles/puzzle-06-steam.js"></script>
 <script src="engine.js"></script>
 <script src="app.js"></script>
 </body>

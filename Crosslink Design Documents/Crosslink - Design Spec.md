@@ -1,4 +1,4 @@
-# CrossLink — Design Spec
+# Crosslink — Design Spec
 
 **Revision 4.1 · 23 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
@@ -36,7 +36,7 @@ moment (§0, R0); the banner loses its confetti; the arrow gets a continuity tes
 derived (A2e); light and dark become a choice, by a sun and a moon (A9).*
 *1.6 → 1.7: **the last gate goes** — any square may be written in, in any order
 (R0b); Peek ahead is retired with it.*
-*1.7 → 1.8: the game is styled **CrossLink** (A10); both cursors are redrawn at
+*1.7 → 1.8: the game is styled **CrossLink** (A10, since reversed at 3.10); both cursors are redrawn at
 full detail and shown at their true size, one art pixel to one screen pixel.*
 *1.8 → 1.9: board №7 is rewritten against E6, and **E9** joins the acceptance
 test — no connection may name a word that is on its own board.*
@@ -466,6 +466,22 @@ newspaper-puzzle look was borrowed, not ours.
      of the hand and mostly black. The two now finish at 24×36 and 22×30 css
      pixels, which is the test — not the grid they were drawn on, but the weight
      they carry on screen next to each other.*
+     *Shortened again at 3.12, 25 rows to 23.* Beside the hand at 18×22 the
+     arrow still read as the bigger of the pair, and a pointer that looks
+     heavier than the hand it alternates with makes the hand read as a state
+     rather than as a shape. **Only the tail was cut** — one of its five
+     two-row steps, with the terminator moved in a column to close it. The head
+     keeps all fourteen rows of fill, because that proportion is what the trace
+     exists to protect and is the one thing five drawings from memory each got
+     wrong in the same direction.
+  1b. **The generator owns the file, so the file must never be edited.**
+     *Learned at 3.12, the hard way.* `cursors.css` is written whole by
+     `tools/make-cursors.py`, selector list and all. Two selectors had been
+     added to the CSS by hand over time and never put back into the script, so
+     the next run of the script — which was only a check on the pixel
+     dimensions — silently dropped both, and the hand cursor came off the
+     lexicon links and the turnable gutters. Anything added to `cursors.css`
+     goes in the template or it does not survive the next build.
   2. **Bone, not white.** #F6F0DC. White reads as a modern cursor; bone reads as
      a cursor that was drawn by somebody.
   3. **Small pixel art is drawn, not derived.** Three attempts at deriving the
@@ -674,6 +690,26 @@ that still plays in twenty-five years. So the frame is not a calendar. It is a
 **hunt**.
 
 - **H1 — Fifty boards, 3×3.** Four hundred and fifty squares in the whole game.
+- **H2a — A word is only spent if it is right where it stands.** *New at 3.12,
+  from a player.* H2 forbids setting a word twice on one board, and `submit()`
+  enforced it against **every** filled square — including squares holding a
+  word that is wrong. So: put a word in the wrong square, watch it go red,
+  work out where it really belongs, and the board refuses it, because you have
+  *already used it* on the mistake you just made.
+
+  That is the only place in the game where being wrong once costs you something
+  later, and it contradicts §5's whole position on help and error: nothing is
+  final, a square you take back keeps any mark it earned, and a wrong word is an
+  error occupying a square rather than a move that has been spent.
+
+  **With the check off the rule stays structural**, and that is deliberate
+  rather than an oversight. Dedupe against correct placements only, and a
+  refusal would announce that the word already down is *right* — which is a
+  verdict, and **A8b** holds that neither the page nor the speakers give
+  verdicts while the check is off. So with the check on, only a correct
+  placement blocks; with it off, any placement blocks and the refusal tells you
+  nothing you could not already see.
+
 - **H2 — No word is set twice on one board. Across the game, a word may repeat.**
   *Repealed and rewritten at 3.9.* It used to read *every word is set once, in the
   entire game* — a word caught was caught for good. The rule was written to make
@@ -871,15 +907,14 @@ seven boards**, none of them twice.
   *Rules drawn inside the artwork were struck* — the banner crops as it scales,
   so anything meant to sit near the type has to be drawn in CSS, next to the type.
 - **A8 — The game makes a noise, and it is synthesised.** `sound.js` builds every
-  sound out of square waves with hard envelopes: no files, nothing to fetch,
-  nothing to go missing, and exactly what a sound card of the period could do
-  without loading a sample.
+  sound on the spot: no files, nothing to fetch, nothing to go missing. Until 3.9
+  that meant square waves throughout, which was half right; see **A8f**.
 
   | | |
   |---|---|
-  | a control going down | one short high blip |
-  | a square picked up | a softer, lower tick |
-  | a letter set down | a very short key click |
+  | a control going down | a dry switch, low and broad |
+  | a square picked up | a lighter, brighter contact |
+  | a letter set down | the shortest thing in the game |
   | a word entered, error check **off** | two neutral tones, no verdict |
   | a word entered, error check **on** | a rising third for right, a low saw buzz for wrong |
   | a window opening / closing | a slide up / a slide down |
@@ -897,6 +932,36 @@ seven boards**, none of them twice.
     when you have done something right; every word set down felt like a small win
     it had no business promising. It is now two notes a whole tone apart, the
     second quieter: the shape of *is that right?* rather than *well done*.
+  - **A8f — A contact is noise. A verdict is a tone.** *New at 3.9, from a
+    player who said the clicks sounded like a phone keyboard, and was right.*
+    The click was `note(1320, 0, 0.035, 0.05)`: a 1320Hz square, thirty-five
+    milliseconds, flat top. A short pitched pop is precisely how a soft keyboard
+    is synthesised, so the resemblance was not a coincidence — it was the same
+    method.
+
+    The period argument had been applied one level too widely. A **beep** is the
+    machine speaking, and the machine of 1994 spoke in square waves. A **click**
+    is not the machine speaking at all: clicking a button in software then made
+    no sound whatever, and the noise anyone remembers came from the switch under
+    their finger. A switch has no pitch. It is broadband noise that dies in a
+    hundredth of a second.
+
+    So the file now has two families, and every new sound must be assigned to
+    one before it is written:
+
+    | family | how it is made | what belongs to it |
+    |---|---|---|
+    | **contact** | white noise through a bandpass, hard exponential decay | click, tick, key |
+    | **verdict** | square or saw oscillator, hard envelope | place, good, bad, open, shut, close, giveup |
+
+    Two things the contact family must keep. **Q stays under 2** — a tighter
+    band starts to find a pitch again and the click stops being a click. And
+    **every hit detunes at random**, widest on `key`: without it, nine letters
+    typed in a row play the same twelve milliseconds nine times and the ear
+    hears a buzzer instead of a hand. Verified by re-rendering the click in an
+    `OfflineAudioContext` and measuring the regularity of its zero crossings —
+    **jitter ratio 0.723**, where a pure tone scores 0.
+
   - **A8e — The fanfare belongs to a board you closed, not one you gave up.**
     Pressing S used to play the closing four-note run as well as the falling
     give-up slide, which is the same lie in the other direction.
@@ -931,14 +996,301 @@ seven boards**, none of them twice.
   preference is not progress (H4), and a tab is about the right length of memory
   for it: long enough to survive a reload, short enough not to be a promise.
 
-- **A10 — The game is styled *CrossLink*.** The intercap is the house style of
-  exactly this period — HotWired, WebCrawler, InfoSeek, AltaVista, GeoCities,
-  QuickTime, HyperCard, PageMaker — inherited from identifier conventions and
-  worn openly in logotypes for about five years. *CrossLinks* would be wrong:
-  plurals then belonged to magazines and sections, and the game is one lattice.
+- **A10 — The game is styled *Crosslink*.** *Reversed at 3.10. It was
+  **CrossLink** from 1.8 to 3.10, and the old argument is kept below because it
+  is a good argument that turned out to be about the wrong thing.*
+
+  The intercap was defended as the house style of exactly this period —
+  HotWired, WebCrawler, InfoSeek, AltaVista, GeoCities, QuickTime, HyperCard,
+  PageMaker — inherited from identifier conventions and worn openly in logotypes
+  for about five years. All true, and it is still the reason the *dress* of this
+  game is what it is.
+
+  But everything else period-correct here is dress: the bevels, the pixel
+  cursor, the Location bar, the ♪ On toggle. Dress may be 1994 precisely because
+  the game underneath is not. **A name is not dress.** It is the one element
+  that leaves the window — onto a Journal spine, into speech, into somebody
+  else's sentence — and an intercap does not survive that journey. It is
+  inaudible spoken and invisible in capitals.
+
+  The sorting test decides it. The intercaps still read as names — QuickTime,
+  HyperCard — survived because a company maintained them for thirty years. The
+  ones that now read as *dated* — InfoSeek, HotWired, GeoCities — read that way
+  because the raised letter timestamps them. That is **W5** failing, on exactly
+  the axis W5 exists for.
+
+  So: **Crosslink**, one word, one capital, everywhere the name is set as text —
+  the title bar, the tab, the eyebrow, the rulebook, the prose. The masthead is
+  `text-transform: uppercase` and reads CROSSLINK either way, which is the
+  clearest evidence that the intercap was never buying anything where it
+  mattered most.
+
   **The URL stays lowercase** — `simonallmer.com/crosslink/` — which was equally
-  the convention. The masthead is set in capitals, so the intercap is invisible
-  there and shows where it should: the title bar, the eyebrow, the prose.
+  the convention, and is now simply the name in another case.
+
+- **A16 — The status bar has two panes.** *At 3.14.* What the page is doing on
+  the left, whose page it is on the right: **© 2026 Simon Allmer Entertainment**.
+  Two panes is what a status bar of the period had, and it settles the problem
+  E27 opened — the live pane keeps *Words in the cells. Connections in the
+  gutters. Any square, any order.*, which after the standfirsts went was the
+  only instruction visible anywhere outside the rulebook.
+
+  `engine.js` writes hints into `footer p` and takes the **first** one, so the
+  notice is never overwritten by a hover and never needs to know it is there.
+  Below 640px the notice is what goes: a reader can find a copyright line in the
+  source, and cannot find the instruction anywhere else on a phone.
+
+  **The flag needed a margin, not a space.** `content: "\2691 "` had a trailing
+  space in it, and a trailing space inside generated content is collapsed away,
+  so the flag sat against the first word with nothing between them. It is
+  `content: "\2691"` and `margin-right: 7px` now. A space in `content` is not a
+  space on the page.
+
+- **A15 — One board, one colour.** *New at 3.13.* Each board carries a `hue`,
+  and it tints the paper for as long as that board is open: sand for the desert,
+  blue for the sea, crust for the bread, green for the garden, a cooler grey for
+  the print shop, firebrick for the steam. The front page and every other page
+  keep the default #C6C6BE.
+
+  It does the work the standfirst used to do, without the cost. A colour tells
+  you a board has a character before you start and tells you **nothing about
+  what it is**, which is exactly the trade E27 was looking for. It is also
+  period to the bone: a page of 1995 announced itself by being a colour.
+
+  Three decisions inside it:
+
+  1. **`--sheet` and `--page` are tinted; `--card` is not.** `--sheet` is the
+     document, the two side windows and the chips the wires pass behind, so the
+     whole page turns at once. `--page` is the desktop the window sits on, added
+     at 3.14 — and it is carried down by the **measured** distance between the
+     two defaults, #C6C6BE over #8E8E86, which is 0x38 off every channel. Taking
+     the distance rather than choosing a second colour by eye is what keeps the
+     pair reading as one surface under another instead of as two colours that
+     happen to be near each other. **`--card` stays white**: a square you write
+     into is paper, and tinted paper is a form field.
+  2. **Every tint sits at roughly the luminance of the default.** A colour that
+     is merely darker reads as a different interface; a colour at the same
+     weight reads as different paper. It also keeps the two-tone bevels working
+     and the black type legible, neither of which survives a tint chosen by eye
+     for prettiness.
+  3. **It goes on `body`, and the dark values must be written out.** The
+     palettes live on `:root`, and `body` is root's child, so a declaration on
+     body shadows the inherited one whatever the selectors weigh. Leave the dark
+     rules out and a board in dark mode inherits the *light* tint. They are
+     written twice, once for the system preference and once for the toggle, for
+     the same reason the palette is.
+
+- **A14 — There is a note, and it is not on the menu.** *New at 3.10.* A
+  headline, two short paragraphs and a closing line, by Simon Allmer: **The Time
+  Has Come for Change.** A hundred years of puzzle pages asking one thing,
+  *remember* — isolated words, random facts, letters shoved together because the
+  letters happened to fit. *That was the best paper could do, but the World Wide
+  Web offers links.* Then the turn: **Crosslink is built on meaning between
+  words**, and the Web did not arrive to make the old things faster, it arrived
+  to make new ones possible.
+
+  It ends on **Let Crosslink guide the change**, set alone under a rule. That
+  line is the whole point of the page and the only thing on it asking for
+  anything — for the click, not for an opinion, which an earlier draft asked for
+  and should not have.
+
+  **A14b — The manifesto is a figure, and the figure is a board.** *Added at
+  3.10.* Berners-Lee drew *Information Management: A Proposal* in 1989 as a
+  graph: clouds and boxes joined by arrows with the relation written on each
+  one — *includes*, *describes*, *for example*, *unifies*, *wrote*. That is a
+  Crosslink board four years before there was one. It is the same claim this
+  game makes, made in the same way, by the same person the Rulebook already
+  quotes, and it had been sitting in plain sight the whole time.
+
+  So the note leads with the argument **drawn**, in this game's own dress rather
+  than in his. Fifteen squares, thirteen wires. Every value is lifted from the
+  board and none is invented: `--card` squares with the two-tone bevel, a
+  `--wire` line, a `--link` head, the relation printed in the sans face on a
+  chip the wire passes behind. It is not a picture of a board, it is a board —
+  which is why it themes, and why it scrolls inside its own panel on a narrow
+  screen exactly as a 5x5 does.
+
+  The vocabulary A14a asks for is now *in the squares* — HYPERTEXT, HYPERMEDIA,
+  A BROWSER, A DATABASE, POLYSEMY — which is a better place for it than a
+  sentence, because in a square a term is a thing with relations rather than a
+  word being dropped.
+
+  **Read against the original at 3.11**, at `w3.org/History/1989/proposal-msw.html`.
+  His arrows are labelled *includes*, *describes*, *refers to*, *is an example
+  of*, *depends on*, *is part of*, *made*. *Includes* is used here as he used
+  it, on HYPERTEXT to HYPERMEDIA.
+
+  His author chain was copied and then dropped. He runs it in two hops — a
+  person **wrote** the document, the document **describes** the proposal — so
+  the page appears inside its own diagram, which is a good joke and was his
+  first. Reproduced here it cost a square and a wire to say something about the
+  page rather than about the game, and the figure is short of neither. **SIMON
+  ALLMER invented THE CROSSLINK** is one hop, and it says the thing worth
+  saying. Faithfulness to a source is worth having only where the source is
+  solving the same problem; his diagram had to explain what the document was,
+  and this one does not.
+
+  Still on the shelf from that reading: he has two named problems, *The problem
+  with trees* and *The problem with keywords*, and this figure has no critique
+  of hierarchy or of indexing by keyword at all. A second figure could carry it.
+  Also unused, and the best line in the document for our purposes: that a method
+  of storage must not impose its own restraints on what is stored. That is
+  precisely the charge against a letter grid, and it is not yet drawn.
+
+  **BANK is opened out.** *Added at 3.11.* Polysemy was a square with a single
+  example hanging off it, which states the property without showing it. BANK now
+  fans into four senses — THE EDGE OF A RIVER, WHERE MONEY IS KEPT, A TIER OF
+  SEATS, TO TILT A PLANE — because four arrows off one word is an argument, and
+  a sentence about polysemy is only a claim. The fifth the registry holds is
+  left off under **E25**.
+
+  **Both of the first two were glossed wrong on the way in**, and in the same
+  direction each time: the figure said **A RIVER** where the registry says *the
+  edge of a river*, and **MONEY** where it says *where money is kept*. A river
+  is not its bank and money is not the house that holds it. Each time the gloss
+  slid off the sense and onto the thing next to it, which on a square built to
+  show that senses are distinct is the one error available that refutes the
+  square. The lesson is duller than the rule: **read the registry, do not
+  remember it.**
+
+  The fan is thrown from **the middle of the row it fans to**, which is why BANK
+  is centred under its senses rather than under POLYSEMY. Thrown from one end,
+  the outermost wire ran through the box beside its target.
+
+  **A NEWSPAPER is not a database, and the Crosslink is.** *Corrected at 3.11.*
+  The figure had A NEWSPAPER **is** A DATABASE, carried over from a line of
+  prose where it worked as a knowing figure of speech — *a database you can only
+  read one row at a time*. Drawn as a bald relation it stops being a joke and
+  becomes a claim, and the claim is false: a newspaper has no schema, no key and
+  no query. Worse, it gives away the wrong asset. The thing with a database
+  behind it is **this** game — `registry.js`, `vocabulary.js`, `lexicon.js` —
+  and the README has always said that corpus is the asset and the mechanic is
+  not. So A DATABASE moved to the hub, where it is both true and worth
+  claiming, and the prose moved with it.
+
+  **There is no prose under it, as of 3.11, and no byline as of 3.14.** The page
+  is a title and the figure, and it fits one screen without scrolling. The
+  byline went because his name is already a square in the drawing with an arrow
+  off it reading *invented*, and printing it again above said the same thing
+  twice, the weaker way round: a credit line states the authorship, the square
+  puts it in the graph with everything else. Two paragraphs stood
+  underneath restating the drawing in sentences, and a page that explains its
+  own diagram is a page conceding the diagram did not work. Removing them is not
+  a trim, it is the argument taking its own side: a note claiming that meaning
+  lives in the links between things, and then setting that claim as a wall of
+  running text, is refuting itself in its own layout.
+
+  What goes with the prose is the closing line and the caption. What replaces
+  them is nothing. The figure's **`aria-label` now carries the entire argument
+  in order** — it is the only place the case exists in sentences, and it has to
+  be complete, because for a reader who cannot see the drawing it is not a
+  fallback, it is the page.
+
+  **It is repeated at the foot of the Rulebook**, under *Where this came from*.
+  Not copied into the markup: `app.js` clones the one on the note at startup, so
+  `tools/make-figure.py` stays the single source and a regenerated drawing
+  cannot land on one page and not the other.
+
+  **HYPERTEXT *extends with* HYPERMEDIA**, where the original says *includes*.
+  That one is deliberately not borrowed. The containment runs the other way —
+  hypermedia is hypertext with everything else added to it, so hypertext cannot
+  contain it — and being faithful to a diagram is worth less than being right.
+  The longer label did not fit its gutter, so the whole right-hand column moved
+  twenty pixels left to make the room, which is the sort of thing the generator
+  catches and a person does not.
+
+  **The argument is carried by one repeated label.** *Joins its words by* runs
+  twice: from THE CROSSWORD to SPELLING, and from CROSSLINK to MEANING. Same
+  relation, two different objects, and the whole case is in the pair. Nothing in
+  the prose states it, because the figure states it better, and a caption that
+  explains a diagram is a diagram that failed.
+
+  Three things the drawing had to be argued out of, all found by measuring
+  rather than by looking: arrowheads whose base corners were computed as
+  *angle ± spread*, which puts them in front of the tip and draws every head
+  inside out; two labels wider than the gutters they sat in; and a *wrote* wire
+  from SIMON ALLMER that ran clean under A BOARD and took its label with it.
+
+  **The figure is generated, not drawn**, by `tools/make-figure.py`, which
+  asserts on every run that no label overlaps a square, that no wire passes
+  through a square it does not end at, and that nothing sits off the canvas.
+  Twenty squares and eighteen wires is past the point where a person can
+  see a two-pixel collision in a screenshot, and every fault above was found by
+  arithmetic after a human eye had already passed the drawing. The SVG in
+  `index.html` is that script's output verbatim; if the two ever differ, the
+  script is right.
+
+  **A14a — The three shapes this copy may not use.** *Added at 3.10, after a
+  draft that used all three.* The register is trade press of the period, and the
+  argument is carried by **vocabulary** — hypertext, hypermedia, browser,
+  database, polysemy — rather than by rhetorical figures. Specifically banned,
+  because each one reads as machine-written rather than period:
+
+  | | |
+  |---|---|
+  | **the negative antithesis** | *did not arrive to do X. It arrived to do Y.* Setting up a wrong reading purely to knock it down is a shape almost nobody writing promo in 1995 reached for. |
+  | **the one-word fragment** | *Isolated words. Random facts.* Staccato sentences used for percussion rather than sense. |
+  | **the rule of three** | Three parallel clauses arriving in a row, which announces that the rhythm was chosen before the content. |
+
+  The replacement is longer sentences with technical nouns used casually, on the
+  assumption that the reader knows what a browser is. *A database you can only
+  read one row at a time, which is to say a newspaper* does the work the
+  antithesis was doing, and does it in the voice of somebody who has actually
+  built one.
+
+  One dating note, deliberate: **semantic web is set lower case**, as a
+  description of what a board is, and never as a proper noun. The capitalised
+  term belongs to 1999 and after, which is outside A5's window; the lower-case
+  phrase is just English and was available.
+
+  **It is promotional copy, not an essay.** It took three drafts to find that.
+  The first ran to six paragraphs of argument — the Geneva lecture theatre, the
+  index against the link — which was the author's CV showing. The second cut it
+  to a forum posting and went flat: it explained itself with an example and
+  ended by asking the reader for feedback, and a promise that hedges is not a
+  promise. The register that works is the one the period actually used to sell
+  the future: **declare, do not demonstrate.**
+
+  Three rules fell out of it, and they hold for any copy this house writes in
+  this voice. **No examples** — an example is a concession that the claim needs
+  propping up, and the claim should be strong enough to stand. **Ask for
+  nothing** — no *tell me what you think*, no *have a go*; a manifesto that
+  requests approval has already conceded it might not deserve any. **Give the
+  old thing its due and then bury it** — *that was the best paper could do, and
+  paper has had its century* is not a sneer at crosswords, it is a date stamp,
+  and it is far more final than an insult.
+
+  It says what the epigraph says and **does not quote it**. Berners-Lee is at
+  the head of the Rulebook and that is enough; a second page agreeing with the
+  first in the first man's words is a house repeating itself.
+
+  **Reached by Shift+S from the front page, and by nothing else, for now.** Two
+  reasons it is not a fifth tile. The four tiles are the game — play, index,
+  archive, rules — and a manifesto is not a part of a game, it is the reason
+  there is one; putting it in the row would make it look like a section. And a
+  note that has to be found is read differently from a note that is served,
+  which is the correct way round for this particular note.
+
+  Shift+S already gave a board up. That is not a collision: `giveUp` has always
+  refused to run outside `play`, so the key was free on the front page and is
+  now spent there. **If the note is ever promoted to the menu, this shortcut
+  goes** — a key that is the only door needs no sign, and a key that is a
+  shortcut to a visible door needs a different one.
+
+- **A10c — The genre is *crosslink*, lower case.** A property and the form it
+  invents are distinguished the way *crossword* does it: **Crosslink** is this
+  game and these boards — *today's Crosslink*, *Crosslink No. 4* — and
+  **crosslink** is the form — *a crosslink is nine words in a lattice*, *he
+  builds crosslinks*. Proper noun against common noun, which is the same
+  structure as *Detective Noname* against *riddle novel*: coin the property,
+  name the form in plain English.
+
+  A styled-versus-plain split — *CrossLink* the brand, *Crosslink* the genre —
+  was considered and rejected. Case alone cannot carry the distinction: it dies
+  in speech, dies in a headline, and dies the moment anyone writes about the
+  game without the style sheet. That *crosslink* is already an English word,
+  in polymer chemistry and in genetics, is a point in its favour. *Crossword*
+  was two ordinary words too. A form's name should feel found, not coined.
 - **A10b — A bullet before a link is furniture, not part of it.** The dot in
   *● Back to Simon Allmer* sits outside the anchor: grey, unclickable, no
   underline. Anything blue on this page is a thing you can go to, and a
@@ -1058,6 +1410,276 @@ next ones should be written for the top of the scale.
   third per-word term — *how much must be known to place it* — or a per-board
   declaration is open; the first is more honest and much more work, since it means
   a second number against all 688 words.
+
+- **E20 — A riddle board must hold one twist all the way across.** *New at 3.9.
+  **Everything Flows** withdrawn under it.* E4a admits two kinds of board, the
+  net and the riddle, and says neither is the lesser. It did not say what a
+  riddle owes. This does: **every word that leads a double life must lead the
+  same two lives.** One pair of worlds, declared in the standfirst, and nine
+  words that all stand in both.
+
+  *Everything Flows* promised water and money. What it delivered was six worlds:
+
+  | word | first life | second life as the board used it |
+  |---|---|---|
+  | BANK | river bank | money bank — **the only word that kept the promise** |
+  | NOTE | banknote | *musical* note |
+  | CURRENT | river current | *electrical* current |
+  | VAULT | bank vault | *church* masonry |
+  | WIRE | wire transfer | *electrical* wire |
+  | ORGAN | — | church organ, or the body — **neither half of the promise** |
+
+  Nothing here breaks an older rule. Every sentence is true, every connection is
+  uniquely answered, E7 was satisfied at 2.6 and E10 with it. The board fails on
+  something no rule had named: it is not one riddle but four, and the standfirst
+  it shipped with is a claim the grid does not support. A solver who works out
+  that the middle column leads two lives learns a key that then opens one square
+  in three, which is worse than no key at all — it teaches a pattern and then
+  breaks it.
+
+  **The board is withdrawn, not repaired**, though repair was available and
+  cheap: `CURRENT` already holds a money sense the board never used (*a current
+  account*), and DEPOSIT (silt, and at a bank) and DRAFT (a ship's draught, and
+  a banker's) would have completed a true nine. Withdrawal was chosen because a
+  riddle rebuilt around a rule written to describe its own failure is a board
+  arguing with the reason it was made — the same fault §16 names in *The Centre
+  Is a Fish*. The material is reserved instead, below.
+
+- **E20a — The reserved set.** A water-and-money board is still worth building,
+  and when it is built it starts here rather than from nothing. Held for it:
+  **BANK, CURRENT, NOTE, VAULT, DEPOSIT, DRAFT**, with FLOAT, LIQUID and
+  LAUNDER as candidates for the last three squares. The line worth carrying over
+  is *"a RIVER in a wet year breaks its own BANK"*, which pays twice and is the
+  best sentence either half of the old board produced. ORGAN, MOUTH and BED do
+  not come with it: two of them are water-only and the third was the outlier
+  that made E20 necessary.
+
+- **E21 — A second face is a fact, not a discount, and each board declares what
+  kind of fact.** *New at 3.9, generalising E16b.* E16b split second faces three
+  ways — plainer, different, harder — and that is still the range. What it did
+  not say is that the range is chosen **per board**, and written down, so the
+  next set of backs is not done by feel. The four boards that carry them:
+
+  | board | what the back is for |
+  |---|---|
+  | №1 *The River of Life* | another **fact** about the same pair. The subject holds more true things than nine words can, so a back is worth turning for what it tells you, not for what it makes easier. |
+  | №3 *God's Batch and Devil's Crust* | the **working**, where the front is the picture. Front: yeast lifts dough. Back: it eats the sugar and breathes gas into it. |
+  | №4 *Human Nature* | the **clock**. The front is the moment you can see; the back is how long it took. See below. |
+  | №5 *Set, Inked and Pulled* | the twist read from the other trade. |
+  | №6 *A Fire That Learned to Push* | **plain** where the front was technical, and technical in the mill, where the weaver's words belong. |
+
+  **№4 is the one that had to invent its axis rather than pick one.** *Added at
+  3.12, the last board to get backs.* The five written before it had taken the
+  obvious readings, and reaching for any of them in a garden would have produced
+  the front sentence in other words — which is the failure E21 exists to
+  prevent, and the failure a board of plain concrete nouns is most exposed to.
+
+  What a garden has that a bakery, a ship, a mill and a print shop do not is
+  **time on several scales at once**. Blossom is three days to a bee and a whole
+  year to the tree that made it. A worker bee is six weeks. A tree is the best
+  part of a decade to its first apple. An inch of topsoil is a thousand years.
+  So every front on that board is a snapshot and every back is the clock behind
+  it, and **32 of the 34 carry an explicit measure of time**. The two that do
+  not — bark cracking as the trunk outgrows it, and two million flower-visits to
+  a jar of honey — are accumulation rather than duration, which is the same
+  family.
+
+  The test of an axis is whether turning the whole board tells you something no
+  front face could. Here it does: turned, the garden stops being a thing you are
+  looking at and becomes a set of clocks running at different speeds inside one
+  another. It also makes the board's own best line its thesis — *the gardener
+  plants, for someone else, an orchard* — and gives that gutter the longest
+  clock on the board for its back.
+
+  №2 *Water World* takes the rule furthest: the front is what a **passenger** sees,
+  the back is what the **crew** knows. A passenger sees a ship drop an anchor; a
+  sailor knows it is the seven lengths of chain behind it that hold, and that
+  the anchor must be dragged along the bottom before it digs in at all.
+
+  **E21a — A back must be re-read when its front changes.** *Added at 3.11,
+  from a reader who took a clue for cryptic wordplay.* REEF/WRECK on Water World
+  had its front replaced — *makes a* became *opens a hull below the waterline
+  and leaves a* — and its back was left alone. The back still read *"shows
+  nothing at all at the hour it **makes a** WRECK"*, so it had quietly
+  fossilised the sentence it was there to be the alternative to. A pair of faces
+  is one object with two sides; editing one side is editing the object.
+
+  Two other things surfaced with it, both worth keeping. The claim itself was
+  unsafe: a reef with just enough water over it does not break white and gives
+  no warning, which is true, but the hour it is shallowest is **low** water and
+  low water is also the hour it is most likely to show — so the moment of most
+  danger and the moment of least warning do not reliably coincide, and *at the
+  hour* asserted that they do. And the vagueness had a cost beyond accuracy: a
+  reader took the whole line for **cryptic wordplay**. That is the worst
+  available failure here. There is no wordplay anywhere in this game — every
+  connection is a plain declarative sentence and that is the entire promise — so
+  a clue loose enough to be mistaken for a cryptic is not merely imprecise, it
+  advertises a game this is not.
+
+  Three constraints hold across all of them. A back must be **true in its own
+  direction** — same subject, same object, same arrow, since `dir` belongs to
+  the gutter and not to the face. **A back is checked exactly like a front**:
+  `tools/check-boards.py` reads both faces, and it caught six **E9** breaches in
+  the 3.9 set that a human proof-read had walked straight past — a WRECK that
+  became *a reef* with REEF two squares away, three clues that said *ship* on a
+  board with SHIP on it, a CRUST wanting *water* thrown in with WATER in the
+  corner. A back reads like prose and prose is where a board word hides; run the
+  checker, do not trust the eye. And **a back may not readmit material the
+  board has already rejected.** The bread board cut a KNIFE for being too
+  specialist; scoring a loaf was therefore not available to its backs either,
+  however good a fact it is. A face nobody has to see is exactly where a
+  rejected idea gets smuggled back in, and it is not free: whatever is behind a
+  gutter is what a solver who turns it gets.
+
+- **E22 — Open fault: *HARBOUR is worth having only in a STORM*.** *Logged at
+  3.9, not fixed.* Board №2 *Water World*, gutter `v:1:1`. Three faults in one
+  sentence.
+
+  It is **not true**: a harbour is a workplace first — loading, refitting,
+  provisioning, and paying by the ton for the privilege. As written it makes
+  every commercial port on earth pointless in fair weather.
+
+  It is **the proverb inside out**: *any port in a storm* means a storm makes
+  you accept a harbour you would otherwise refuse. The storm lowers the standard
+  for harbours. It does not make harbours the only thing worth having.
+
+  It **failed E6** when it was logged: *"HARBOUR is worth having only in a
+  ___"* was satisfied just as well by GALE, which sat at (0,3) on the same grid.
+  *That leg is gone as of 3.10* — GALE was replaced by GLASS under **E23**, and
+  nothing now on the board fits the slot but STORM. The fix was incidental and
+  it repairs only the ambiguity; the sentence is still not true, which was
+  always the worse half.
+
+  There is a fourth thing, which is not a fault but is worth recording: even on
+  shelter the sentence is doubtful. In heavy weather a harbour on a lee shore is
+  among the worst places a ship can be — no sea room, and a coast to leeward —
+  and the standing advice is to run for open water.
+
+  **Proposed:** *HARBOUR is walled on the seaward side against the surge of a
+  STORM.* A breakwater and a storm surge are both storm-specific, so E6 holds,
+  and it restores the harbour as a built thing. Left standing at 3.9 only
+  because that pass was specified as backs-only; the back written for the gutter
+  (*shuts its gates and turns ships away in a*) is true on its own and does not
+  lean on the front, so replacing the front costs nothing.
+
+- **E23 — Two words on a board may not be near-synonyms, and a word directly
+  above another is the place to check.** *New at 3.10. GALE removed from Water
+  World under it.* E6 asks that a clue point at one answer. E23 asks something
+  earlier: that the **grid** offer one answer. GALE and STORM were both on that
+  board, and a gale is a storm that has not been promoted — so any clue about
+  heavy weather had two homes, and *"is a hard WIND"* was very nearly a
+  definition rather than a connection.
+
+  The geometry is what made it likely. GALE sat directly above WIND, and the
+  square above a word is the square most tempted into being a synonym of it: it
+  is the nearest neighbour, and the easiest sentence to write about a neighbour
+  is *is a kind of*. Check every vertical pair on a themed column before
+  anything else.
+
+  **GLASS** takes the square — the barometer, which sailors call the glass. It
+  is not a weather word at all but the instrument that *reads* weather, so it
+  keeps the column's subject and drops the synonym:
+
+  | | |
+  |---|---|
+  | GLASS / RAIN | *falls a day before the* — and the back is the tapping, twice a watch |
+  | GLASS / FLAG | *knows a day before a* — the instrument leads the wind that moves the cloth |
+  | GLASS / WIND | *falling fast means, above all else,* — a rapid fall means wind, not water |
+
+  It earns its place three other ways. It is polysemous, which this game likes;
+  it joins BEACON and KNOT to make a third instrument on a board about knowing
+  where you are; and its sailor's sense had to be written into `vocabulary.js`,
+  which is the honest cost of using a word for its second meaning.
+
+- **E24 — A clue must be true in the language it is printed in.** *New at 3.10.
+  The River of Life, `v:1:1`, repaired under it.* The back of CAIRO/EGYPT read
+  *"CAIRO is called, by the people who live in it, simply EGYPT"*, and the fact
+  behind it is real and lovely: Cairenes call their city **Masr**, which is also
+  the Arabic name of the country. The city wears the country's name.
+
+  But the board is in English, and what the sentence says in English is that
+  Cairo is called Egypt, which nobody says and which is simply false. The clue
+  was carrying a fact about two Arabic words while printing a claim about two
+  English ones, and trusting the reader to make a substitution it never asked
+  for. A solver who knows the fact nods; a solver who does not is told something
+  untrue and has no way to find that out.
+
+  The repair names the word: *"is called Masr by the people who live in it,
+  which is also the Arabic for"*. Six words longer, true as printed, and the
+  fact survives — because the fact was never the English.
+
+  **The general form.** Where a clue rests on another language, another era or
+  another trade's usage, the clue must say so inside itself. A board may teach a
+  word it does not have on it; it may not silently swap one in.
+
+- **E25 — A borrowed sense is not a second sense.** *New at 3.11, from the
+  BANK fan in the note's figure.* The registry gives BANK five domains, and one
+  of them is *to bank on something*. It should not be counted. Anybody reading
+  *bank on it* is reading the institution — the phrase is the money sense in a
+  coat, and it arrived by metaphor from the money sense inside living memory of
+  the language. Set beside *where money is kept* it does not widen the word, it
+  repeats it.
+
+  The test is not etymology, which is too strict, and not dictionary headwords,
+  which are too loose. **It is whether a reader meeting the two senses cold
+  would take them for the same word doing the same job.** *A tier of seats* and
+  *where money is kept* share a root — both descend from the moneylender's
+  bench — and still pass, because nobody hearing them connects them. *To bank
+  on* and *where money is kept* have no such distance.
+
+  **This has a cost beyond the figure.** `twist` in the difficulty scale counts
+  registry domains, so a word carrying a borrowed sense is scored harder than it
+  plays. BANK is charged for five and earns four. Nothing on the shelf is
+  affected today — BANK left the boards with *Everything Flows* under E20 — but
+  the registry is 149 words and this pass has looked at one of them. **The list
+  has not been audited for borrowed senses and should be**, before `twist` is
+  trusted any further than it already is.
+
+- **E26 — The frontier is no longer marked.** *Cut at 3.12.* Every square a
+  placed word touched carried `outline: 1px dashed var(--link)`, inset four
+  pixels. Inset and dashed, it read as a ring of blue dots sitting loose inside
+  the box rather than as a property of the square, and it was the only mark on
+  the board that was neither a word nor a wire. The rulebook's promise went with
+  it — it now says that working outward is *usually easiest*, which is advice,
+  where before it described a marking that no longer exists.
+
+  The `reachable` class is still set on the element. Nothing in `app.js` changed,
+  so a future hint that wants those squares can have them back from the
+  stylesheet alone.
+
+  **The arrowheads stay.** They are blue and they are pointed, and they are not
+  decoration: the head is the only thing on the board that says which of the two
+  words is the subject, so a gutter without one is a sentence you cannot read
+  in order.
+
+- **E27 — The standfirst named the subject, so the standfirst is gone.** *At
+  3.13.* Every board opened with a paragraph that gave the game away before a
+  square was filled: *a garden is already a network*, *nothing on the board that
+  is not in a kitchen*, *Rome found Egypt already ancient*. Each was written to
+  set a tone and each spent the board's first pleasure to do it. Working out
+  what a board is **about** is the first deduction it offers, and it was being
+  handed over for free at the top of the page.
+
+  All six now read **Edited by Simon Allmer** and nothing else, which is the
+  byline a puzzle page has carried since before any of this. It is also the
+  honest label: these are edited, not authored, in the sense that matters — the
+  facts were there already.
+
+  **The titles still name the subject**, and that is a real inconsistency rather
+  than an oversight. *God's Batch and Devil's Crust* says bread; *Water World*
+  says sea. A title has to be a handle for the archive and the Journal, so it
+  cannot go the way of the standfirst, and the guesswork it costs is bought
+  back by the colour (**A15**) which spoils nothing and says the board has a
+  character.
+
+  **What went with it, and is not replaced.** The standfirst was also where a
+  board said how many gutters were bare, and — on the four boards that carry
+  them — that its connections turn over. The turn is still discoverable: a
+  turnable gutter is underlined with a dotted rule, takes the hand cursor, and
+  says *(this one reads another way)* in the status bar on hover, and §5 of the
+  rulebook explains it outright. But it is no longer announced, and the status
+  bar's idle line is the obvious place to put it back, being the one piece of
+  copy on the page that belongs to no board and can spoil nothing.
 
 **Open, at 2.6: `twist` over-counts on a board with a declared theme.** Board №6
 is a print shop — the title says so, the standfirst says so, and all nine words
@@ -1258,6 +1880,59 @@ written to the same bare shape (E7, no line worth quoting). **Both are fixed at
 Board №2, *The Gift of the River*, still stands as written. It has no E10 or E7
 fault that anyone has found, but it has not been read against E11 or E13 either,
 and it is the next board due that pass.
+
+**The second renumbering, at 3.9.** *Everything Flows* is withdrawn under E20,
+and the survivors move up again for the same reason as before: the app numbers a
+board from its file and again from its place in the list, and the two must agree.
+
+| was | is | title | id |
+|---|---|---|---|
+| №1 | — | *Everything Flows* | **withdrawn** |
+| №2 | **№1** | The River of Life | `01-nile` |
+| №3 | **№2** | Water World | `02-landfall` |
+| №4 | **№3** | God's Batch and Devil's Crust | `03-bread` |
+| №5 | **№4** | Human Nature | `04-orchard` |
+| №6 | **№5** | Set, Inked and Pulled | `05-press` |
+| №7 | **№6** | A Fire That Learned to Push | `06-steam` |
+
+Six boards, 118 word-slots, and the shelf now reads ★ ★ ★ ★ ★★★ ★★. The rule
+above still governs: revision notes and §13, §13b, §13c and §17 are left in
+whatever numbers they were written in, and are read through both tables. Working
+comments in the code are a different case and were moved — a comment that says
+*go and look at board 07* has to resolve, so those now name the board rather
+than its number, which does not move when a board is withdrawn. The two
+references to **board 02** that survive, in `engine.js` and in the head of
+*Water World*, are to the board withdrawn at 2.5 and are correct as they stand.
+
+**The renames, at 3.10.** Two boards are retitled, and the ids do not move with
+them — an id is an address and a title is a name, and the address of a page that
+has been visited should not change because the name did.
+
+| was | is | id |
+|---|---|---|
+| *The Gift of the River* | **The River of Life** | `01-nile` |
+| *Landfall* | **Water World** | `02-landfall` |
+| *From the Ground Up* | **Human Nature** | `04-orchard` (at 3.13) |
+
+§13b and the 2.5 table above keep the old titles, on the same principle as the
+old numbers: they record what was decided when. The third rename is a different
+kind from the first two — those swapped one name for a better one, and this one
+swaps a name that **described the layout** for a name that says what the board
+is about. *From the Ground Up* told you soil was at the bottom and sky at the
+top, which the grid already shows; a title that repeats what is visible has
+spent itself. *Human Nature* is the pun the board is built on — twenty-four
+squares of nature and one man standing in it with a spade — and it is what the
+last connection actually says. *The Gift of the River* was
+Herodotus — *Egypt is the gift of the Nile* — and that source is now carried
+only by the board's own head comment, which is the right place for it.
+
+**What this cost.** Nine words leave the quarry's set-in-a-board count, 127 to
+118; every one of them was unique to that board, so no other grid is touched,
+and their entries in `registry.js` and `vocabulary.js` are untouched — a word
+withdrawn from a board is not a word withdrawn from the language. The riddle is
+now represented on the shelf by №5, *Set, Inked and Pulled*, which is the better
+example anyway: one twist, PRESS, held across all nine squares, which is exactly
+what E20 now requires and what *Everything Flows* never did.
 
 ---
 
