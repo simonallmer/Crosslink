@@ -519,11 +519,26 @@
     el.onclick = function () { lexOpen(el.getAttribute("data-lex")); refresh(); };
   });
 
+  // The daily is the day of the week. Monday is No. 1 and Sunday is No. 7, so a
+  // board comes round again seven days later and the tile changes at midnight
+  // without anything having to be published.
+  //
+  // `getDay()` counts from Sunday, and this week starts on Monday, hence the
+  // shift. The modulo is the whole failure plan: with six boards on the shelf
+  // Sunday falls back to No. 1, and the day a seventh is added the mapping is
+  // exactly Monday-to-Sunday with nothing here to change. Wrapping is also what
+  // stops the tile opening `undefined` the moment a board is withdrawn, which
+  // has happened once already this month.
+  function dailyIndex() {
+    var weekday = (new Date().getDay() + 6) % 7;      // 0 = Monday ... 6 = Sunday
+    return weekday % CL.puzzles.length;
+  }
+
   Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function (a) {
     a.onclick = function (ev) {
       ev.preventDefault();
       var d = a.getAttribute("data-go");
-      if (d === "daily") go("play", CL.puzzles.length - 1);
+      if (d === "daily") go("play", dailyIndex());
       else go(d);
     };
   });

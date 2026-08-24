@@ -69,6 +69,13 @@ read from the other trade (№5), plain language for technical (№6).
 
 ## The boards
 
+**Play Daily** is the day of the week: Monday is No. 1 and Sunday is No. 7, so
+the tile turns over at midnight and a board comes round again a week later.
+Nothing expires — every board is on the Puzzles page every day. With six boards
+on the shelf Sunday falls back to No. 1, and the day a seventh is built the
+mapping is exactly Monday to Sunday with no code to change. See H5a.
+
+
 Every board now opens with the same line — **Edited by Simon Allmer** — and
 nothing else. The standfirsts used to describe the subject, which handed over
 the first deduction a board offers before a square was filled. What replaces

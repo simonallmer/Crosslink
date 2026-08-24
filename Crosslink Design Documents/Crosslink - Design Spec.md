@@ -747,6 +747,26 @@ that still plays in twenty-five years. So the frame is not a calendar. It is a
   that expires. New boards go on releasing at a steady cadence (a week is the
   working assumption); the difference is that nothing is ever missed, only
   not-yet-caught.
+
+  **H5a — The daily is the day of the week.** *Built at 3.16.* It used to open
+  whatever board was last on the shelf, which made *Play Daily* a lie: the tile
+  said today and meant newest, and it read the same on Tuesday as it had on
+  Monday. It now maps **Monday to No. 1 and Sunday to No. 7**, so the tile turns
+  over at midnight, a board comes round again a week later, and nothing has to
+  be published for either to happen.
+
+  Two details carry it. `getDay()` counts from **Sunday** and this week starts
+  on **Monday**, so the index is shifted before anything else is done with it.
+  And the weekday is taken **modulo the number of boards**, which is the whole
+  failure plan: with six on the shelf Sunday falls back to No. 1, and the day a
+  seventh is built the mapping is exactly Monday-to-Sunday with nothing here to
+  change. Wrapping is also what stops the tile opening `undefined` the next time
+  a board is withdrawn, which has happened once already — E20 took one off the
+  shelf this month, and under the old rule that silently moved the daily.
+
+  This does not contradict H5's point. Nothing expires: every board is still on
+  the Puzzles page every day of the week. The daily is a **door**, not a
+  deadline.
 - **H6 — Six-board bank.** §3 makes editing the bottleneck. Never ship from empty.
 - **H7 — One board, one sitting.** A 3×3 should close in five to ten minutes.
 
