@@ -366,7 +366,8 @@
     puzzles: { el: "view-puzzles", title: "Crosslink \u2014 Puzzles",   loc: "puzzles.html" },
     words:   { el: "view-words",   title: "Crosslink \u2014 Word List", loc: "words.html" },
     rules:   { el: "view-rules",   title: "Crosslink \u2014 Rulebook",  loc: "rulebook.html" },
-    intro:   { el: "view-intro",   title: "Crosslink \u2014 Introduction", loc: "intro.html" }
+    intro:   { el: "view-intro",   title: "Crosslink \u2014 Introduction", loc: "intro.html" },
+    promo:   { el: "view-promo",   title: "Crosslink",                     loc: "" }
   };
   var here = null, trail = [];
 
@@ -400,6 +401,7 @@
     });
     if (name === "play") load(arg);
     else document.body.removeAttribute("data-hue");   // only a board is coloured
+    if (name === "promo") emblem();
     if (name === "words") wordList();
     else if (name === "puzzles") puzzleIndex();
     chrome();
@@ -747,6 +749,120 @@
   document.getElementById("x-lex").onclick = function () { show("win-lex", false); };
   document.getElementById("x-main").onclick = function () { location.href = "https://simonallmer.com"; };
 
+  // ---- the emblem -----------------------------------------------------
+  //
+  // The masthead, square, at whatever size the frame will give it: a
+  // promotional image of the game rather than a picture of a board. Shift+A
+  // from the front page.
+  //
+  // It is its own SVG rather than the front page's banner in a square box. That
+  // banner's art is a 600x210 field sliced to fit, so in a square container the
+  // browser scales it on the taller axis and crops away two thirds of the
+  // width — four of the six rays go off the sides, and the thing that survives
+  // is a gradient. The recipe is shared (A7b) and the composition is not: same
+  // sky, same dither, same glow, same gold, rays laid out for a square.
+  //
+  // Type is drawn in the SVG rather than set in HTML over it, so the whole
+  // emblem is one object that scales without a font size having to agree with a
+  // container width — which is what a promotional image is for.
+
+  var EM_SKY = [
+    '<defs>',
+    '<linearGradient id="em-sky" x1="0" y1="0" x2="0" y2="1">',
+    '<stop offset="0" stop-color="#123A63"/><stop offset="0.55" stop-color="#0D2A48"/>',
+    '<stop offset="1" stop-color="#0A1D33"/></linearGradient>',
+    '<pattern id="em-dither" width="4" height="4" patternUnits="userSpaceOnUse">',
+    '<rect width="4" height="4" fill="none"/>',
+    '<rect x="0" y="0" width="1" height="1" fill="#FFFFFF" opacity="0.10"/>',
+    '<rect x="2" y="2" width="1" height="1" fill="#FFFFFF" opacity="0.06"/></pattern>',
+    '<radialGradient id="em-glow" cx="0.5" cy="0.62" r="0.62">',
+    '<stop offset="0" stop-color="#2E7FA8" stop-opacity="0.85"/>',
+    '<stop offset="1" stop-color="#2E7FA8" stop-opacity="0"/></radialGradient>',
+    '</defs>'
+  ].join("");
+
+  // Six rays from a low apex, as on the front page. Four leave through the top
+  // and two through the sides, which is what stops a square reading as a fan.
+  var EM_RAYS = [
+    [70, 160], [215, 268], [332, 385], [440, 530]
+  ].map(function (r) {
+    return '<path d="M300 588 L' + r[0] + ' 0 L' + r[1] + ' 0 Z"/>';
+  }).concat([
+    '<path d="M300 588 L0 118 L0 196 Z"/>',
+    '<path d="M300 588 L600 118 L600 196 Z"/>'
+  ]).join("");
+
+  var EM_SERIF = "\'Times New Roman\', Times, Georgia, serif";
+
+  function emblem() {
+    var out = ['<svg viewBox="0 0 600 600" role="img" ' +
+               'aria-label="Simon Allmer presents Crosslink, a game of connections.">'];
+    out.push(EM_SKY);
+    out.push('<rect width="600" height="600" fill="url(#em-sky)"/>');
+    out.push('<g class="rays">' + EM_RAYS + '</g>');
+    out.push('<rect width="600" height="600" fill="url(#em-glow)"/>');
+    out.push('<rect width="600" height="600" fill="url(#em-dither)"/>');
+
+    // The name twice: the lower copy is the drop shadow the masthead sets in
+    // CSS as `text-shadow: 3px 3px 0 #06172B`, which SVG has no equivalent for.
+    out.push('<text class="em-kick" x="300" y="248">SIMON ALLMER PRESENTS</text>');
+    out.push('<text class="em-name em-shadow" x="304" y="334">CROSSLINK</text>');
+    out.push('<text class="em-name" x="300" y="330">CROSSLINK</text>');
+    out.push('<rect class="em-rule" id="em-rule-l" x="0" y="372" width="40" height="3"/>');
+    out.push('<text class="em-sub" x="300" y="378">A GAME OF CONNECTIONS</text>');
+    out.push('<rect class="em-rule" id="em-rule-r" x="0" y="372" width="40" height="3"/>');
+    out.push('</svg>');
+    var host = document.getElementById("promo");
+    host.innerHTML = out.join("");
+
+    var svg = host.firstChild;
+    emFit(svg);
+    // Measured once is measured too early. Text metrics before the face has
+    // settled are the fallback's, and a fallback is narrower — which threw the
+    // rules inward, across the letters. Nothing here is expensive, so it is
+    // simply done again once the fonts report ready.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { emFit(svg); });
+  }
+
+  // Everything that depends on a measurement, in one place, safe to run twice.
+  function emFit(svg) {
+    // Letter-spacing puts a gap after the LAST letter too, so a middle-anchored
+    // line sits half a gap right of centre. All three lines are tracked and the
+    // widest is tracked most, so they would agree neither with each other nor
+    // with the box.
+    function centre(el, extra) {
+      var track = parseFloat(getComputedStyle(el).letterSpacing) || 0;
+      el.setAttribute("x", 300 - track / 2 + (extra || 0));
+    }
+    // `.em-name` matches the shadow too, and the shadow comes first in document
+    // order — selecting on it re-centred the shadow and left the name where it
+    // was, so the drop shadow sat exactly behind the letters and did not show.
+    centre(svg.querySelector(".em-kick"));
+    centre(svg.querySelector(".em-name.em-shadow"), 4);
+    centre(svg.querySelector(".em-name:not(.em-shadow)"));
+    centre(svg.querySelector(".em-sub"));
+
+    // The rules go off the ends of the subtitle's INK — `getBBox` and not
+    // `getComputedTextLength`, because the advance width carries the trailing
+    // letter-space and the ink does not, and it is the ink they must clear.
+    var sub = svg.querySelector(".em-sub"), box = sub.getBBox();
+    // A hidden or unlaid-out element measures zero. Taking that at face value
+    // makes the half-width negative and puts BOTH rules inside the word, which
+    // is a line through the middle of the subtitle rather than a rule beside
+    // it. If there is no measurement, draw no rules.
+    var ok = box.width > 40;
+    // 26 units held the rules too far off; the masthead sets its own at about
+    // 19 and 11 either side of the words. 16 is nearer that and still four
+    // times the clearance a rule needs not to read as a strikethrough.
+    var gap = 16, len = 40;
+    var l = svg.querySelector("#em-rule-l"), r = svg.querySelector("#em-rule-r");
+    l.setAttribute("visibility", ok ? "visible" : "hidden");
+    r.setAttribute("visibility", ok ? "visible" : "hidden");
+    if (!ok) return;
+    l.setAttribute("x", box.x - gap - len);
+    r.setAttribute("x", box.x + box.width + gap);
+  }
+
   // ---- the hint ladder: a verb first, letters second, the word last ----
 
   function nextHint(r, c) {
@@ -934,6 +1050,10 @@
       ev.preventDefault();
       if (here && here.name === "menu") go("intro"); else giveUp();
       return;
+    }
+    // Shift+A, from the front page only: the emblem, filled in and square.
+    if ((ev.key === "a" || ev.key === "A") && ev.shiftKey && here && here.name === "menu") {
+      ev.preventDefault(); go("promo"); return;
     }
     // `st` does not exist until a board has been loaded, so this has to test for
     // the state before it tests the state. It threw on every keystroke made on

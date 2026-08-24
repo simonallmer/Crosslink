@@ -131,6 +131,14 @@ Shift+S gives a board up while you are on one. The two never meet — giving up
 has always refused to run anywhere but a board — so the key was free on the
 front page.
 
+## The emblem
+
+**Shift+A from the front page.** The masthead at 1:1, filling the frame — a
+promotional image of the game rather than a picture of a board. It shares the
+banner's recipe (sky, dither, glow, gold) and not its composition: the rays are
+laid out for a square, and the type is drawn in the SVG so the whole thing is
+one object that scales. See A17.
+
 ## Known limitation, and what it implies
 
 The error check compares against the answer key, so it will flag *FISH swims in

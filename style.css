@@ -813,6 +813,30 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   font-size: 10px; color: var(--ink-faint);
 }
 
+/* ---- the emblem: the masthead, square ------------------------------
+   Square because the drawing is: a 1:1 viewBox and `height: auto`, so nothing
+   is told twice. It takes the width the sheet gives it, capped against the
+   viewport height so the whole image is on screen at once — a promotional
+   image that needs scrolling is not one. The frame is the masthead's own
+   3px bevel, not the white panel the board sits in. */
+.promo {
+  width: min(100%, 78vh); margin: 0 auto;
+  border: 3px solid; border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
+}
+.promo svg { display: block; width: 100%; height: auto; }
+.promo .rays { fill: #2A6E96; opacity: .30; }
+
+/* The masthead's own values, scaled to a 600-unit square: one face, one case,
+   three sizes (A7), and the colours are literals here exactly as they are
+   there — the banner does not follow the light or dark palette and neither
+   does this, because it is a printed thing that happens to be on a screen. */
+.promo text { font-family: "Times New Roman", Times, Georgia, serif; text-anchor: middle; }
+.promo .em-kick { font-size: 15px; letter-spacing: 5.1px; fill: #9DC4DC; }
+.promo .em-name { font-size: 68px; font-weight: 700; letter-spacing: 9.5px; fill: #F6F0DC; }
+.promo .em-name.em-shadow { fill: #06172B; }
+.promo .em-sub  { font-size: 16px; letter-spacing: 6.1px; fill: #E7C45A; }
+.promo .em-rule { fill: #E7C45A; opacity: .8; }
+
 /* ---- difficulty ---- */
 .index .st.stars { font-size: 15px; color: var(--gold); letter-spacing: .1em; font-family: var(--sans); }
 

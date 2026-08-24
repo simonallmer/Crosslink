@@ -1028,6 +1028,65 @@ seven boards**, none of them twice.
   **The URL stays lowercase** — `simonallmer.com/crosslink/` — which was equally
   the convention, and is now simply the name in another case.
 
+- **A17 — The masthead, square.** *New at 3.15.* Shift+A from the front page
+  and nowhere else: the banner at 1:1, filling whatever the frame will give it.
+  A promotional image of the *game*, not a picture of a board.
+
+  *The first cut was a board* — the front page's three-by-three with the words
+  and connections written in — and it was the wrong object. It showed how a
+  puzzle works to somebody who has not agreed to care yet, and it spoiled a
+  board to do it. The masthead asks for nothing and gives away nothing.
+
+  **It is its own SVG, not the banner in a square box.** The banner's art is a
+  600×210 field with `preserveAspectRatio="slice"`, so in a square container the
+  browser scales on the taller axis and crops away two thirds of the width: four
+  of the six rays leave the frame and what survives is a gradient. The **recipe**
+  is shared with A7b — same sky gradient, same 4px dither at 10% and 6%, same
+  radial glow at `cy 0.62`, same gold — and the **composition** is not. The rays
+  are laid out for a square, four leaving through the top and two through the
+  sides, which is what stops a square reading as a fan.
+
+  **The type is drawn in the SVG**, not set in HTML on top of it. One object
+  that scales, with no font size that has to agree with a container width, which
+  is the whole requirement for an image someone else will place. Its colours are
+  literals rather than tokens, exactly as the banner's are: this is a printed
+  thing that happens to be on a screen, and it does not follow light or dark.
+
+  Two things had to be measured rather than set. **Letter-spacing puts a gap
+  after the last letter as well**, so a middle-anchored line sits half a gap
+  right of true centre — and all three lines are tracked, the widest most, so
+  they would not have agreed with each other or with the box. And the two gold
+  rules are placed off the measured ends of the subtitle rather than at guessed
+  coordinates.
+
+  **Measurement is the hard part of this drawing, and it failed twice.**
+
+  *It measured the wrong thing.* `getComputedTextLength()` returns the advance
+  width, which carries the trailing letter-space; the rules have to clear the
+  **ink**. It is `getBBox()` now, and the clearance is 26 units on both sides,
+  equal because it is derived from the same box.
+
+  *It measured once, and too early.* Metrics taken before the face has settled
+  are the fallback's, and a fallback is narrower, so the rules were placed
+  inward — across the letters. Worse, an element with no layout measures **zero**
+  width, which makes the half-width negative and puts *both* rules inside the
+  word: a line through the middle of the subtitle rather than a rule beside it.
+  Three answers, all cheap: everything that depends on a measurement lives in
+  one function that is safe to run twice, it runs again on `document.fonts.ready`,
+  and a measurement under 40 units is not believed at all — the rules are hidden
+  rather than drawn somewhere wrong.
+
+  The general form is worth keeping: **a layout computed from a measurement must
+  say what it does when the measurement is not available yet.** Drawing anyway
+  is the one answer that cannot be right, and it is the default.
+
+  **The drop shadow is a second copy of the word**, offset four units, because
+  SVG has no `text-shadow`. It did not show at first: `.em-name` matches the
+  shadow too and the shadow comes first in the document, so selecting on that
+  class re-centred the shadow and left the real word where it was — the two
+  landed exactly on top of each other. Selecting a thing by a class it shares
+  with the thing behind it is a bug that renders as *nothing missing*.
+
 - **A16 — The status bar has two panes.** *At 3.14.* What the page is doing on
   the left, whose page it is on the right: **© 2026 Simon Allmer Entertainment**.
   Two panes is what a status bar of the period had, and it settles the problem
