@@ -7,7 +7,7 @@
   D3  the board contains at least one cycle
   D4  10-12 of 12 connections on a 3x3; 28-34 of 40 on a 5x5
   H2  no word is set twice on ONE board (across the game is allowed since 3.9)
-  L1  every word has a lexicon, registry or vocabulary entry
+  L1  every word has a lexicon, registry or vocabulary entry IN ITS OWN LANGUAGE
 
 Run:  python3 tools/check-boards.py
 """
@@ -30,7 +30,10 @@ def load(path):
     size = int(re.search(r"size:\s*(\d+)", t).group(1))
     centre = [int(x) for x in re.search(r"centre:\s*\[(\d+),\s*(\d+)\]", t).groups()]
     nouns_src = re.search(r"nouns:\s*\[(.*?)\n  \],", t, re.S).group(1)
-    nouns = [re.findall(r'"([A-Z]+)"', r) for r in nouns_src.split("\n") if '"' in r]
+    # Umlauts are letters. A German board may set FLÜGEL in a square, and a
+    # pattern of bare A-Z would read it as two words, FL and GEL, and then fail
+    # L1 on both of them.
+    nouns = [re.findall(r'"([A-ZÄÖÜ]+)"', r) for r in nouns_src.split("\n") if '"' in r]
     # Both faces. A connection's back must pass E9 exactly as its front does —
     # it is the same gutter and the same board, and a back face that names a
     # neighbour gives the square away just as completely.
@@ -61,6 +64,7 @@ def load(path):
             out.append([None if i.strip().startswith("null") else i for i in items if i.strip()])
         return out
     return dict(path=os.path.basename(path), id=js_field(t, "id"), title=js_field(t, "title"),
+                lang=js_field(t, "lang") or "en",
                 size=size, centre=centre, nouns=nouns, verbs=verbs, h=slots("h"), v=slots("v"))
 
 def edges(p):
@@ -134,7 +138,9 @@ def check(p, already):
         warn.append("T-rule note: the title names %s, which is on the board"
                     % ", ".join(leaked))
 
-    variant = {v: k for k, vs in SPELL.items() for v in vs}
+    # W1a is a rule about English, and only English has two of them on this
+    # shelf. A language with no spelling table gets no verdict about spelling.
+    variant = {v: k for k, vs in SPELL.items() for v in vs} if p["lang"] == "en" else {}
     wrong_side = sorted(w for row in p["nouns"] for w in row if w in variant)
     if wrong_side:
         bad.append("W1a fails: " + ", ".join(
@@ -146,8 +152,13 @@ def check(p, already):
     if len(set(ws)) != len(ws): bad.append("a word is repeated on this board")
     # Twice across the GAME is fine since 3.9. It is reported, because a word
     # that crosses boards is worth knowing about, but it is not a failure.
+    # A crossing is between two boards a solver can meet in one sitting, which
+    # means two boards on one shelf. German MAUS and English MOUSE are not a
+    # crossing; German BANK and English BANK are two different words that
+    # happen to be spelled alike, and saying otherwise would be the one claim
+    # this game must never make loosely.
     clash = sorted(set(ws) & already)
-    if clash: warn.append("crosses an earlier board: %s" % ", ".join(clash))
+    if clash: warn.append("crosses an earlier board in the same language: %s" % ", ".join(clash))
     return bad, warn, set(ws), len(es), possible
 
 def spellings():
@@ -160,16 +171,25 @@ def spellings():
         out[k] = re.findall(r'"([A-Z]+)"', body)
     return out
 
-def known_words():
+# Which files hold the words of which language. L1 is answered out of the
+# board's OWN language: a German word is not missing from the game because the
+# English vocabulary has never heard of it.
+SOURCES = {
+    "en": ("lexicon.js", "registry.js", "vocabulary.js"),
+    "de": ("lexicon-de.js",),
+}
+
+def known_words(lang):
     ks = set()
     # Keys may be bare (COAL) or quoted, and may carry a hyphen, because a name
     # like BERNERS-LEE is not a valid bare JS identifier. L1 has to see both, or
-    # the first hyphenated word to reach a board fails for not existing.
-    key = r'^  "?([A-Z][A-Z-]*)"?:'
-    for f, pat in (("lexicon.js", key), ("registry.js", key), ("vocabulary.js", key)):
+    # the first hyphenated word to reach a board fails for not existing. Umlauts
+    # are letters here for the same reason they are letters in a square.
+    key = r'^  "?([A-ZÄÖÜ][A-ZÄÖÜ-]*)"?:'
+    for f in SOURCES.get(lang, ()):
         path = os.path.join(ROOT, f)
         if os.path.exists(path):
-            ks |= set(re.findall(pat, io.open(path, encoding="utf-8").read(), re.M))
+            ks |= set(re.findall(key, io.open(path, encoding="utf-8").read(), re.M))
     return ks
 
 # There is no legacy list any more. The two boards it held — The Centre Is a
@@ -181,25 +201,34 @@ SPELL = spellings()
 
 def main():
     files = sorted(glob.glob(os.path.join(ROOT, "puzzles", "puzzle-*.js")))
-    known, already, fails = known_words(), set(), 0
-    print("%-26s %-24s %s" % ("board", "title", "links   verdict"))
+    # One shelf per language, and the shelves are checked apart: each keeps its
+    # own vocabulary and its own record of what has already been set.
+    known, already, fails = {}, {}, 0
+    print("%-22s %-4s %-24s %s" % ("board", "lang", "title", "links   verdict"))
     print("-" * 78)
     for f in files:
         p = load(f)
-        bad, warn, ws, ne, possible = check(p, already)
-        missing = sorted(ws - known)
-        if missing: bad.append("L1 fails: no entry for %s" % ", ".join(missing))
-        already |= ws
+        lang = p["lang"]
+        if lang not in known: known[lang] = known_words(lang)
+        seen = already.setdefault(lang, set())
+        bad, warn, ws, ne, possible = check(p, seen)
+        missing = sorted(ws - known[lang])
+        if missing:
+            bad.append("L1 fails: no %s entry for %s" % (lang, ", ".join(missing)))
+        already[lang] |= ws
         legacy = p["id"] in LEGACY
         verdict = "OK" if not bad else ("legacy" if legacy else "FAIL")
-        print("%-26s %-24s %2d/%-2d   %s" % (p["id"], p["title"][:23], ne, possible, verdict))
+        print("%-22s %-4s %-24s %2d/%-2d   %s" % (p["id"], lang, p["title"][:23], ne, possible, verdict))
         for b in bad:
             print("      - " + b)
             if not legacy: fails += 1
         for w in warn:
             print("      . " + w)
     print("-" * 78)
-    print("%d distinct words set across %d boards." % (len(already), len(files)))
+    for lang in sorted(already):
+        boards = sum(1 for f in files if load(f)["lang"] == lang)
+        print("%s: %d distinct words set across %d board%s."
+              % (lang, len(already[lang]), boards, "" if boards == 1 else "s"))
     dead = [(k, v) for k, vs in SPELL.items() for v in vs if len(v) != len(k)]
     if dead:
         fails += len(dead)

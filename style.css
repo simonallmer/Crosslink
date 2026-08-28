@@ -124,6 +124,11 @@ body[data-hue="crust"] { --sheet: #C9B597; --page: #917D5F; }   /* No. 3, a bake
 body[data-hue="green"] { --sheet: #B7C7AC; --page: #7F8F74; }   /* No. 4, the garden */
 body[data-hue="grey"]  { --sheet: #B9B9B6; --page: #81817E; }   /* No. 5, newsprint and lead */
 body[data-hue="red"]   { --sheet: #CDAFA6; --page: #95776E; }   /* No. 6, firebrick */
+/* The English run is sand through to firebrick — six warm earths in a line.
+   The German shelf opens outside it on purpose: a new shelf reads as a new
+   shelf before a word of it is read. Brett № 1, nine creatures leading double
+   lives in a city. */
+body[data-hue="plum"]  { --sheet: #C6B0BC; --page: #8E7884; }   /* de № 1, a sour plum */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) body[data-hue="sand"]  { --sheet: #272318; --page: #100E08; }
@@ -132,6 +137,7 @@ body[data-hue="red"]   { --sheet: #CDAFA6; --page: #95776E; }   /* No. 6, firebr
   :root:not([data-theme="light"]) body[data-hue="green"] { --sheet: #1D2620; --page: #0A100C; }
   :root:not([data-theme="light"]) body[data-hue="grey"]  { --sheet: #242424; --page: #0F0F0F; }
   :root:not([data-theme="light"]) body[data-hue="red"]   { --sheet: #2B1E1C; --page: #120C0B; }
+  :root:not([data-theme="light"]) body[data-hue="plum"]  { --sheet: #261C22; --page: #0F0A0D; }
 }
 :root[data-theme="dark"] body[data-hue="sand"]  { --sheet: #272318; --page: #100E08; }
 :root[data-theme="dark"] body[data-hue="blue"]  { --sheet: #1B2129; --page: #090C11; }
@@ -139,6 +145,7 @@ body[data-hue="red"]   { --sheet: #CDAFA6; --page: #95776E; }   /* No. 6, firebr
 :root[data-theme="dark"] body[data-hue="green"] { --sheet: #1D2620; --page: #0A100C; }
 :root[data-theme="dark"] body[data-hue="grey"]  { --sheet: #242424; --page: #0F0F0F; }
 :root[data-theme="dark"] body[data-hue="red"]   { --sheet: #2B1E1C; --page: #120C0B; }
+:root[data-theme="dark"] body[data-hue="plum"]  { --sheet: #261C22; --page: #0F0A0D; }
 
 * { box-sizing: border-box; }
 body {
@@ -542,6 +549,30 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   font-family: var(--mono); font-size: 11px; color: var(--link);
 }
 .sitelist a:hover { background: #000080; color: #FFFFFF; }
+
+/* The language list hangs in the same drawer as the site list — one toolbar,
+   one kind of menu — but its rows are buttons and not links, because a
+   language is not somewhere you go. */
+.langlist { min-width: 132px; }
+.sitelist button {
+  display: block; width: 100%; text-align: left; padding: 3px 8px;
+  background: none; border: 0; cursor: pointer;
+  font-family: var(--mono); font-size: 11px; color: var(--link);
+}
+.sitelist button:hover { background: #000080; color: #FFFFFF; }
+#lang-toggle { font-size: 8px; }
+#lang-toggle #lang-now { font-size: 11px; }
+
+/* Changing language turns the page rather than blinking it: the whole desktop
+   fades out, every string is replaced while nothing is legible, and it fades
+   back. Only opacity moves — the strings are written into a document that
+   keeps its shape — so there is nothing to see between the two halves. */
+.desktop { transition: opacity 150ms ease-in-out; }
+.desktop.turning { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .desktop { transition: none; }
+  .desktop.turning { opacity: 1; }
+}
 .loc {
   flex: 1 1 auto; min-width: 0; background: var(--card); padding: 3px 6px;
   font-family: var(--mono); font-size: 11px; color: var(--ink-soft);

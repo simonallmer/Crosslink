@@ -1,6 +1,6 @@
 # Crosslink — Design Spec
 
-**Revision 4.1 · 23 August 2026**
+**Revision 4.2 · 29 August 2026**
 *0.2 → 0.3: the full-lattice rule is withdrawn; relation types, the editorial
 standard, the language rules and the period dress are added.*
 *0.3 → 0.4: the language rule is corrected — it governs answers, not connectors;
@@ -50,6 +50,11 @@ universal law, **E12** no plurals. Board №7 rewritten against all three.*
 may not require an argument to see.*
 *2.3 → 2.4: the words on the closing page open the lexicon like every other word
 in the game (N3b).*
+*4.1 → 4.2: **the game is played in more than one language (§24).** W1 is
+scoped rather than repealed — answers are in the board's own language, and
+English stays the base and the widest. The first German board, **Verrückte
+Tiere**, is built from the ground up rather than translated, and each language
+becomes a shelf that numbers its own boards from № 1.*
 *4.0 → 4.1: board №4 is retitled **God's Batch and Devil's Crust**, and the
 acceptance test learns to read titles — which reports the retitling as a T-rule
 leak on its first run (§7).*
@@ -357,8 +362,25 @@ one word. That is the standard.
 
 ## 4. Words admitted to the board
 
-- **W1 — Answers are English.** Always. Including the English forms of place
-  names: MUNICH, not München; ROME, not Roma.
+- **W1 — Answers are in the board's own language.** *Scoped at 4.2; it read
+  "answers are English, always" for four revisions, and for four revisions that
+  was the same sentence, because there was one language.* An English board takes
+  English answers, including the English forms of place names — MUNICH, not
+  München; ROME, not Roma — and a German board takes German ones, including
+  MAILAND rather than Milano. What the rule has always forbidden is the one thing
+  it still forbids: a **foreign** word in a square. The board declares its
+  language; the square is in it.
+- **W1c — English is the base language, and the widest.** The polysemous
+  registry, the general quarry, the two spellings (W1a) and every second face
+  are English, and none of them is owed to another language on any timetable. A
+  language arrives with a board and a lexicon; everything else is a thing it may
+  grow, not a thing it lacks.
+- **W1d — A board is built in its language, never translated into it.** A
+  Crosslink runs on a word meaning two things by accident, and the accidents are
+  the property of the language: UHU is an owl and a glue in German and nothing at
+  all in English. A translated board is therefore not a harder or an easier
+  version of the same board — it is not the same board, and usually not a board.
+  This is the rule the whole of §24 exists to protect.
 - **W2 — The rule governs answers, not connectors.** No answer is ever a foreign
   word. Connectors are where other languages belong, and they are welcome there:
   "is called ikura in", "is named for the solidus, a". A connector that carries a
@@ -2628,3 +2650,121 @@ which is a watchable length for a screen recording.
 reassigning `reset`, which could never have worked — the Restart button was bound
 to the original function long before that line ran. Hook at the source, not at
 the name.
+
+---
+
+## 24. The languages *(built at 4.2)*
+
+For four revisions W1 read *answers are English, always*, and for four revisions
+that was not a rule about English. It was a rule that a board is written in one
+language and its squares are in it, wearing the only language there was. What
+4.2 does is take the second clause seriously and leave the first alone.
+
+### L2 — A board is built in its language, never translated into it
+
+This is the whole section, and everything else in it is machinery.
+
+A crossword can be translated badly and remains a crossword: it joins its words
+by spelling, and spelling survives being carried across as a puzzle even when it
+does not survive as the same puzzle. A Crosslink joins its words by **meaning**,
+and the specific pleasure it trades in is a word meaning two things at once. That
+coincidence is the property of one language and of no other. There is no English
+word that is a horned owl and a tube of glue; there is no German word that is a
+riverbank and a place for money and a tier of seats. Translate *Verrückte Tiere*
+and you get nine sentences about animals with no second sense under any of them —
+not a harder board, not an easier one, **not a board**.
+
+So a language does not receive the shelf. It starts one.
+
+### L3 — English is the base, and the base is the widest
+
+The registry of polysemous words, the general quarry with its ease ratings, the
+two spellings of W1a and all 159 second faces are English. None of them is owed
+to another language on a timetable, and a language that has none of them is not
+incomplete — it is early. What a language needs to open is a board and a lexicon.
+Everything above that is growth.
+
+The interface falls back key by key: a language with half its strings written
+runs, in that half, and reads English for the rest. That is deliberate. The
+alternative — a language may not ship until it is finished — is how a second
+language never ships.
+
+### L4 — A shelf per language, numbered from № 1
+
+Each language numbers its own boards. There is an English No. 1 and a German
+Brett № 1, and neither waits on the other. The Puzzles page, the Word List, the
+daily tile and the nine squares of the front-page emblem all show one shelf.
+
+So does the Lexicon, and that is the case worth stating: English BANK and German
+BANK are **not the same word**. They are spelled alike and they are two entries
+with two sets of senses, filed apart. Pooling them would be a claim about
+meaning, and this game does not make claims about meaning loosely — it is the
+one thing it sells.
+
+The acceptance test checks the shelves apart for the same reason. L1 is answered
+out of the board's own vocabulary; a crossing is reported between two boards a
+solver could meet in one sitting, which means two boards on one shelf.
+
+### L5 — What is not a string
+
+Two facts about a language are not text and cannot live in a string table.
+
+**Which letters may be typed into a square.** A–Z in English, A–Z and the three
+umlauts in German. A square that will not take an Ä cannot hold a German word,
+and the day a board wants one it has to already work rather than be fixed then.
+ß is deliberately absent: a square is set in capitals, and the capital of ß is
+SS, which the browser delivers on its own.
+
+**How much room a sentence needs.** German runs longer. At the English gutter
+width a real connection went to five lines and over its own edge. Its gutters
+are wider and its rows taller, measured off the live board exactly as the
+English ones were, and — as with the English measurements — **measured with
+`offsetHeight` and never with a bounding rect**, because the board is fitted to
+the page with a transform and a rect is the scaled box.
+
+That second fact broke a rule that had held since the first 5×5. *Wide sheet if
+size ≥ 5* was never about size; it was about a lattice being wider than 648px of
+sheet, and size was a stand-in that worked while there was one language. A German
+3×3 is 802px. The sheet now asks the board how wide it is.
+
+### L6 — A language is a directory
+
+English is the root, the way it is the root of everything else here, so nothing
+set in English changes address. German pages sit under `/de/` and carry German
+file names: `anleitung.html`, not `rulebook.html`. This costs nothing today —
+there is no server — and it is the difference between a site that can be
+published in two languages and one that would have to be rebuilt to be.
+
+### L7 — The change is a turn of the page
+
+The control is in the toolbar beside the sound and the light, because it is a
+preference about the reader. It opens a list rather than toggling, because two is
+where this starts and not where it stops.
+
+Changing it fades the whole desktop out, replaces every string while nothing is
+legible, and fades it back. Only opacity moves — the strings are written into a
+document that keeps its shape — so there is nothing to see between the halves.
+`prefers-reduced-motion` turns the fade off and leaves the button working.
+
+The choice is kept for the session, the same as the theme (A6b) and for the same
+reason: long enough to matter, not long enough to be a promise.
+
+**English is the default and is not sniffed from the browser.** This is the one
+decision here that goes against the obvious implementation. A German reader
+arriving on six English boards and one German one is better served by being
+shown the widest shelf with a visible button than by being handed the narrowest
+without being asked — and would in any case find the English shelf eventually,
+whereas the reverse is a reader who never learns the other six exist.
+
+### L8 — The prose is written, not keyed
+
+Short labels are keyed and live in `lang.js`. The rulebook is not. It is written
+out once per language in the markup and switched whole, because a rulebook is a
+piece of writing: translated key by key it comes out as English sentences wearing
+German words, which is exactly the failure L2 refuses on the boards.
+
+The two are therefore allowed to differ. The German rulebook explains why its
+board has no second faces, which the English one has no occasion to say; the
+English one explains that it is the base language, which the German one says
+differently and for a different reason. Neither is a translation with a section
+missing.

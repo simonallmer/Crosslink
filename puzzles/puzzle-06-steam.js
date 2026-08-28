@@ -1,6 +1,7 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "06-steam",
+  lang: "en",
   title: "A Fire That Learned to Push",
   standfirst: "Edited by Simon Allmer",
   hue: "red",

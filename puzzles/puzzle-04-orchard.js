@@ -1,6 +1,7 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "04-orchard",
+  lang: "en",
   title: "Human Nature",
   standfirst: "Edited by Simon Allmer",
   hue: "green",

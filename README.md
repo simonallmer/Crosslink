@@ -43,7 +43,7 @@ slot holding anything else — the hyphen in BERNERS-LEE or COCA-COLA — is pri
 from the start like a revealed letter that costs nothing. You type the letters
 and the hyphen is already there.
 
-**Either English is accepted.** Boards and the lexicon are written in British
+**Either English is accepted** (on an English board). Boards and the lexicon are written in British
 English; the American spelling is taken on entry and the square keeps whatever
 was typed. Only same-length pairs need declaring — CENTRE/CENTER, GREY/GRAY,
 DEFENCE/DEFENSE — because the letter count printed on every square already
@@ -67,13 +67,61 @@ on each: another fact (№1), what the crew knows and a passenger does not (№2
 the working behind the picture (№3), the clock behind the moment (№4), the twist
 read from the other trade (№5), plain language for technical (№6).
 
+## The languages
+
+**English is the base language and stays the widest.** The polysemous registry,
+the general quarry, the two spellings and every second face on every gutter are
+English assets, and none of them is waiting to be translated.
+
+**A board in another language is not this game translated.** It cannot be. A
+Crosslink lives on a word meaning two things by accident, and the accidents
+belong to the language: German UHU is a horned owl and a tube of glue, because a
+firm in Bühl named its adhesives after birds in 1932. There is no English word
+that is both, so there is no English board *Verrückte Tiere* is a version of. The
+riddles are built from the ground up, in the language, out of that language's own
+coincidences — which is the whole reason the format survives the crossing at all.
+
+**Each language is a shelf, and counts its own boards from № 1.** There is an
+English No. 1 and a German Brett № 1 and neither waits on the other. The Puzzles
+page, the Word List, the daily tile and the nine squares of the front-page emblem
+all show one shelf: the one you are reading in. So does the Lexicon — English
+BANK and German BANK are two words that happen to be spelled alike, and the game
+never says otherwise.
+
+**A language is a directory.** English is the root, the way it is the root of
+everything else here, so nothing set in English changes address; German pages sit
+under `/de/` and are called `anleitung.html` rather than `rulebook.html`.
+
+**The button is in the toolbar,** beside the sound and the light, and it opens a
+list rather than toggling, because two is where this starts and not where it
+stops. Changing language turns the page: the whole desktop fades out, every
+string is replaced while nothing is legible, and it fades back — only opacity
+moves, so the layout never shifts under the reader, and `prefers-reduced-motion`
+turns the fade off without turning the button off. The choice is kept for the
+session, the same as the theme and for the same reason. English is the default
+and is *not* sniffed from the browser: a German reader arriving on six English
+boards and one German one is better served by the widest shelf and a button than
+by being handed the narrowest without being asked.
+
+**What the engine had to be told.** Two things about a language are not strings.
+The first is which letters may be typed into a square — A–Z in English, A–Z and
+the three umlauts in German, because a square that will not take an Ä cannot hold
+a German word. The second is how much room a sentence needs: German runs longer,
+so its gutters are wider and its rows taller, measured off the live board exactly
+as the English ones were. That second fact broke a rule that had been true since
+the first 5×5 — *wide sheet if size ≥ 5* — because a German 3×3 is 802px of
+lattice and the narrow sheet holds 648. The sheet now asks the board how wide it
+is rather than how big.
+
 ## The boards
 
 **Play Daily** is the day of the week: Monday is No. 1 and Sunday is No. 7, so
 the tile turns over at midnight and a board comes round again a week later.
 Nothing expires — every board is on the Puzzles page every day. With six boards
 on the shelf Sunday falls back to No. 1, and the day a seventh is built the
-mapping is exactly Monday to Sunday with no code to change. See H5a.
+mapping is exactly Monday to Sunday with no code to change. See H5a. The shelf is
+the one for the language you are reading in, so German — one board — has that
+board every day, and will have seven the day it has seven.
 
 
 Every board now opens with the same line — **Edited by Simon Allmer** — and
@@ -84,7 +132,9 @@ through to firebrick, which says a board has a character and says nothing about
 what it is. See E27 and A15.
 
 
-Six, and every one of them passes `tools/check-boards.py` on its own account.
+### English — six
+
+Every one of them passes `tools/check-boards.py` on its own account.
 Three used to stand in front of them. *The Centre Is a Fish* and *Worth Its
 Weight* were built before §1 of the spec existed and were withdrawn at 2.5
 rather than kept as exceptions: between them they broke D1, D2, D4 and E9, and
@@ -111,6 +161,24 @@ to everything, and a *riddle*, where the pleasure is the twist. Neither is the
 lesser kind — but the riddle is the harder one to build, which is the lesson of
 *Everything Flows*: a riddle that does not hold one twist all the way across is
 not a riddle, it is a pile of puns.
+
+### German — one
+
+| № | Title | Size | Links | Backs | Stars | What it is |
+|---|---|---|---|---|---|---|
+| 1 | Verrückte Tiere | 3×3 | 12/12 | 0 | ★★ | Neun Tiere, und keines ist eins. Nine German animals, not one of which means an animal on this board: glue, a queue, a tap, a hangover, a policeman, a constellation, a bow tie, an imperative. HAHN is the centre and four sentences point at it. |
+
+Twelve of twelve gutters are filled, so there is no barred gutter on it and it
+therefore explains none. It carries **no second faces**: the 159 backs in this
+game are English and only English, each one written by hand, and the engine
+already knew what to do without them — no `verb2`, no turn, no dotted rule under
+the sentence, rather than an empty offer. That is not a gap waiting to be closed.
+It is the difference between a language six boards deep and a language starting
+with this one.
+
+It came in from the standalone print edition in *Verrückte Tiere/*, which stays
+where it is: that folder is a one-sheet A4 board built by `bauen.py` and is a
+different object from a board on the shelf here.
 
 Boards 5 and 6 are a third thing, and E14 names it: a **subject board**, where
 the layout itself is the argument. Board 6's rows are a sequence and its arms are
@@ -161,16 +229,27 @@ index.html                  shell
 style.css                   the look, light and dark
 engine.js                   lattice, edges, visibility rules, rendering
 app.js                      state, typing, hint ladder, error check, finish
+lang.js                     the interface in each language, and what is not a string
 lexicon.js                  the definitions, written by hand
 registry.js                 the polysemous quarry
 vocabulary.js               the general quarry
+lexicon-de.js               the German definitions and the German polysemous quarry
 sound.js                    the noises
 cursors.css                 the drawn cursors
-puzzles/puzzle-*.js         one file per board, in order
+puzzles/puzzle-*.js         one file per board, in order; puzzle-de-* is the German shelf
 tools/check-boards.py       the acceptance test — D1-D4, H2, L1, E9
 ```
 
-Adding a puzzle is one file pushed onto `CROSSLINK.puzzles`, plus a `<script>` tag:
+The long prose is *not* in `lang.js`. The rulebook is written out in
+`index.html`, once per language, marked `data-lang` — a rulebook is a piece of
+writing, and translated key by key it would have come out as English sentences
+wearing German words. The German one carries a section the English one does not
+need and the English one carries a section the German one does not, which is the
+point. Short labels are keyed and live in `lang.js`; a missing key falls back to
+English, so a new language may ship half-finished and still be playable.
+
+Adding a puzzle is one file pushed onto `CROSSLINK.puzzles`, plus a `<script>` tag.
+A board declares `lang` (`"en"` if it says nothing) and is filed on that shelf:
 a grid of nouns, an `h` table of horizontal verbs and
 a `v` table of vertical ones, with `null` where a gutter is barred. `dir` names the
 subject: `"right"`/`"down"` mean the first noun acts, `"left"`/`"up"` mean the

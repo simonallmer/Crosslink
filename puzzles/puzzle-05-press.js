@@ -1,6 +1,7 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "05-press",
+  lang: "en",
   title: "Set, Inked and Pulled",
   standfirst: "Edited by Simon Allmer",
   hue: "grey",

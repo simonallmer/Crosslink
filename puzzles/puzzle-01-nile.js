@@ -1,6 +1,7 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "01-nile",
+  lang: "en",
   title: "The River of Life",
   standfirst: "Edited by Simon Allmer",
   hue: "sand",

@@ -67,16 +67,23 @@
   // Built once, from spelling.js: every accepted variant mapped back to the one
   // form the boards and the lexicon are written in. A word not in the table is
   // its own canonical, which is nearly all of them.
-  var CANON = null;
+  //
+  // Keyed by language, because the two Englishes are a fact about English and
+  // not about the game. German has no such pair on the shelf and wants no
+  // table; a language that has one writes its own, and nothing here has to
+  // learn about it beyond the lookup.
+  var CANON = {};
   function canonMap() {
-    if (CANON) return CANON;
-    CANON = {};
-    var t = CL.spelling || {}, k, i;
+    var lang = CL.lang || "en";
+    if (CANON[lang]) return CANON[lang];
+    var map = CANON[lang] = {};
+    var t = (CL.spellings && CL.spellings[lang]) || (lang === "en" ? (CL.spelling || {}) : {});
+    var k, i;
     for (k in t) if (t.hasOwnProperty(k)) {
-      CANON[k] = k;
-      for (i = 0; i < t[k].length; i++) CANON[t[k][i]] = k;
+      map[k] = k;
+      for (i = 0; i < t[k].length; i++) map[t[k][i]] = k;
     }
-    return CANON;
+    return map;
   }
 
   // The one form of a word. Used wherever a typed word meets a written one, and
@@ -130,18 +137,44 @@
     }
   };
 
+  // ---- the word tables, by language -----------------------------------
+  //
+  // Three of them, and each language answers for its own. English has all
+  // three: the hand-written lexicon, the polysemous registry, and the general
+  // quarry with its ease rating. German so far has two, and that is not a
+  // deficiency to be filled in — the German shelf begins with the polysemous
+  // words because VERRÜCKTE TIERE is made of nothing else. A missing table is
+  // an empty object, so every reader of these gets an answer.
+  function table(a, b) { return a || b || {}; }
+
+  CL.lexicon = function (lang) {
+    return (lang || CL.lang) === "de" ? table(CL.lexDe) : table(CL.lex);
+  };
+  CL.polysemes = function (lang) {
+    return (lang || CL.lang) === "de" ? table(CL.registryDe) : table(CL.registry);
+  };
+  CL.quarry = function (lang) {
+    return (lang || CL.lang) === "de" ? table(CL.wordsDe) : table(CL.words);
+  };
+
   // How hard a board is, from the words on it: how ordinary they are, and how
   // many of them are being asked to wear a second coat. A puzzle may override
   // the reckoning with `stars`, because a constructor knows things this does not.
   CL.stars = function (p) {
     if (p.stars) return p.stars;
+    // The reckoning is done against the board's OWN language. Weighing German
+    // words in the English quarry would have found none of them, called every
+    // word maximally obscure, and made every German board three stars by
+    // arithmetic rather than by being hard.
+    var quarry = CL.quarry(CL.boardLang ? CL.boardLang(p) : "en"),
+        reg = CL.polysemes(CL.boardLang ? CL.boardLang(p) : "en");
     var n = 0, hard = 0, twist = 0;
     p.nouns.forEach(function (row) {
       row.forEach(function (w) {
         n++;
-        var e = (CL.words && CL.words[w]) ? CL.words[w].e : 3;
+        var e = quarry[w] ? quarry[w].e : 3;
         hard += 3 - e;
-        var doms = (CL.registry && CL.registry[w]) ? CL.registry[w].length : 0;
+        var doms = reg[w] ? reg[w].length : 0;
         if (doms >= 2) twist += Math.min(doms, 4) / 4;
       });
     });
@@ -162,7 +195,7 @@
   };
 
   // Cell geometry is a function of board size: a bigger lattice takes smaller squares.
-  CL.dims = function (size) {
+  CL.dims = function (size, lang) {
     // Both gutter measurements were set by the arrowhead and not by the words,
     // and both were a little too small for a connection written to E7's longer
     // shapes. Measured off the live board rather than guessed:
@@ -178,9 +211,25 @@
     // box: at 0.87 a genuine four-line label measures 43px against an unscaled
     // 12.5px line and rounds to three. That is how 96 was picked the first time,
     // and it was wrong by two whole steps.
-    return size >= 5
-      ? { noun: 112, gut: 104, row: 56, gutRow: 54 }
-      : { noun: 140, gut: 104, row: 62, gutRow: 56 };
+    // ...and the numbers themselves are a fact about the LANGUAGE, so they
+    // live with it in lang.js. English is what is measured above. German runs
+    // longer — "ist so nah verwandt, dass es gemeinsame Junge gibt: er und
+    // ein" went to five lines and over the edge of its gutter at the English
+    // width — so its gutters are wider and its rows taller, measured the same
+    // way on the standalone board before it came in here.
+    var d = CL.language(lang).dims;
+    return size >= 5 ? d.big : d.small;
+  };
+
+  // How wide the lattice wants to be, in pixels, before anything is scaled. It
+  // is what decides whether a board gets the narrow sheet or the wide one, and
+  // it has to be measured rather than guessed from `size`: a German 3x3 is
+  // wider than an English one, because its gutters are, and the old rule —
+  // wide if size >= 5 — put the first German board on the narrow sheet and
+  // made it scroll sideways on its first screen.
+  CL.boardWidth = function (p) {
+    var d = CL.dims(p.size, CL.boardLang(p));
+    return p.size * d.noun + (p.size - 1) * d.gut;
   };
 
   // Which of a connection's two faces is showing. A connection with no second
@@ -197,7 +246,7 @@
 
   CL.render = function (st, onPick) {
     var p = st.puzzle, board = document.getElementById("board"), n = 2 * p.size - 1;
-    var d = CL.dims(p.size), cols = [], rows = [];
+    var d = CL.dims(p.size, CL.boardLang(p)), cols = [], rows = [];
     for (var i = 0; i < n; i++) {
       cols.push((i % 2 === 0 ? d.noun : d.gut) + "px");
       rows.push((i % 2 === 0 ? d.row : d.gutRow) + "px");
@@ -228,15 +277,27 @@
     STATUS.textContent = text;
   };
 
+  // The idle line is remembered the first time a hint replaces it, which means
+  // it is remembered in whatever language was showing then. A language change
+  // has to forget it, or the status bar falls back to English for the rest of
+  // the session the first time the pointer leaves a square.
+  CL.statusForget = function () {
+    if (!STATUS) STATUS = document.querySelector("footer p");
+    if (STATUS) STATUS.removeAttribute("data-idle");
+  };
+
   function href(st, r, c) {
     var word = st.filled[CL.K(r, c)];
     var slug = word ? word.toLowerCase()
                     : new Array(CL.answer(st, r, c).length + 1).join("?");
-    return "http://simonallmer.com/crosslink/" + st.puzzle.id + "/" + slug + ".html";
+    // A language is a directory. English is the root, the way it is the root of
+    // everything else here, so nothing set in English changes address.
+    var dir = CL.language(CL.boardLang(st.puzzle)).dir;
+    return "http://simonallmer.com/crosslink/" + dir + st.puzzle.id + "/" + slug + ".html";
   }
 
   function wire(st, d, r, c, live) {
-    d.onmouseenter = function () { CL.status(live ? href(st, r, c) : "(no link from here yet)"); };
+    d.onmouseenter = function () { CL.status(live ? href(st, r, c) : CL.t("gut.noLink")); };
     d.onmouseleave = function () { CL.status(null); };
   }
 
@@ -291,7 +352,7 @@
   function paintGut(st, d, id) {
     var e = null;
     for (var i = 0; i < st.edges.length; i++) if (st.edges[i].id === id) { e = st.edges[i]; break; }
-    if (!e) { d.className = "gut barred"; d.title = "No relation is claimed here."; return; }
+    if (!e) { d.className = "gut barred"; d.title = CL.t("gut.barred"); return; }
     if (!st.verbVisible[id]) { d.className = "gut"; return; }
     var a = e.cells[0], b = e.cells[1];
     var both = st.filled[CL.K(a[0], a[1])] !== undefined && st.filled[CL.K(b[0], b[1])] !== undefined;
@@ -313,7 +374,7 @@
     if (!turnable || !CL.onTurn) return;
     d.onclick = function (ev) { ev.stopPropagation(); CL.onTurn(id); };
     d.onmouseenter = function () {
-      CL.status(over ? "(turn back)" : "(this one reads another way)");
+      CL.status(over ? CL.t("gut.turnBack") : CL.t("gut.turn"));
     };
     d.onmouseleave = function () { CL.status(null); };
   }

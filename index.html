@@ -13,16 +13,16 @@
 <main>
   <div class="win-bar main-bar">
     <span class="win-title" id="win-name">Crosslink</span>
-    <button class="win-x" id="x-main" title="Close" aria-label="Close">&#10006;</button>
+    <button class="win-x" id="x-main" title="Close" aria-label="Close" data-i18n-title="win.close" data-i18n-label="win.close">&#10006;</button>
   </div>
 
   <div class="toolbar">
-    <button class="tool" id="nav-back">&#9664; Back</button>
-    <button class="tool" id="nav-home">Home</button>
-    <span class="loc-label">Location:</span>
+    <button class="tool" id="nav-back" data-i18n="nav.back">&#9664; Back</button>
+    <button class="tool" id="nav-home" data-i18n="nav.home">Home</button>
+    <span class="loc-label" data-i18n="nav.loc">Location:</span>
     <span class="loc" id="loc"></span>
-    <button class="tool arrow" id="loc-arrow" title="Other sites" aria-haspopup="true" aria-expanded="false">&#9660;</button>
-    <button class="tool" id="sound-toggle" title="Sound" aria-pressed="true">&#9834; On</button>
+    <button class="tool arrow" id="loc-arrow" title="Other sites" data-i18n-title="nav.sites" aria-haspopup="true" aria-expanded="false">&#9660;</button>
+    <button class="tool" id="sound-toggle" title="Sound" data-i18n-title="nav.sound" aria-pressed="true">&#9834; On</button>
     <button class="tool ico" id="theme-toggle" title="Light or dark" aria-pressed="false">
       <svg class="ico-sun" viewBox="0 0 13 13" aria-hidden="true">
         <rect x="6" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/>
@@ -46,6 +46,9 @@
         <rect x="4" y="11" width="3" height="1"/>
       </svg>
     </button>
+    <button class="tool lang" id="lang-toggle" title="Language" data-i18n-title="nav.lang"
+            aria-haspopup="true" aria-expanded="false"><span id="lang-now">English</span> &#9660;</button>
+    <ul class="sitelist langlist" id="langlist" hidden></ul>
     <ul class="sitelist" id="sitelist" hidden></ul>
   </div>
 
@@ -81,9 +84,9 @@
       </svg>
 
       <div class="banner-type">
-        <p class="banner-kicker">Simon Allmer Presents</p>
+        <p class="banner-kicker" data-i18n="banner.kicker">Simon Allmer Presents</p>
         <h1 class="banner-name">Crosslink</h1>
-        <p class="banner-sub">A Game of Connections</p>
+        <p class="banner-sub" data-i18n="banner.sub">A Game of Connections</p>
       </div>
     </div>
 
@@ -93,18 +96,18 @@
           <span class="tile-art" aria-hidden="true">
             <svg viewBox="0 0 44 44"><rect class="s" x="3" y="3" width="14" height="10"/><rect class="s" x="27" y="3" width="14" height="10"/><rect class="s f" x="15" y="17" width="14" height="10"/><rect class="s" x="3" y="31" width="14" height="10"/><rect class="s" x="27" y="31" width="14" height="10"/><path class="w" d="M10 13v18M34 13v18M17 8h10M17 36h10"/></svg>
           </span>
-          <span class="tile-name">Play Daily</span>
+          <span class="tile-name" data-i18n="tile.daily">Play Daily</span>
         </a>
         <a class="tile t-green" href="#words" data-go="words">
           <span class="tile-art" aria-hidden="true">
             <svg viewBox="0 0 44 44"><path class="w" d="M6 9h32M6 16h32M6 23h20M6 30h32M6 37h24"/><rect class="s f" x="28" y="20" width="10" height="7"/></svg>
           </span>
-          <span class="tile-name">Word List</span>
+          <span class="tile-name" data-i18n="tile.words">Word List</span>
         </a>
       </div>
 
       <div class="hero" id="hero">
-        <svg viewBox="0 0 200 150" aria-label="A three by three lattice. Click it for the board numbers.">
+        <svg viewBox="0 0 200 150" aria-label="A three by three lattice. Click it for the board numbers." data-i18n-label="hero.label">
           <path class="w" d="M56 19h13M126 19h13M56 75h13M126 75h13M56 131h13M126 131h13M30 32v25M100 32v25M170 32v25M30 88v25M100 88v25M170 88v25"/>
           <path class="h" d="M69 19l-6-3v6zM139 19l-6-3v6zM69 75l-6-3v6zM139 75l-6-3v6zM100 57l3-6h-6zM30 57l3-6h-6zM170 113l3 6h-6zM100 113l3 6h-6z"/>
           <g class="cell" data-n="1"><rect class="p red"   x="4"   y="6"   width="52" height="26"/><text x="30"  y="24">1</text></g>
@@ -125,19 +128,19 @@
           <span class="tile-art" aria-hidden="true">
             <svg viewBox="0 0 44 44"><rect class="s" x="4" y="5" width="36" height="9"/><rect class="s f" x="4" y="18" width="36" height="9"/><rect class="s" x="4" y="31" width="36" height="9"/></svg>
           </span>
-          <span class="tile-name">Puzzles</span>
+          <span class="tile-name" data-i18n="tile.puzzles">Puzzles</span>
         </a>
         <a class="tile t-gold" href="#rules" data-go="rules">
           <span class="tile-art" aria-hidden="true">
             <svg viewBox="0 0 44 44"><path class="s f" d="M8 6h13a4 4 0 0 1 4 4v28a4 4 0 0 0-4-4H8z"/><path class="s" d="M36 6H23a4 4 0 0 0-4 4v28a4 4 0 0 1 4-4h13z"/></svg>
           </span>
-          <span class="tile-name">Rulebook</span>
+          <span class="tile-name" data-i18n="tile.rules">Rulebook</span>
         </a>
       </div>
     </div>
 
-    <p class="front-note">Welcome to the Crosslink Home Page on the World Wide Web.</p>
-    <p class="front-out"><span class="dot" aria-hidden="true">&#9679;</span> <a href="https://simonallmer.com" class="out">Back to Simon Allmer</a></p>
+    <p class="front-note" data-i18n="front.note">Welcome to the Crosslink Home Page on the World Wide Web.</p>
+    <p class="front-out"><span class="dot" aria-hidden="true">&#9679;</span> <a href="https://simonallmer.com" class="out" data-i18n="front.out">Back to Simon Allmer</a></p>
   </section>
 
   <!-- ===================== the board ===================== -->
@@ -149,12 +152,12 @@
     </header>
 
     <div class="controls">
-      <label class="toggle"><input type="checkbox" id="check" checked> Error check</label>
-      <button id="restart" class="ghost">Restart</button>
+      <label class="toggle"><input type="checkbox" id="check" checked> <span data-i18n="play.check">Error check</span></label>
+      <button id="restart" class="ghost" data-i18n="play.restart">Restart</button>
     </div>
 
     <div class="board-scroll">
-      <div id="board" class="board" role="grid" aria-label="Crosslink board"></div>
+      <div id="board" class="board" role="grid" aria-label="Crosslink board" data-i18n-label="play.board"></div>
     </div>
 
     <input id="ghost-input" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-hidden="true">
@@ -174,7 +177,7 @@
     </section>
 
     <section id="finish" class="finish" hidden>
-      <h2>The board closes.</h2>
+      <h2 data-i18n="finish.head">The board closes.</h2>
       <p class="finish-sub" id="finish-sub"></p>
       <ul id="sentences" class="sentences"></ul>
     </section>
@@ -182,19 +185,19 @@
 
   <!-- ===================== the index of boards ===================== -->
   <section class="view" id="view-puzzles" hidden>
-    <h1 class="page-title">Puzzles</h1>
-    <p class="page-sub">Every Crosslink so far. A word may be set in more than one of them.</p>
+    <h1 class="page-title" data-i18n="puzzles.title">Puzzles</h1>
+    <p class="page-sub" data-i18n="puzzles.sub">Every Crosslink so far. A word may be set in more than one of them.</p>
     <table class="index" id="puzzle-index"></table>
     <p class="page-foot" id="puzzle-foot"></p>
   </section>
 
   <!-- ===================== the word list ===================== -->
   <section class="view" id="view-words" hidden>
-    <h1 class="page-title">Word List</h1>
+    <h1 class="page-title" data-i18n="words.title">Word List</h1>
     <p class="page-sub" id="words-sub"></p>
     <p class="legend">
-      <span class="key open">Set in a board &#8212; click the number to play it</span>
-      <span class="key none">Waiting for a board</span>
+      <span class="key open" data-i18n="words.keyOpen">Set in a board &#8212; click the number to play it</span>
+      <span class="key none" data-i18n="words.keyNone">Waiting for a board</span>
     </p>
     <ul class="wordgrid" id="word-index"></ul>
   </section>
@@ -221,11 +224,14 @@
        figure's `aria-label`, which carries every relation in order — that is
        the only place the argument exists in sentences, and it has to. -->
   <section class="view" id="view-intro" hidden>
-    <h1 class="page-title">Crosslink Introduction</h1>
+    <h1 class="page-title" data-i18n="intro.title">Crosslink Introduction</h1>
 
     <!-- No byline. His name is a square in the figure below, with an arrow off
          it reading "invented" — printing it again above the drawing said the
          same thing twice, and the weaker way round. -->
+    <p class="page-sub" data-lang="de" hidden>Die Zeichnung ist englisch gesetzt. Sie ist das
+    Argument selbst und nicht seine Beschriftung, also wird sie neu gezeichnet und nicht
+    übersetzt — bis dahin steht sie hier, wie sie ist.</p>
     <figure class="fig-wrap">
       <div class="fig-scroll">
       <svg class="fig" viewBox="0 0 754 606" role="img" aria-label="The argument drawn as a board. The crossword is set in a newspaper, joins its words by spelling and asks for recall. The Web is hypertext, includes hypermedia, is read in a browser, and made the Crosslink possible. The Crosslink joins its words by meaning, runs on polysemy, is built on a database and is played on a computer. BANK, for example, means the edge of a river, where money is kept, a tier of seats, and to tilt a plane. Simon Allmer invented it.">
@@ -418,14 +424,14 @@
 
   <!-- ===================== the rulebook ===================== -->
   <section class="view" id="view-rules" hidden>
-    <h1 class="page-title">Rulebook</h1>
+    <h1 class="page-title" data-i18n="rules.title">Rulebook</h1>
     <blockquote class="epigraph">
       <p>&#8220;The dictionary defines words only in terms of other words. What matters is not
       the words themselves which are a collection of mostly arbitrary sounds, but the
       <em>relationships</em> between one word to the next.&#8221;</p>
       <cite><span class="n" data-lex="BERNERS-LEE">Tim Berners-Lee</span>, CERN, 1994</cite>
     </blockquote>
-    <div class="rules">
+    <div class="rules" data-lang="en">
       <h2>The board</h2>
       <p>Nine words stand in the cells of a three-by-three lattice. Between them, in the
       gutters, stand the connections that join them. Every gutter is a sentence: the word at
@@ -479,11 +485,106 @@
       crossing between two puzzles rather than a mistake. No word is ever set twice on the
       <em>same</em> board.</p>
 
+      <h2>The languages</h2>
+      <p>English is the base language and stays the widest: the polysemous registry, the
+      general quarry, the two spellings, and every second face on every gutter are English
+      and are not waiting to be translated.</p>
+      <p>A board in another language is not this game translated. It cannot be. A Crosslink
+      lives on a word meaning two things by accident, and the accidents belong to the
+      language — German <em>UHU</em> is a horned owl and a tube of glue, and there is no
+      English word that is both, so there is no English board that <em>Verr&#252;ckte
+      Tiere</em> is a version of. The button in the toolbar changes the language and with it
+      the shelf: each language numbers its own boards, from No. 1.</p>
+
       <h2>Difficulty</h2>
       <p>Each board carries one, two or three stars. The count comes from the words on it:
       how ordinary they are, and how many of them are being used in a second sense. A board
       of plain facts earns one star. A board where half the words are wearing two coats
       earns three.</p>
+    </div>
+
+    <!-- Die deutsche Anleitung. Geschrieben und nicht Zeile für Zeile
+         übersetzt: die kurzen Beschriftungen stehen in lang.js, aber eine
+         Anleitung ist ein Stück Prosa, und Schlüssel für Schlüssel übersetzt
+         hätte sie englische Sätze in deutschen Wörtern ergeben. Ein Abschnitt
+         steht hier, der in der englischen Fassung fehlt und dort auch nicht
+         hingehört: dass die Sprachen verschieden weit sind, und warum. -->
+    <div class="rules" data-lang="de" hidden>
+      <h2>Das Brett</h2>
+      <p>Neun Wörter stehen in den Feldern eines Gitters aus drei mal drei. Zwischen ihnen,
+      in den Gassen, stehen die Verbindungen, die sie verbinden. Jede Gasse ist ein Satz: das
+      Wort am Schaft, die Verbindung, das Wort an der Spitze.</p>
+
+      <h2>Was zu sehen ist</h2>
+      <p>Jede Verbindung auf dem Brett steht von Anfang an da. Nichts ist verborgen: das
+      ganze Netz ist zu lesen, und jedes Feld darin lässt sich von dort aus erschließen, wo
+      du gerade sitzt.</p>
+      <p>Du darfst in jedes Feld schreiben, in jeder Reihenfolge. Von einem Wort aus
+      weiterzugehen, das schon steht, ist meist der leichteste Weg zum nächsten — aber
+      nichts ist gesperrt, und wer das Wort in der fernen Ecke sieht, darf es sofort
+      hinsetzen.</p>
+
+      <h2>Eine Verbindung umdrehen</h2>
+      <p>Manche Verbindungen sind zweimal geschrieben. Wo eine es ist, trägt ihr Satz einen
+      feinen gepunkteten Strich darunter — klick darauf, und sie dreht sich um auf die
+      andere Seite, die dasselbe mit anderen Worten sagt. Manchmal ist das einfacher.
+      Manchmal ist es nur ein anderer Blickwinkel, und manchmal schwerer als die Seite, mit
+      der du angefangen hast.</p>
+      <p>Es kostet nichts. Das Umdrehen wird nirgends gezählt, und ein Brett, das mit lauter
+      umgedrehten Verbindungen gelöst wurde, ist rundheraus gelöst und sagt das auch.</p>
+      <p>Die zweiten Seiten sind bisher englisch. Auf dem deutschen Brett trägt jede
+      Verbindung eine Seite, und der gepunktete Strich steht deshalb gar nicht erst da — die
+      Engine lässt ihn weg, statt ihn leer anzubieten.</p>
+
+      <h2>Ein Wort eintragen</h2>
+      <p>Klick auf ein Feld und tippe. Jeder Buchstabe hat seine eigene Linie, du kannst also
+      abzählen, was das Feld verlangt. <em>Wort eintragen</em> setzt es hin; <em>Wieder
+      wegnehmen</em> hebt es wieder auf. Nichts ist endgültig, und ein Feld, das du wieder
+      leerst, behält jede Markierung, die es sich verdient hat.</p>
+
+      <h2>Hilfe, und was sie kostet</h2>
+      <p><em>Buchstabe zeigen</em> setzt einen Buchstaben, den du nicht getippt hast, und
+      zählt das Feld als halb gelöst. <em>Wort zeigen</em> zählt es als geschenkt, nicht als
+      gelöst. Das Brett führt darüber Buch und liest es dir am Ende vor.</p>
+      <p><em>Esc</em> geht einen Schritt zurück: aus dem Feld, auf dem du stehst, und dann
+      von der Seite, auf der du bist.</p>
+
+      <h2>Der Schalter</h2>
+      <p><em>Fehlerprüfung</em> ist zu Beginn an: ein falsches Wort wird rot, sobald du es
+      einträgst. Schalte sie aus, und nichts auf dem Brett widerspricht dir mehr — ein Wort,
+      das du hinsetzt, wird einfach genommen, und du erfährst es am Schluss. Auch der Klang
+      ändert sich: mit ausgeschalteter Prüfung sagt dir das Brett in einem Geräusch nicht,
+      was es dir auf der Seite verschweigt.</p>
+
+      <h2>Die zwei Fenster</h2>
+      <p>Ein Klick auf die Sätze im Hinweisfeld öffnet den <em>Wortlaut</em>, der jeden Satz
+      enthält, den das Brett gezeigt hat, ob ganz oder halb bekannt. Ein Klick auf ein Wort,
+      das du gesetzt hast, öffnet das <em>Wörterbuch</em> mit seinen Bedeutungen — meist
+      mehr als eine, und meist ist die zweite die, die das Brett meint.</p>
+
+      <h2>Die Jagd</h2>
+      <p>Die Wortliste ist der ganze Steinbruch. Ein Wort darf auf mehr als einem Brett
+      stehen, und dann trägt die Liste für jedes eine Nummer — ein Wort, das zweimal
+      auftaucht, ist eine Kreuzung zwischen zwei Rätseln und kein Fehler. Auf
+      <em>demselben</em> Brett steht kein Wort zweimal.</p>
+
+      <h2>Die Sprachen</h2>
+      <p>Englisch ist die Grundsprache und bleibt die breiteste: der Steinbruch der
+      mehrdeutigen Wörter, die beiden Rechtschreibungen und alle zweiten Seiten sind
+      englisch.</p>
+      <p>Ein Brett in einer anderen Sprache ist keine Übersetzung. Es kann keine sein. Ein
+      Crosslink lebt davon, dass ein Wort zufällig zwei Dinge meint, und diese Zufälle
+      gehören der Sprache: <em>UHU</em> heißt Eule und Alleskleber, weil eine Firma in Bühl
+      1932 ihre Leime nach Vögeln benannte, und dafür gibt es kein englisches Wort — also
+      auch kein englisches Brett, von dem <em>Verrückte Tiere</em> eine Fassung wäre. Der
+      Knopf in der Leiste wechselt die Sprache und mit ihr das Regal: jede Sprache zählt
+      ihre Bretter selbst, von № 1 an.</p>
+
+      <h2>Schwierigkeit</h2>
+      <p>Jedes Brett trägt einen, zwei oder drei Sterne. Die Zahl kommt von den Wörtern
+      darauf: wie gewöhnlich sie sind, und wie viele davon in einer zweiten Bedeutung
+      gebraucht werden. Ein Brett aus schlichten Tatsachen bekommt einen Stern. Ein Brett,
+      auf dem die Hälfte der Wörter zwei Mäntel trägt, bekommt drei.</p>
     </div>
 
     <!-- The figure is not repeated in the markup: app.js clones the one on the
@@ -492,7 +593,7 @@
          other. -->
     <figure class="fig-wrap" id="rules-fig"><div class="fig-scroll"></div></figure>
 
-    <p class="credit">Game Design: Simon Allmer</p>
+    <p class="credit" data-i18n="rules.credit">Game Design: Simon Allmer</p>
   </section>
 
   <!-- Two panes, the way a status bar of the period had them. The left one is
@@ -500,8 +601,8 @@
        afterwards, and it takes the FIRST p, so the notice on the right is never
        touched by it. -->
   <footer>
-    <p>Words in the cells. Connections in the gutters. Any square, any order.</p>
-    <p class="notice">&#169; 2026 Simon Allmer Entertainment</p>
+    <p data-i18n="foot.idle">Words in the cells. Connections in the gutters. Any square, any order.</p>
+    <p class="notice" data-i18n="foot.notice">&#169; 2026 Simon Allmer Entertainment</p>
   </footer>
 </main>
 
@@ -509,8 +610,8 @@
 
 <aside class="win" id="win-script" hidden>
   <div class="win-bar">
-    <span class="win-title">Written form</span>
-    <button class="win-x" id="x-script" title="Close" aria-label="Close">&#10006;</button>
+    <span class="win-title" data-i18n="script.title">Written form</span>
+    <button class="win-x" id="x-script" title="Close" aria-label="Close" data-i18n-title="win.close" data-i18n-label="win.close">&#10006;</button>
   </div>
   <div class="win-body">
     <ul id="script-list" class="script"></ul>
@@ -519,8 +620,8 @@
 
 <aside class="win" id="win-lex" hidden>
   <div class="win-bar">
-    <span class="win-title">Lexicon</span>
-    <button class="win-x" id="x-lex" title="Close" aria-label="Close">&#10006;</button>
+    <span class="win-title" data-i18n="lex.title">Lexicon</span>
+    <button class="win-x" id="x-lex" title="Close" aria-label="Close" data-i18n-title="win.close" data-i18n-label="win.close">&#10006;</button>
   </div>
   <div class="win-body">
     <p class="lex-word" id="lex-word"></p>
@@ -528,7 +629,7 @@
     <ol class="lex-senses" id="lex-senses"></ol>
     <p class="lex-note" id="lex-note"></p>
     <p class="lex-where" id="lex-where"></p>
-    <p class="lex-head">Words on this board</p>
+    <p class="lex-head" data-i18n="lex.head">Words on this board</p>
     <ul class="lex-list" id="lex-list"></ul>
   </div>
 </aside>
@@ -536,16 +637,19 @@
 </div>
 
 <script src="sound.js"></script>
+<script src="lang.js"></script>
 <script src="registry.js"></script>
 <script src="vocabulary.js"></script>
 <script src="spelling.js"></script>
 <script src="lexicon.js"></script>
+<script src="lexicon-de.js"></script>
 <script src="puzzles/puzzle-01-nile.js"></script>
 <script src="puzzles/puzzle-02-landfall.js"></script>
 <script src="puzzles/puzzle-03-bread.js"></script>
 <script src="puzzles/puzzle-04-orchard.js"></script>
 <script src="puzzles/puzzle-05-press.js"></script>
 <script src="puzzles/puzzle-06-steam.js"></script>
+<script src="puzzles/puzzle-de-01-tiere.js"></script>
 <script src="engine.js"></script>
 <script src="app.js"></script>
 </body>

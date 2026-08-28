@@ -5,11 +5,18 @@
 
   function load(i) {
     P = CL.puzzles[i];
+    // The number is the board's place on its OWN shelf. Each language counts
+    // from 1: there is an English No. 1 and a German Brett № 1, and neither is
+    // waiting on the other to be built.
     document.getElementById("eyebrow").textContent =
-      "Crosslink \u00b7 No. " + (+P.id.split("-")[0]) + " \u00b7 " + CL.starText(CL.stars(P));
+      CL.t("play.eyebrow", { n: CL.boardNo(CL.puzzles.indexOf(P)), stars: CL.starText(CL.stars(P)) });
     document.getElementById("title").textContent = P.title;
     document.getElementById("standfirst").textContent = P.standfirst;
-    document.body.classList.toggle("wide", P.size >= 5);
+    // The narrow sheet is 700px with 26 either side, so 648 of lattice fits in
+    // it. Asked of the board rather than of its size, so a language with wider
+    // gutters gets the wide sheet at 3x3 without anything here being told
+    // about that language.
+    document.body.classList.toggle("wide", CL.boardWidth(P) > 648);
     // A board carries its own colour. It goes on the body rather than on the
     // view, so the paper, the side windows and the chips the wires run behind
     // all turn together — one document, one colour, which is how a page of this
@@ -117,7 +124,11 @@
   // BERNERS-LEE would otherwise be a slot nobody could fill. It is printed from
   // the start, like a revealed letter that costs nothing, and `nextSlot` steps
   // over it exactly as it steps over one.
-  function seated(ch) { return !/[A-Z]/.test(ch); }
+  // ...and which letters those are is a fact about the language: English is
+  // A-Z, German is A-Z and the three umlauts. A square that will not take an Ä
+  // cannot hold a German word, so the alphabet is asked for rather than
+  // assumed.
+  function seated(ch) { return !CL.language().letters.test(ch); }
 
   function freshDraft(r, c) {
     var ans = CL.answer(st, r, c), rev = st.revealed[CL.K(r, c)] || {}, d = [];
@@ -166,8 +177,7 @@
         body = document.getElementById("panel-body");
     if (!st.selected) {
       empty.hidden = false; body.hidden = true;
-      empty.textContent = Object.keys(st.filled).length
-        ? "Pick a square." : "Pick any square and begin. The middle is the usual way in.";
+      empty.textContent = CL.t(Object.keys(st.filled).length ? "play.pick" : "play.pickAny");
       return;
     }
     empty.hidden = true; body.hidden = false;
@@ -175,7 +185,8 @@
     var r = st.selected[0], c = st.selected[1], k = CL.K(r, c), ans = CL.answer(st, r, c);
     var down = st.filled[k];
     document.getElementById("panel-count").textContent =
-      down !== undefined ? down + " — " + ans.length + " letters" : ans.length + " letters";
+      down !== undefined ? CL.t("play.down", { word: down, n: ans.length })
+                         : CL.t("play.letters", { n: ans.length });
 
     var ul = document.getElementById("routes");
     ul.innerHTML = "";
@@ -185,39 +196,38 @@
       ul.appendChild(li);
     });
     if (!ul.children.length) {
-      ul.innerHTML = '<li class="gap">Nothing has surfaced here yet.</li>';
+      ul.innerHTML = '<li class="gap"></li>';
+      ul.firstChild.textContent = CL.t("play.nothingHere");
     }
     var more = document.createElement("li");
     more.className = "more";
-    more.textContent = "Read every sentence \u2192";
+    more.textContent = CL.t("play.readAll");
     ul.appendChild(more);
-    ul.title = "Read every sentence the board has shown you";
+    ul.title = CL.t("play.readAllTip");
     ul.onclick = function () { show("win-script", true); };
 
     var enter = document.getElementById("enter"), btn = document.getElementById("hint");
 
     if (down !== undefined) {
-      enter.textContent = "Take it back";
+      enter.textContent = CL.t("play.takeBack");
       enter.disabled = false;
       enter.onclick = function () { lift(r, c); };
       btn.textContent = "";
       btn.hidden = true;
-      document.getElementById("hint-note").textContent =
-        "Nothing is final. A square you take back keeps any mark it earned.";
+      document.getElementById("hint-note").textContent = CL.t("play.takeBackNote");
       return;
     }
 
-    enter.textContent = "Enter word";
+    enter.textContent = CL.t("play.enter");
     enter.disabled = !draftFull();
     enter.onclick = function () { submit(); ghost.focus(); };
 
     var h = nextHint(r, c);
     btn.hidden = false;
-    btn.textContent = h ? h.label : "Nothing left to give";
+    btn.textContent = h ? h.label : CL.t("play.spent");
     btn.disabled = !h;
     btn.onclick = function () { if (h) { h.run(); say(h.note, true); draw(); ghost.focus(); } };
-    document.getElementById("hint-note").textContent =
-      "A letter marks the square as partly solved. The word marks it as given.";
+    document.getElementById("hint-note").textContent = CL.t("play.hintNote");
   }
 
   function term(xy, r, c) {
@@ -250,7 +260,7 @@
     if (document.getElementById("win-script").hidden) return;
     var ul = document.getElementById("script-list");
     ul.innerHTML = "";
-    if (!st) { ul.innerHTML = '<li class="gap">No board is open.</li>'; return; }
+    if (!st) { ul.innerHTML = '<li class="gap"></li>'; ul.firstChild.textContent = CL.t("script.none"); return; }
     st.edges.forEach(function (e) {
       if (!st.verbVisible[e.id]) return;
       var s = st.filled[CL.K(e.subject[0], e.subject[1])],
@@ -263,7 +273,10 @@
       });
       ul.appendChild(li);
     });
-    if (!ul.children.length) ul.innerHTML = '<li class="gap">Nothing has surfaced yet.</li>';
+    if (!ul.children.length) {
+      ul.innerHTML = '<li class="gap"></li>';
+      ul.firstChild.textContent = CL.t("script.nothing");
+    }
   }
 
   function piece(xy, word) {
@@ -282,9 +295,11 @@
 
   function lexWin() {
     if (document.getElementById("win-lex").hidden) return;
-    var hand = lexWord && CL.lex ? CL.lex[lexWord] : null;
-    var reg = lexWord && CL.registry ? CL.registry[lexWord] : null;
-    var gen = lexWord && CL.words ? CL.words[lexWord] : null;
+    // Each language answers out of its own three tables. A German word looked
+    // up in the English lexicon is not merely absent, it is a category error.
+    var hand = lexWord ? CL.lexicon()[lexWord] : null;
+    var reg  = lexWord ? CL.polysemes()[lexWord] : null;
+    var gen  = lexWord ? CL.quarry()[lexWord] : null;
     document.getElementById("lex-word").textContent = lexWord || "";
     document.getElementById("lex-pos").textContent =
       hand ? hand.pos : (gen ? gen.k : (reg ? "n." : ""));
@@ -292,8 +307,8 @@
     var ol = document.getElementById("lex-senses"), note = document.getElementById("lex-note");
     ol.innerHTML = "";
     note.textContent = "";
-    if (!lexWord) note.textContent = "Click a word you have placed, or any word in the list.";
-    else if (!hand && !reg && !gen) note.textContent = "Not in the Crosslink word list.";
+    if (!lexWord) note.textContent = CL.t("lex.prompt");
+    else if (!hand && !reg && !gen) note.textContent = CL.t("lex.unknown");
     else if (!hand && !reg && gen) {
       var li0 = document.createElement("li");
       li0.textContent = gen.d;
@@ -305,7 +320,8 @@
         li.textContent = t;
         ol.appendChild(li);
       });
-      if (reg) note.textContent = "Domains: " + reg.map(function (x) { return x[0]; }).join(" \u00B7 ");
+      if (reg) note.textContent = CL.t("lex.domains",
+        { list: reg.map(function (x) { return x[0]; }).join(" \u00B7 ") });
     } else if (reg) {
       reg.forEach(function (x) {
         var li = document.createElement("li");
@@ -320,18 +336,22 @@
     where.innerHTML = "";
     if (lexWord) {
       // Every board it is set in, since 3.9 allows more than one.
+      // Only the shelf you are standing in front of. A word is not "also on
+      // board 4" when board 4 is in a language this page is not written in.
       var on = [];
-      CL.puzzles.forEach(function (p, i) {
-        p.nouns.forEach(function (row) { if (row.indexOf(lexWord) >= 0 && on.indexOf(i) < 0) on.push(i); });
+      CL.shelf().forEach(function (i) {
+        CL.puzzles[i].nouns.forEach(function (row) {
+          if (row.indexOf(lexWord) >= 0 && on.indexOf(i) < 0) on.push(i);
+        });
       });
-      if (!on.length) where.textContent = "Not yet set in a board.";
+      if (!on.length) where.textContent = CL.t("lex.notSet");
       else {
-        where.appendChild(document.createTextNode(on.length > 1 ? "Set in " : "Set in "));
+        where.appendChild(document.createTextNode(CL.t("lex.setIn")));
         on.forEach(function (i, n) {
-          if (n) where.appendChild(document.createTextNode(" and "));
+          if (n) where.appendChild(document.createTextNode(CL.t("lex.and")));
           var b = document.createElement("button");
           b.type = "button"; b.className = "lex-play";
-          b.textContent = "\u2116" + (i + 1) + " \u2014 " + CL.puzzles[i].title;
+          b.textContent = "\u2116" + CL.boardNo(i) + " \u2014 " + CL.puzzles[i].title;
           b.onclick = function () { go("play", i); };
           where.appendChild(b);
         });
@@ -340,7 +360,7 @@
 
     var ul = document.getElementById("lex-list");
     ul.innerHTML = "";
-    if (!st) { ul.innerHTML = '<li class="gap">Nothing on the board.</li>'; return; }
+    if (!st) { ul.innerHTML = '<li class="gap"></li>'; ul.firstChild.textContent = CL.t("lex.noBoard"); return; }
     for (var r = 0; r < P.size; r++) {
       for (var c = 0; c < P.size; c++) {
         var w = st.filled[CL.K(r, c)];
@@ -354,20 +374,27 @@
         ul.appendChild(li);
       }
     }
-    if (!ul.children.length) ul.innerHTML = '<li class="gap">Nothing yet.</li>';
+    if (!ul.children.length) {
+      ul.innerHTML = '<li class="gap"></li>';
+      ul.firstChild.textContent = CL.t("lex.empty");
+    }
   }
 
   // ---- where in the site you are ---------------------------------------
 
   var SITE = "http://simonallmer.com/crosslink/";
+  // A view names the string its window bar carries and, where it has one, the
+  // page it stands for on the site. Neither is written out here any more: the
+  // title comes from the language's own table, and the file name from the
+  // language too, because a German page is not called rulebook.html.
   var VIEWS = {
-    menu:    { el: "view-menu",    title: "Crosslink",             loc: "" },
-    play:    { el: "view-play",    title: "Crosslink",             loc: "" },
-    puzzles: { el: "view-puzzles", title: "Crosslink \u2014 Puzzles",   loc: "puzzles.html" },
-    words:   { el: "view-words",   title: "Crosslink \u2014 Word List", loc: "words.html" },
-    rules:   { el: "view-rules",   title: "Crosslink \u2014 Rulebook",  loc: "rulebook.html" },
-    intro:   { el: "view-intro",   title: "Crosslink \u2014 Introduction", loc: "intro.html" },
-    promo:   { el: "view-promo",   title: "Crosslink",                     loc: "" }
+    menu:    { el: "view-menu",    doc: "doc.home" },
+    play:    { el: "view-play",    doc: "doc.home" },
+    puzzles: { el: "view-puzzles", doc: "doc.puzzles", loc: "puzzles" },
+    words:   { el: "view-words",   doc: "doc.words",   loc: "words" },
+    rules:   { el: "view-rules",   doc: "doc.rules",   loc: "rules" },
+    intro:   { el: "view-intro",   doc: "doc.intro",   loc: "intro" },
+    promo:   { el: "view-promo",   doc: "doc.home" }
   };
   var here = null, trail = [];
 
@@ -410,8 +437,15 @@
   }
 
   function chrome() {
-    var v = VIEWS[here.name], title = v.title, loc = SITE + v.loc;
-    if (here.name === "play") { title = "Crosslink \u2014 " + P.title; loc = SITE + P.id + "/"; }
+    // A language is a directory on the site, and English is the root — the way
+    // it is the root of everything else here. So nothing set in English ever
+    // changes address, and /de/ appears the day German does.
+    var v = VIEWS[here.name], L = CL.language();
+    var title = CL.t(v.doc), loc = SITE + L.dir + (v.loc ? L.loc[v.loc] : "");
+    if (here.name === "play") {
+      title = CL.t("doc.board", { title: P.title });
+      loc = SITE + CL.language(CL.boardLang(P)).dir + P.id + "/";
+    }
     document.getElementById("win-name").textContent = title;
     document.getElementById("loc").textContent = loc;
   }
@@ -420,13 +454,20 @@
   // H2 was repealed at 3.9: a word may be set on more than one board. So a word
   // knows every board it is on, not the last one that happened to claim it —
   // which is what the old `board: -1` single slot silently did.
+  //
+  // One quarry per language, and they do not pool. The English list is the
+  // registry plus the general words plus anything set in an English board; the
+  // German list is the German registry plus anything set in a German one. A
+  // word that exists in both — BANK is the obvious one — is two words here,
+  // with two sets of senses, which is exactly what it is.
   function vocabulary() {
     var map = {}, k;
-    for (k in CL.registry) if (CL.registry.hasOwnProperty(k)) map[k] = { boards: [] };
-    for (k in CL.words) if (CL.words.hasOwnProperty(k) && !map[k]) map[k] = { boards: [] };
-    for (k in CL.lex) if (CL.lex.hasOwnProperty(k) && !map[k]) map[k] = { boards: [] };
-    CL.puzzles.forEach(function (p, i) {
-      p.nouns.forEach(function (row) {
+    var reg = CL.polysemes(), gen = CL.quarry(), lex = CL.lexicon();
+    for (k in reg) if (reg.hasOwnProperty(k)) map[k] = { boards: [] };
+    for (k in gen) if (gen.hasOwnProperty(k) && !map[k]) map[k] = { boards: [] };
+    for (k in lex) if (lex.hasOwnProperty(k) && !map[k]) map[k] = { boards: [] };
+    CL.shelf().forEach(function (i) {
+      CL.puzzles[i].nouns.forEach(function (row) {
         row.forEach(function (w) {
           var e = map[w] || (map[w] = { boards: [] });
           if (e.boards.indexOf(i) < 0) e.boards.push(i);
@@ -453,27 +494,26 @@
       boards.forEach(function (board) {
         var a = document.createElement("button");
         a.type = "button"; a.className = "b";
-        a.textContent = "\u2116" + (board + 1);
-        a.title = "Play " + CL.puzzles[board].title;
+        a.textContent = "\u2116" + CL.boardNo(board);
+        a.title = CL.t("puzzles.playTip", { title: CL.puzzles[board].title });
         a.onclick = function () { go("play", board); };
         li.appendChild(a);
       });
       ul.appendChild(li);
     });
     document.getElementById("words-sub").textContent =
-      words.length + " words in the quarry. " + onBoards +
-      " have been set in a board so far; the rest are waiting for one. " +
-      "A word may be set in more than one, and carries a number for each.";
+      CL.t("words.sub", { n: words.length, m: onBoards });
   }
 
   function puzzleIndex() {
     var t = document.getElementById("puzzle-index");
     t.innerHTML = "";
-    CL.puzzles.forEach(function (p, i) {
+    CL.shelf().forEach(function (i, place) {
+      var p = CL.puzzles[i];
       var tr = document.createElement("tr");
       tr.innerHTML = '<td class="no"></td><td class="ti"></td><td class="sz"></td>' +
                      '<td class="st"></td><td class="ac"></td>';
-      tr.children[0].textContent = "\u2116" + (i + 1);
+      tr.children[0].textContent = "\u2116" + (place + 1);
       tr.children[2].textContent = p.size + "\u00D7" + p.size;
       tr.children[3].textContent = CL.starText(CL.stars(p));
       tr.children[3].className = "st stars";
@@ -488,7 +528,7 @@
 
       var b = document.createElement("button");
       b.type = "button"; b.className = "ghost";
-      b.textContent = "Play";
+      b.textContent = CL.t("puzzles.play");
       b.onclick = open;
       tr.children[4].appendChild(b);
       t.appendChild(tr);
@@ -497,17 +537,18 @@
     // No longer a warning. A word on two boards is a crossing between them, and
     // the footer says how many there are rather than complaining about them.
     var seen = {}, shared = [];
-    CL.puzzles.forEach(function (p) {
-      p.nouns.forEach(function (row) { row.forEach(function (w) {
+    CL.shelf().forEach(function (i) {
+      CL.puzzles[i].nouns.forEach(function (row) { row.forEach(function (w) {
         if (seen[w] === 1) shared.push(w);
         seen[w] = (seen[w] || 0) + 1;
       }); });
     });
     var total = Object.keys(seen).length;
-    document.getElementById("puzzle-foot").textContent = shared.length
-      ? total + " words set so far. " + shared.length +
-        " of them cross two boards or more: " + shared.sort().join(", ") + "."
-      : total + " words set so far, none yet on two boards.";
+    document.getElementById("puzzle-foot").textContent =
+      !total ? CL.t("puzzles.none")
+      : shared.length ? CL.t("puzzles.shared",
+          { total: total, n: shared.length, list: shared.sort().join(", ") })
+      : CL.t("puzzles.alone", { total: total });
   }
 
   // N3b generalised: anything printed with a `data-lex` opens that entry. The
@@ -515,7 +556,7 @@
   // is a word in the game like any other, and it was the one word on that page
   // you could not look up.
   Array.prototype.forEach.call(document.querySelectorAll("[data-lex]"), function (el) {
-    el.title = "Look up " + el.getAttribute("data-lex");
+    el.title = CL.t("lookup", { word: el.getAttribute("data-lex") });
     el.onclick = function () { lexOpen(el.getAttribute("data-lex")); refresh(); };
   });
 
@@ -529,16 +570,21 @@
   // exactly Monday-to-Sunday with nothing here to change. Wrapping is also what
   // stops the tile opening `undefined` the moment a board is withdrawn, which
   // has happened once already this month.
+  // The shelf is the one for the language you are reading in, so a language
+  // with one board has that board every day and a language with none has no
+  // daily to open — which the tile handles rather than throwing.
   function dailyIndex() {
+    var shelf = CL.shelf();
+    if (!shelf.length) return -1;
     var weekday = (new Date().getDay() + 6) % 7;      // 0 = Monday ... 6 = Sunday
-    return weekday % CL.puzzles.length;
+    return shelf[weekday % shelf.length];
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function (a) {
     a.onclick = function (ev) {
       ev.preventDefault();
       var d = a.getAttribute("data-go");
-      if (d === "daily") go("play", dailyIndex());
+      if (d === "daily") { var i = dailyIndex(); go(i < 0 ? "puzzles" : "play", i < 0 ? undefined : i); }
       else go(d);
     };
   });
@@ -565,7 +611,7 @@
     var dark = darkNow();
     themeBtn.className = "tool ico" + (dark ? " is-dark" : "");
     themeBtn.setAttribute("aria-pressed", dark ? "true" : "false");
-    themeBtn.title = dark ? "Dark. Click for light." : "Light. Click for dark.";
+    themeBtn.title = CL.t(dark ? "nav.themeDark" : "nav.themeLight");
   }
   try {
     var kept = window.sessionStorage && sessionStorage.getItem("crosslink-theme");
@@ -700,12 +746,15 @@
   paintTheme();
 
   var soundBtn = document.getElementById("sound-toggle");
+  function paintSound() {
+    var on = !CL.sfx || CL.sfx.isOn();
+    soundBtn.textContent = CL.t(on ? "nav.soundOn" : "nav.soundOff");
+    soundBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    soundBtn.classList.toggle("off", !on);
+  }
   soundBtn.onclick = function () {
-    var next = !CL.sfx.isOn();
-    CL.sfx.on(next);
-    soundBtn.innerHTML = next ? "\u266A On" : "\u266A Off";
-    soundBtn.setAttribute("aria-pressed", next ? "true" : "false");
-    soundBtn.classList.toggle("off", !next);
+    CL.sfx.on(!CL.sfx.isOn());
+    paintSound();
   };
 
   // The emblem is the index in miniature: click it once and it numbers itself,
@@ -715,17 +764,25 @@
     if (numbered) return;
     numbered = true;
     hero.classList.add("numbered");
-    document.getElementById("hero-note").textContent = "Pick a square.";
+    document.getElementById("hero-note").textContent = CL.t("hero.picked");
   };
-  Array.prototype.forEach.call(hero.querySelectorAll(".cell"), function (g) {
-    var i = +g.getAttribute("data-n") - 1;
-    if (!CL.puzzles[i]) g.classList.add("empty");
-    g.onclick = function (ev) {
-      if (!numbered) return;
-      ev.stopPropagation();
-      if (CL.puzzles[i]) go("play", i);
-    };
-  });
+  // The nine squares are the first nine boards of the language you are reading
+  // in, so the emblem is a picture of that shelf and of how young it is. It has
+  // to be redrawn when the language turns: a square that opened No. 4 in
+  // English opens nothing at all in German, and must not go on offering to.
+  function paintHero() {
+    var shelf = CL.shelf();
+    Array.prototype.forEach.call(hero.querySelectorAll(".cell"), function (g) {
+      var i = shelf[+g.getAttribute("data-n") - 1];
+      g.classList.toggle("empty", i === undefined);
+      g.onclick = function (ev) {
+        if (!numbered) return;
+        ev.stopPropagation();
+        if (i !== undefined) go("play", i);
+      };
+    });
+    document.getElementById("hero-note").textContent = CL.t(numbered ? "hero.picked" : "hero.note");
+  }
 
   var siteList = document.getElementById("sitelist"), siteArrow = document.getElementById("loc-arrow");
   SITES.forEach(function (host) {
@@ -741,8 +798,105 @@
     siteList.hidden = !on;
     siteArrow.setAttribute("aria-expanded", on ? "true" : "false");
   }
-  siteArrow.onclick = function (ev) { ev.stopPropagation(); sites(siteList.hidden); };
-  document.addEventListener("click", function () { sites(false); });
+  siteArrow.onclick = function (ev) { ev.stopPropagation(); langs(false); sites(siteList.hidden); };
+  document.addEventListener("click", function () { sites(false); langs(false); });
+
+  // ---- the language -----------------------------------------------------
+  //
+  // A list and not a switch, because two is where this starts and not where it
+  // stops. It sits with the sound and the light rather than with the location,
+  // because it is a preference about the reader and not a place on the site —
+  // even though, one line down in `chrome`, it turns out to be both.
+  var langBtn = document.getElementById("lang-toggle"),
+      langNow = document.getElementById("lang-now"),
+      langList = document.getElementById("langlist");
+
+  CL.languages.forEach(function (L) {
+    var li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button";
+    b.lang = L.code;                       // so a screen reader says the name right
+    b.textContent = L.name;                // in that language, never translated
+    b.onclick = function (ev) { ev.stopPropagation(); langs(false); setLang(L.code); };
+    li.appendChild(b);
+    langList.appendChild(li);
+  });
+
+  function langs(on) {
+    langList.hidden = !on;
+    langBtn.setAttribute("aria-expanded", on ? "true" : "false");
+  }
+  langBtn.onclick = function (ev) { ev.stopPropagation(); sites(false); langs(langList.hidden); };
+
+  // The change is a turn of the page and not a flicker. The whole desktop goes
+  // out, every string is replaced while nothing is being read, and it comes
+  // back — which is why the strings are written into the document rather than
+  // the document being rebuilt: the layout never moves, so there is nothing to
+  // see between the two halves of the fade.
+  var TURN = 150;
+
+  function turn(fn) {
+    var el = document.querySelector(".desktop");
+    if (!el) { fn(); return; }
+    el.classList.add("turning");
+    setTimeout(function () {
+      fn();
+      // One frame for the new text to land in. Lifting the class in the same
+      // tick as the swap shows the first frame of the fade with the old
+      // page's measurements still in it.
+      if (window.requestAnimationFrame) requestAnimationFrame(function () { el.classList.remove("turning"); });
+      else el.classList.remove("turning");
+    }, TURN);
+  }
+
+  // Everything in the document that is written in a language, put back in the
+  // one now showing. `data-i18n` is for labels, `data-lang` for whole blocks of
+  // prose — the rulebook is written twice rather than translated key by key,
+  // because a rulebook is a piece of writing and not a row of buttons.
+  function paintStrings() {
+    function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+    each("[data-i18n]",       function (el) { el.textContent = CL.t(el.getAttribute("data-i18n")); });
+    each("[data-i18n-title]", function (el) { el.title = CL.t(el.getAttribute("data-i18n-title")); });
+    each("[data-i18n-label]", function (el) { el.setAttribute("aria-label", CL.t(el.getAttribute("data-i18n-label"))); });
+    each("[data-lang]",       function (el) { el.hidden = el.getAttribute("data-lang") !== CL.lang; });
+    each("[data-lex]",        function (el) { el.title = CL.t("lookup", { word: el.getAttribute("data-lex") }); });
+    langNow.textContent = CL.language().name;
+    langNow.lang = CL.lang;
+    paintTheme();
+    paintSound();
+    paintHero();
+  }
+
+  function setLang(code) {
+    if (code === CL.lang || CL.language(code).code !== code) return;
+    if (CL.sfx) CL.sfx.click();
+    turn(function () {
+      CL.lang = code;
+      try { if (window.sessionStorage) sessionStorage.setItem("crosslink-lang", code); } catch (e) {}
+      document.documentElement.setAttribute("lang", code);
+      CL.statusForget();
+      paintStrings();
+      // The board you were on is not on the shelf you are now standing in
+      // front of, so the one page that cannot simply be repainted is a board.
+      // It goes to the index rather than to some other language's No. 1: the
+      // honest answer to changing language mid-board is here is that
+      // language's shelf, not here is a board you did not ask for.
+      var name = (here && here.name === "play") ? "puzzles" : (here ? here.name : "menu");
+      go(name, name === here.name ? here.arg : undefined, true);
+    });
+  }
+
+  // Kept for the session only, the same as the theme and for the same reason:
+  // long enough to matter, not long enough to be a promise. English is the
+  // default and is not sniffed from the browser — a German reader arriving on
+  // six English boards and one German one is better served by the widest shelf
+  // and a button than by being shown the narrowest without being asked.
+  try {
+    var keptLang = window.sessionStorage && sessionStorage.getItem("crosslink-lang");
+    if (keptLang && CL.language(keptLang).code === keptLang) {
+      CL.lang = keptLang;
+      document.documentElement.setAttribute("lang", keptLang);
+    }
+  } catch (e) {}
   // Escape unwinds, innermost thing first: the site list if it is open, then the
   // square you are standing on, then the page you are on. Only the last of those
   // is new — the other two were already bound, and putting "go back" underneath
@@ -751,6 +905,7 @@
   document.addEventListener("keydown", function (ev) {
     if (ev.key !== "Escape") return;
     if (ev.defaultPrevented) return;            // something nearer already took it
+    if (!langList.hidden) { langs(false); return; }
     if (!siteList.hidden) { sites(false); return; }
     // The square, whether or not the hidden input happens to hold focus. When it
     // does, its own handler has already run and preventDefault kept us out.
@@ -809,9 +964,13 @@
 
   var EM_SERIF = "\'Times New Roman\', Times, Georgia, serif";
 
+  function up(s) {
+    return String(s).toUpperCase().replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  }
+
   function emblem() {
-    var out = ['<svg viewBox="0 0 600 600" role="img" ' +
-               'aria-label="Simon Allmer presents Crosslink, a game of connections.">'];
+    var out = ['<svg viewBox="0 0 600 600" role="img" aria-label="' +
+               CL.t("emblem.label").replace(/"/g, "&quot;") + '">'];
     out.push(EM_SKY);
     out.push('<rect width="600" height="600" fill="url(#em-sky)"/>');
     out.push('<g class="rays">' + EM_RAYS + '</g>');
@@ -820,11 +979,14 @@
 
     // The name twice: the lower copy is the drop shadow the masthead sets in
     // CSS as `text-shadow: 3px 3px 0 #06172B`, which SVG has no equivalent for.
-    out.push('<text class="em-kick" x="300" y="248">SIMON ALLMER PRESENTS</text>');
+    // Set in capitals, out of the same two strings the banner uses, so the
+    // masthead and the emblem cannot come to disagree about what the game is
+    // called in a language.
+    out.push('<text class="em-kick" x="300" y="248">' + up(CL.t("banner.kicker")) + '</text>');
     out.push('<text class="em-name em-shadow" x="304" y="334">CROSSLINK</text>');
     out.push('<text class="em-name" x="300" y="330">CROSSLINK</text>');
     out.push('<rect class="em-rule" id="em-rule-l" x="0" y="372" width="40" height="3"/>');
-    out.push('<text class="em-sub" x="300" y="378">A GAME OF CONNECTIONS</text>');
+    out.push('<text class="em-sub" x="300" y="378">' + up(CL.t("banner.sub")) + '</text>');
     out.push('<rect class="em-rule" id="em-rule-r" x="0" y="372" width="40" height="3"/>');
     out.push('</svg>');
     var host = document.getElementById("promo");
@@ -884,17 +1046,17 @@
     var k = CL.K(r, c), ans = CL.answer(st, r, c);
     var hidden = CL.edgesAt(st, r, c).filter(function (e) { return !st.verbVisible[e.id]; });
     if (hidden.length) {
-      return { label: "Surface a link", note: "A route in, at no cost to the square.",
+      return { label: CL.t("hint.link"), note: CL.t("hint.linkNote"),
         run: function () { st.surfaced[pickOne(hidden).id] = true; } };
     }
     var rev = st.revealed[k] || (st.revealed[k] = {});
     var missing = [];
     for (var i = 0; i < ans.length; i++) if (!rev[i]) missing.push(i);
     if (missing.length > 1) {
-      return { label: "Reveal a letter", note: "This square will read as partly solved.",
+      return { label: CL.t("hint.letter"), note: CL.t("hint.letterNote"),
         run: function () { rev[pickOne(missing)] = true; st.mark[k] = "partial"; st.draft = reseat(r, c); } };
     }
-    return { label: "Reveal the word", note: "This square will read as given, not solved.",
+    return { label: CL.t("hint.word"), note: CL.t("hint.wordNote"),
       run: function () { st.filled[k] = ans; st.mark[k] = "given"; st.status[k] = "given"; st.selected = null; st.draft = []; } };
   }
 
@@ -907,7 +1069,7 @@
     var r = st.selected[0], c = st.selected[1], k = CL.K(r, c),
         ans = CL.answer(st, r, c);
 
-    if (!draftFull()) { say("That square takes " + ans.length + " letters."); return; }
+    if (!draftFull()) { say(CL.t("msg.takes", { n: ans.length })); return; }
     var w = st.draft.join("").toUpperCase();
     // Compared as one word, so CENTER cannot be set down beside CENTRE.
     //
@@ -928,7 +1090,7 @@
       var rc = kk.split(",");
       return CL.same(st.filled[kk], CL.answer(st, +rc[0], +rc[1]));
     });
-    if (dup.length) { say("Each word is used once, and " + w + " is already on the board."); return; }
+    if (dup.length) { say(CL.t("msg.dup", { word: w })); return; }
 
     st.filled[k] = w;
     st.status[k] = st.mark[k] || "clean";
@@ -961,7 +1123,7 @@
     }
     st.selected = null;
     st.draft = [];
-    say("The whole board, given.", true);
+    say(CL.t("msg.gaveUp"), true);
     if (CL.sfx) CL.sfx.giveup();
     draw();
     finish(true);
@@ -981,9 +1143,9 @@
       else if (st.status[k] === "partial") partial++;
       else given++;
     });
-    var bits = [clean + " solved outright"];
-    if (partial) bits.push(partial + " with letters revealed");
-    if (given) bits.push(given + " given");
+    var bits = [CL.t("finish.clean", { n: clean })];
+    if (partial) bits.push(CL.t("finish.partial", { n: partial }));
+    if (given) bits.push(CL.t("finish.given", { n: given }));
     document.getElementById("finish-sub").textContent = bits.join(", ") + ".";
 
     var ul = document.getElementById("sentences");
@@ -996,7 +1158,7 @@
       // Every word on the closing page opens its entry, the same as everywhere
       // else a word is set in type. A word that looks like a link is one.
       Array.prototype.forEach.call(li.children, function (n) {
-        n.title = "Look up " + n.textContent;
+        n.title = CL.t("lookup", { word: n.textContent });
         n.onclick = function () { lexOpen(n.textContent); refresh(); };
       });
       ul.appendChild(li);
@@ -1033,7 +1195,7 @@
       back();
       return;
     }
-    var letters = ghost.value.toUpperCase().replace(/[^A-Z]/g, "");
+    var letters = ghost.value.toUpperCase().replace(CL.language().strip, "");
     ghost.value = "";
     if (!st.selected || !letters) return;
     typeIn(letters);
@@ -1075,7 +1237,7 @@
     // the front page — harmless while nobody typed there, and not harmless now
     // that the front page is somewhere you press a key on purpose (A14).
     if (!st || !st.selected) return;
-    if (/^[a-zA-Z]$/.test(ev.key)) {
+    if (ev.key.length === 1 && CL.language().letters.test(ev.key.toUpperCase())) {
       ghost.focus();
       typeIn(ev.key.toUpperCase());
     }
@@ -1095,5 +1257,6 @@
     if (src && dst) dst.appendChild(src.cloneNode(true));
   })();
 
+  paintStrings();
   go("menu");
 })();

@@ -1,6 +1,7 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
   id: "02-landfall",
+  lang: "en",
   title: "Water World",
   standfirst: "Edited by Simon Allmer",
   hue: "blue",
