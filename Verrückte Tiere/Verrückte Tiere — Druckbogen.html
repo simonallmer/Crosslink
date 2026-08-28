@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Verrückte Tiere — Crosslink</title>
+<style>
+@page { size: A4 landscape; margin: 9mm 10mm; }
+:root { --ink:#111; --soft:#4a4a44; --faint:#8b8880; --rule:#bdb9ab;
+        --wire:#8f8f86; --bar:#b8b4a8; --gold:#8a5f00; --link:#1b2a8c;
+        --serif:"Times New Roman",Times,serif; --sans:Verdana,Geneva,Arial,sans-serif;
+        --rot:#C00000; }
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; }
+body { font-family:var(--serif); color:var(--ink); background:#fff; }
+
+.seite { width:277mm; height:190mm; page-break-after:always; position:relative;
+         display:flex; flex-direction:column; overflow:hidden; }
+.seite:last-child { page-break-after:auto; }
+
+/* ---- Kopf --------------------------------------------------------- */
+.kopf { display:flex; align-items:baseline; justify-content:space-between;
+        border-bottom:2px solid var(--ink); padding-bottom:2mm; margin-bottom:3.5mm; }
+.kopf .links { display:flex; align-items:baseline; gap:4mm; }
+.kopf h1 { font-size:15pt; font-weight:400; margin:0; letter-spacing:.01em; }
+.kopf .marke { font-family:var(--sans); font-size:6pt; letter-spacing:.24em;
+               text-transform:uppercase; color:var(--soft); }
+.kopf .rechts { font-family:var(--sans); font-size:6pt; letter-spacing:.16em;
+                text-transform:uppercase; color:var(--faint); text-align:right; }
+.kopf .stern { color:var(--gold); font-size:8pt; letter-spacing:.08em; }
+
+/* ---- das Gitter ---------------------------------------------------- */
+.brett { display:grid; gap:.6mm;
+  grid-template-columns:52mm 46mm 52mm 46mm 52mm;
+  grid-template-rows:32mm 30mm 32mm 30mm 32mm;
+  margin:0 auto; }
+.brett > div { display:flex; align-items:center; justify-content:center; text-align:center;
+               position:relative; }
+
+.z { border:.35mm solid var(--ink); background:#fff; }
+.z .tick { position:absolute; top:.6mm; right:1.2mm; font-family:var(--sans);
+           font-size:5pt; color:var(--soft); }
+.z .tick::before { content:"["; } .z .tick::after { content:"]"; }
+.z .kaest { display:flex; gap:.5mm; justify-content:center; width:88%; margin-top:1.5mm; }
+.z .kaest i { flex:1 1 0; border-bottom:.3mm solid var(--faint); height:4.6mm; }
+.z .wort { font-size:15pt; letter-spacing:.06em; color:var(--link); }
+
+.g::before { content:""; position:absolute; background:var(--wire); }
+.g.an.h::before { left:0; right:0; top:50%; height:.25mm; }
+.g.an.v::before { top:0; bottom:0; left:50%; width:.25mm; }
+.g.bar.h::before { left:26%; right:26%; top:50%; height:.7mm; background:var(--bar); }
+.g.bar.v::before { top:26%; bottom:26%; left:50%; width:.7mm; background:var(--bar); }
+.g.level.h::before { height:.6mm; background:var(--soft); }
+.g.level.v::before { width:.6mm; background:var(--soft); }
+.g .lab { position:relative; z-index:1; background:#fff; font-family:var(--sans);
+          font-size:6.4pt; line-height:1.32; color:var(--ink); padding:0 .6mm; }
+.g.h .lab { max-width:calc(100% - 3.4mm); }
+.g.v .lab { max-width:calc(100% - 1mm); }
+/* die Pfeilspitzen */
+.g .lab::after, .g .lab::before { content:""; position:absolute; width:0; height:0;
+                                  border:1.2mm solid transparent; }
+.g.to-right .lab::after { right:-4.2mm; top:50%; margin-top:-1.2mm; border-right-width:0; border-left-color:var(--ink); }
+.g.to-left  .lab::before { left:-4.2mm; top:50%; margin-top:-1.2mm; border-left-width:0; border-right-color:var(--ink); }
+.g.to-down  .lab::after { bottom:-3.4mm; left:50%; margin-left:-1.2mm; border-bottom-width:0; border-top-color:var(--ink); }
+.g.to-up    .lab::before { top:-3.4mm; left:50%; margin-left:-1.2mm; border-top-width:0; border-bottom-color:var(--ink); }
+
+/* Rot: ein Satz, der noch zur Überarbeitung ansteht. ("neu": true im brett.json) */
+.g.neu .lab { color:var(--rot); }
+.g.neu.an::before { background:var(--rot); }
+.g.neu.to-right .lab::after { border-left-color:var(--rot); }
+.g.neu.to-left  .lab::before { border-right-color:var(--rot); }
+.g.neu.to-down  .lab::after { border-top-color:var(--rot); }
+.g.neu.to-up    .lab::before { border-bottom-color:var(--rot); }
+.liste li.neu .s1, .liste li.neu .paar { color:var(--rot); }
+
+/* ---- Titelblock auf Seite 1 ---------------------------------------- */
+.einleitung { display:flex; gap:7mm; font-size:7.8pt; line-height:1.45; margin-bottom:2.5mm; }
+.einleitung div { flex:1; }
+.einleitung b { font-weight:700; }
+.einleitung .weit { flex:1.3; }
+
+/* ---- die Satzliste -------------------------------------------------- */
+.liste { columns:2; column-gap:7mm; font-size:7.4pt; line-height:1.42; margin:0; padding:0;
+         list-style:none; }
+.liste li { break-inside:avoid; margin-bottom:2.4mm; }
+.liste .paar { display:block; font-family:var(--sans); font-size:6.2pt; letter-spacing:.1em;
+               color:var(--soft); text-transform:uppercase; }
+.liste .pf { color:var(--gold); }
+.liste .s1 { display:block; }
+.liste .s2 { display:block; color:var(--soft); font-style:italic; }
+.liste i { font-style:normal; }
+.liste .s2 i { font-style:italic; }
+
+.fuss { position:absolute; bottom:0; left:0; right:0; border-top:.3mm solid var(--rule);
+        padding-top:1.6mm; font-family:var(--sans); font-size:5.6pt; letter-spacing:.14em;
+        text-transform:uppercase; color:var(--faint); display:flex; justify-content:space-between; }
+.widmung { text-align:center; font-style:italic; font-size:9.5pt; color:var(--soft); margin-top:4mm; }
+.hinweis { font-size:8pt; line-height:1.5; margin:3mm auto 0; max-width:210mm; text-align:center; color:var(--soft); }
+</style>
+</head>
+<body>
+
+<section class="seite">
+  <div class="kopf">
+    <div class="links">
+      <span class="marke">Crosslink · Allmer Games</span>
+      <h1>Verrückte Tiere</h1>
+      <span class="stern">★★☆</span>
+    </div>
+    <div class="rechts">Brett № 3 · Deutsch<br>Erstellt von Simon</div>
+  </div>
+  <div class="einleitung">
+    <div><b>In den Feldern stehen Tiere, dazwischen steht, was sie verbindet.</b>
+      Fang in der Mitte an: vier Buchstaben, vier Sätze zeigen darauf.</div>
+    <div><b>Ein Pfeil zeigt, wer etwas tut</b>; ein Strich ohne Spitze gilt in beide
+      Richtungen.</div>
+    <div class="weit"><b>Die Zahl in der Ecke sagt, wie viele Buchstaben fehlen.</b>
+</div>
+  </div>
+  <div class="brett"><div class="z leer"><span class="tick">4</span><span class="kaest"><i></i><i></i><i></i><i></i></span></div>
+<div class="g an h to-right"><span class="lab">stellt sich hinter Reptilien an und wird dabei selbst Teil der</span></div>
+<div class="z leer"><span class="tick">8</span><span class="kaest"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+<div class="g an h to-right"><span class="lab">weicht im seichten Wasser den Scheren aus vom</span></div>
+<div class="z leer"><span class="tick">5</span><span class="kaest"><i></i><i></i><i></i><i></i><i></i></span></div>
+<div class="g an v to-up"><span class="lab">sorgt bei Falschanwendung zum Cursorstillstand der</span></div>
+<div class="tot"></div>
+<div class="g an v to-down"><span class="lab">steht im Festzelt und wird nur kürzer durch einen zweiten</span></div>
+<div class="tot"></div>
+<div class="g an v to-down"><span class="lab">steht in den schicksalhaften Sternen über jedem weltlichen Flug einer</span></div>
+<div class="z leer"><span class="tick">3</span><span class="kaest"><i></i><i></i><i></i></span></div>
+<div class="g an h level"><span class="lab">erblickt nur einen schlafenden</span></div>
+<div class="z leer"><span class="tick">4</span><span class="kaest"><i></i><i></i><i></i><i></i></span></div>
+<div class="g an h to-left"><span class="lab">hören nicht das Krähen vom lauten</span></div>
+<div class="z leer"><span class="tick">5</span><span class="kaest"><i></i><i></i><i></i><i></i><i></i></span></div>
+<div class="g an v to-up"><span class="lab">kann, als Befehl verstanden, ausgeführt werden vom</span></div>
+<div class="tot"></div>
+<div class="g an v to-down"><span class="lab">spendet Leitungswasser zur Vertreibung des</span></div>
+<div class="tot"></div>
+<div class="g an v to-down"><span class="lab">hält im Rat den Zins tief; darüber freut sich an der Börse der</span></div>
+<div class="z leer"><span class="tick">6</span><span class="kaest"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+<div class="g an h to-left"><span class="lab">ist in modebewusster, gestiefelter Form auch anzutreffen mit</span></div>
+<div class="z leer"><span class="tick">5</span><span class="kaest"><i></i><i></i><i></i><i></i><i></i></span></div>
+<div class="g an h to-left"><span class="lab">sorgt, aus beruflichen Gründen, für den Aufhalt und Entzug von Herr</span></div>
+<div class="z leer"><span class="tick">5</span><span class="kaest"><i></i><i></i><i></i><i></i><i></i></span></div></div>
+  <div class="fuss"><span>Das Brett</span><span>9 Tiere · 12 Verbindungen</span></div>
+</section>
+
+
+</body>
+</html>

@@ -1265,10 +1265,14 @@ seven boards**, none of them twice.
   be complete, because for a reader who cannot see the drawing it is not a
   fallback, it is the page.
 
-  **It is repeated at the foot of the Rulebook**, under *Where this came from*.
-  Not copied into the markup: `app.js` clones the one on the note at startup, so
-  `tools/make-figure.py` stays the single source and a regenerated drawing
-  cannot land on one page and not the other.
+  **It is repeated at the foot of the Rulebook**, and there it stands entirely
+  alone: the heading *Where this came from* and the paragraph under it are gone
+  too. They were the same concession one page later — a caption telling the
+  reader what the drawing above it means. The figure closes the Rulebook without
+  a word of introduction, which is the only ending consistent with what it
+  claims. Not copied into the markup: `app.js` clones the one on the note at
+  startup, so `tools/make-figure.py` stays the single source and a regenerated
+  drawing cannot land on one page and not the other.
 
   **HYPERTEXT *extends with* HYPERMEDIA**, where the original says *includes*.
   That one is deliberately not borrowed. The containment runs the other way —
