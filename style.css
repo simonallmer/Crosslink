@@ -522,18 +522,28 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   margin: 0 -26px 18px; padding: 4px 8px;
   background: var(--face); border-bottom: 1px solid var(--bevel-lo);
 }
+/* Every control in the bar is 26px tall and nothing it contains may change
+   that. The heights used to come out of the content, and so there were seven
+   of them across eight buttons: 40px for `\u25C0 Back`, because the triangle
+   carries a taller glyph box than the letters beside it; 33px for the language
+   button, which sets 8px around an 11px span; 21px for the icon button, which
+   sets `line-height: 0`. The bar read as a row of buttons at different
+   altitudes. A declared height and a centring box settle all of it at once,
+   and 26px is not a new number — it is what `button.ghost` has always used. */
 .tool {
+  height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--sans); font-size: 11px; color: var(--ink);
-  background: var(--face); padding: 3px 9px; border-radius: 0;
+  background: var(--face); padding: 0 9px; border-radius: 0;
   border: 2px solid; border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi);
 }
 .tool:active:not(:disabled) { border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo); }
 .tool:disabled { color: var(--ink-faint); }
 .loc-label { font-family: var(--sans); font-size: 11px; color: var(--ink-soft); margin-left: 6px; }
-.tool.arrow { padding: 3px 6px; font-size: 8px; line-height: 1; }
+.tool.arrow { padding: 0 6px; font-size: 8px; line-height: 1; }
 #sound-toggle { min-width: 54px; }
 #sound-toggle.off { color: var(--ink-faint); }
-.tool.ico { padding: 2px 6px; line-height: 0; }
+.tool.ico { padding: 0 6px; line-height: 0; }
 .tool.ico svg { width: 13px; height: 13px; display: block; fill: var(--ink); shape-rendering: crispEdges; }
 #theme-toggle .ico-moon { display: none; }
 #theme-toggle.is-dark .ico-sun { display: none; }
@@ -574,7 +584,9 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   .desktop.turning { opacity: 1; }
 }
 .loc {
-  flex: 1 1 auto; min-width: 0; background: var(--card); padding: 3px 6px;
+  flex: 1 1 auto; min-width: 0; height: 26px;
+  display: flex; align-items: center;
+  background: var(--card); padding: 0 6px;
   font-family: var(--mono); font-size: 11px; color: var(--ink-soft);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   border: 2px solid; border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo);
@@ -821,6 +833,25 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
 @media (max-width: 900px) { .wordgrid { column-count: 3; } }
 @media (max-width: 640px) {
   .toolbar { margin: 0 -14px 16px; }
+
+  /* The bar was 396px of controls in a 375px window, and the 21px it could not
+     hold became a horizontal scrollbar on the whole document: every page on a
+     phone could be dragged sideways into blank space, because one button hung
+     over the edge and the page grew to cover it.
+
+     Nothing here shrinks — flex will not take a button below the width of the
+     word printed on it — so something has to go, and it is the location field
+     and its label. That is not a loss. The field was measured at 16px wide on
+     a phone: it had already been squeezed past the point of showing a single
+     character, so all it contributed was the 51px label announcing it. The
+     dropdown stays, because it is the way to the other sites and the field was
+     never the way to anything.
+
+     What is left is six controls at 26px: back, home and the site list at the
+     left, and the three that set how the page behaves at the right. */
+  .loc-label, .loc { display: none; }
+  #sound-toggle { margin-left: auto; }
+
   .banner { padding: 18px 10px 16px; }
   .banner-name { font-size: 34px; text-shadow: 2px 2px 0 #06172B; }
   .banner-kicker { font-size: 10px; letter-spacing: .24em; text-indent: .24em; }
