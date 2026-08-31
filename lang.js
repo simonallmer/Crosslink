@@ -84,7 +84,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 
     en: {
       "win.close":       "Close",
-      "nav.back":        "◀ Back",
+      "nav.back":        "Back",
       "nav.home":        "Home",
       "nav.loc":         "Location:",
       "nav.sites":       "Other sites",
@@ -126,9 +126,9 @@ window.CROSSLINK = window.CROSSLINK || {};
       "play.hintNote":   "A letter marks the square as partly solved. The word marks it as given.",
       "play.letters":    "{n} letters",
       "play.down":       "{word} — {n} letters",
-      "play.zoomOut":    "Zoom out",
+      "play.zoomOut":    "Zoom Out",
       "play.zoomOutTip": "Show the whole board at once",
-      "play.zoomIn":     "Zoom in",
+      "play.zoomIn":     "Zoom In",
       "play.zoomInTip":  "Back to the size the verbs can be read at",
 
       "hint.link":       "Surface a link",
@@ -204,7 +204,7 @@ window.CROSSLINK = window.CROSSLINK || {};
     // game and it should not learn a second vocabulary on the way in here.
     de: {
       "win.close":       "Schließen",
-      "nav.back":        "◀ Zurück",
+      "nav.back":        "Zurück",
       "nav.home":        "Start",
       "nav.loc":         "Adresse:",
       "nav.sites":       "Andere Seiten",

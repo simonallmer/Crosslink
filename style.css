@@ -544,6 +544,15 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
 #sound-toggle { min-width: 54px; }
 #sound-toggle.off { color: var(--ink-faint); }
 .tool.ico { padding: 0 6px; line-height: 0; }
+/* Same pixel hand as the sun and the moon above, and crisp for the same
+   reason: it is a drawing of an arrow on a grid, not a letterform, and it must
+   not be softened into one. It greys out with the word beside it, because a
+   disabled button whose arrow stayed black would read as half-live. */
+.tool .ico-back {
+  flex: 0 0 auto; width: 4px; height: 7px; margin-right: 6px;
+  fill: var(--ink); shape-rendering: crispEdges;
+}
+.tool:disabled .ico-back { fill: var(--ink-faint); }
 .tool.ico svg { width: 13px; height: 13px; display: block; fill: var(--ink); shape-rendering: crispEdges; }
 #theme-toggle .ico-moon { display: none; }
 #theme-toggle.is-dark .ico-sun { display: none; }
@@ -799,6 +808,18 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
    scrolled on a full-size desktop and clipped HYPERMEDIA and A BROWSER off the
    right-hand edge, which are two of the words the argument is made of. */
 .fig { display: block; width: 100%; min-width: 540px; height: auto; }
+/* The floor comes off on a phone. 540px was the width below which the labels
+   stop being readable, and it was the right floor while the alternative was a
+   figure with two of its words cut off — but on a 375px screen it bought
+   readable labels at the price of a drawing you had to drag sideways to see,
+   which is the one thing a diagram of a shape must not ask for. So the same
+   bargain the board now offers with its own button is struck here by default:
+   the whole picture, smaller. It is an argument about structure, and the
+   structure is what survives the shrinking. */
+@media (max-width: 640px) {
+  .fig { min-width: 0; }
+  .fig-scroll { padding: 8px; }
+}
 
 .fig .cells rect {
   fill: var(--card); stroke: var(--bevel-lo); stroke-width: 1.5;

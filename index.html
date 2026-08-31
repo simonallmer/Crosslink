@@ -17,7 +17,12 @@
   </div>
 
   <div class="toolbar">
-    <button class="tool" id="nav-back" data-i18n="nav.back">&#9664; Back</button>
+    <!-- The arrow is drawn and not typed. U+25C0 carries an emoji presentation,
+         so a phone rendered it as a blue lozenge sitting in a 1994 toolbar. The
+         label is a span for the same reason `#lang-toggle` uses one: `data-i18n`
+         writes textContent, and textContent on the button would take the
+         drawing with it. -->
+    <button class="tool" id="nav-back"><svg class="ico-back" viewBox="0 0 4 7" aria-hidden="true"><rect x="3" y="0" width="1" height="1"/><rect x="2" y="1" width="2" height="1"/><rect x="1" y="2" width="3" height="1"/><rect x="0" y="3" width="4" height="1"/><rect x="1" y="4" width="3" height="1"/><rect x="2" y="5" width="2" height="1"/><rect x="3" y="6" width="1" height="1"/></svg><span data-i18n="nav.back">Back</span></button>
     <button class="tool" id="nav-home" data-i18n="nav.home">Home</button>
     <span class="loc-label" data-i18n="nav.loc">Location:</span>
     <span class="loc" id="loc"></span>
@@ -98,11 +103,11 @@
           </span>
           <span class="tile-name" data-i18n="tile.daily">Play Daily</span>
         </a>
-        <a class="tile t-green" href="#words" data-go="words">
+        <a class="tile t-navy" href="#puzzles" data-go="puzzles">
           <span class="tile-art" aria-hidden="true">
-            <svg viewBox="0 0 44 44"><path class="w" d="M6 9h32M6 16h32M6 23h20M6 30h32M6 37h24"/><rect class="s f" x="28" y="20" width="10" height="7"/></svg>
+            <svg viewBox="0 0 44 44"><rect class="s" x="4" y="5" width="36" height="9"/><rect class="s f" x="4" y="18" width="36" height="9"/><rect class="s" x="4" y="31" width="36" height="9"/></svg>
           </span>
-          <span class="tile-name" data-i18n="tile.words">Word List</span>
+          <span class="tile-name" data-i18n="tile.puzzles">Puzzles</span>
         </a>
       </div>
 
@@ -124,11 +129,11 @@
       </div>
 
       <div class="tile-col">
-        <a class="tile t-navy" href="#puzzles" data-go="puzzles">
+        <a class="tile t-green" href="#words" data-go="words">
           <span class="tile-art" aria-hidden="true">
-            <svg viewBox="0 0 44 44"><rect class="s" x="4" y="5" width="36" height="9"/><rect class="s f" x="4" y="18" width="36" height="9"/><rect class="s" x="4" y="31" width="36" height="9"/></svg>
+            <svg viewBox="0 0 44 44"><path class="w" d="M6 9h32M6 16h32M6 23h20M6 30h32M6 37h24"/><rect class="s f" x="28" y="20" width="10" height="7"/></svg>
           </span>
-          <span class="tile-name" data-i18n="tile.puzzles">Puzzles</span>
+          <span class="tile-name" data-i18n="tile.words">Word List</span>
         </a>
         <a class="tile t-gold" href="#rules" data-go="rules">
           <span class="tile-art" aria-hidden="true">
