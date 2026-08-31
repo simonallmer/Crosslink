@@ -104,6 +104,20 @@
     board.style.marginRight = -Math.round(w * (1 - s)) + "px";
     board.style.marginBottom = -Math.round(h * (1 - s)) + "px";
     wrap.style.height = "";
+    // When all of it is showing there is nowhere to scroll, so the scroller is
+    // switched off rather than left on with nowhere to go.
+    //
+    // That is tidiness on a desktop and a repair on a phone. `.board-scroll`
+    // carries `-webkit-overflow-scrolling: touch`, which puts it on a layer of
+    // its own, and Safari does not bring that layer back when the content
+    // underneath it shrinks to fit: zoom out while scrolled right and the board
+    // stays parked off the left edge, leaving an empty frame where it was. A
+    // clamp cannot be relied on to fix that, because the offset Safari reports
+    // is the stale one. `overflow-x: hidden` can: a box with no scroll range
+    // has no stale position to hold.
+    var fits = w * s <= wrap.clientWidth + 1;
+    if (fits) wrap.scrollLeft = 0;
+    wrap.style.overflowX = fits ? "hidden" : "auto";
     // Offered only where it would do something. A control that cannot change
     // anything is worse than no control at all, and on a desktop this one never
     // could: every board on the shelf already fits its sheet there.
