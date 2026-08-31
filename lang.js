@@ -126,6 +126,10 @@ window.CROSSLINK = window.CROSSLINK || {};
       "play.hintNote":   "A letter marks the square as partly solved. The word marks it as given.",
       "play.letters":    "{n} letters",
       "play.down":       "{word} — {n} letters",
+      "play.zoomOut":    "Zoom out",
+      "play.zoomOutTip": "Show the whole board at once",
+      "play.zoomIn":     "Zoom in",
+      "play.zoomInTip":  "Back to the size the verbs can be read at",
 
       "hint.link":       "Surface a link",
       "hint.linkNote":   "A route in, at no cost to the square.",
@@ -242,6 +246,10 @@ window.CROSSLINK = window.CROSSLINK || {};
       "play.hintNote":   "Ein Buchstabe zählt das Feld als halb gelöst. Das Wort zählt es als geschenkt.",
       "play.letters":    "{n} Buchstaben",
       "play.down":       "{word} — {n} Buchstaben",
+      "play.zoomOut":    "Verkleinern",
+      "play.zoomOutTip": "Das ganze Brett auf einmal zeigen",
+      "play.zoomIn":     "Vergrößern",
+      "play.zoomInTip":  "Zurück zu der Größe, in der die Verben lesbar sind",
 
       "hint.link":       "Verbindung aufdecken",
       "hint.linkNote":   "Ein Weg hinein, und er kostet das Feld nichts.",

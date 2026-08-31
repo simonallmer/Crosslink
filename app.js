@@ -68,19 +68,49 @@
   // Past MIN_SCALE the verbs stop being readable, so the board scrolls sideways instead.
   var MIN_SCALE = 0.82;
 
+  // …unless you ask for the whole thing. Zoomed out, the floor is lifted and
+  // every square is on screen at whatever scale that takes. The verbs stop
+  // being readable, and that is the entire cost — paid on purpose. What it buys
+  // is the shape of the board: which squares are down, which are still open,
+  // and how far the one you are working on stands from the one you have just
+  // solved. That is a thing the panel cannot tell you and a sideways scroll
+  // actively hides.
+  //
+  // It also gives back the height the board was spending, because the margin
+  // that collapses the transform's layout box collapses with it — so more of
+  // the sentences underneath are on screen at the same time. On a phone that
+  // is half the reason to press it.
+  //
+  // A map, then, and not a reading view. The button says which of the two you
+  // are looking at by changing its own name.
+  var zoomedOut = false;
+
   function fit() {
     var wrap = document.querySelector(".board-scroll"), board = document.getElementById("board");
     if (!board.offsetWidth && !board.offsetHeight) return;
     board.style.transform = "none";
     board.style.margin = "0";
     var w = board.offsetWidth, h = board.offsetHeight;
-    var s = Math.min(1, Math.max(MIN_SCALE, wrap.clientWidth / w));
+    // The scale at which all of it shows. At or above MIN_SCALE the board
+    // already fits and there is nothing to zoom out of — so the state is
+    // dropped rather than kept, and a window dragged wide while zoomed out
+    // comes back reading rather than staying tiny in a page with room to spare.
+    var whole = wrap.clientWidth / w;
+    if (whole >= MIN_SCALE) zoomedOut = false;
+    var s = Math.min(1, zoomedOut ? whole : Math.max(MIN_SCALE, whole));
     board.style.transformOrigin = "top left";
     board.style.transform = "scale(" + s + ")";
     // Collapse the layout box the transform left behind, so the scroller measures true.
     board.style.marginRight = -Math.round(w * (1 - s)) + "px";
     board.style.marginBottom = -Math.round(h * (1 - s)) + "px";
     wrap.style.height = "";
+    // Offered only where it would do something. A control that cannot change
+    // anything is worse than no control at all, and on a desktop this one never
+    // could: every board on the shelf already fits its sheet there.
+    var btn = document.getElementById("zoom");
+    btn.hidden = whole >= MIN_SCALE;
+    btn.textContent = CL.t(zoomedOut ? "play.zoomIn" : "play.zoomOut");
+    btn.title = CL.t(zoomedOut ? "play.zoomInTip" : "play.zoomOutTip");
   }
   window.addEventListener("resize", function () { if (st) fit(); });
 
@@ -1247,6 +1277,13 @@
     st.check = ev.target.checked; draw();
   });
   document.getElementById("restart").addEventListener("click", reset);
+  // Zooming changes how much of the board you can see and nothing about what is
+  // on it, so it redraws nothing: `fit` is the whole of the work.
+  document.getElementById("zoom").addEventListener("click", function () {
+    zoomedOut = !zoomedOut;
+    if (CL.sfx) CL.sfx.click();
+    fit();
+  });
 
   // The rulebook ends with the same drawing the note opens with. Cloned rather
   // than repeated in the markup, so tools/make-figure.py stays the one source
