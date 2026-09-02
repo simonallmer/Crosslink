@@ -3,7 +3,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   id: "02-landfall",
   lang: "en",
   title: "Water World",
-  standfirst: "Edited by Simon Allmer",
+  standfirst: "Written by Simon Allmer",
   hue: "blue",
   size: 5,
   centre: [2, 2],

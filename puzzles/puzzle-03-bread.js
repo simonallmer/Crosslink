@@ -3,7 +3,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   id: "03-bread",
   lang: "en",
   title: "God\u2019s Batch and Devil\u2019s Crust",
-  standfirst: "Edited by Simon Allmer",
+  standfirst: "Written by Simon Allmer",
   hue: "crust",
   size: 3,
   centre: [1, 1],

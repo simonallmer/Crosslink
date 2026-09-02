@@ -344,7 +344,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   CL.shelf = function (code) {
     var want = code || CL.lang, out = [];
     (CL.puzzles || []).forEach(function (p, i) {
-      if (CL.boardLang(p) === want) out.push(i);
+      if (CL.boardLang(p) === want && p.id !== "07-americana") out.push(i);
     });
     return out;
   };

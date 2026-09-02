@@ -322,11 +322,28 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
    while you are writing it, Times once the board has taken it. */
 .noun .word { font-family: var(--serif); font-size: 15px; line-height: 1.1; }
 .noun .word span { display: inline-block; width: 12px; margin: 0 2px; text-align: center; }
-.noun.done-clean   .word { color: var(--visited); border-bottom: 1px solid var(--visited); }
-.noun.done-partial .word { color: var(--visited); border-bottom: 1px dotted var(--visited); }
+/* A placed word is marked by an underline beneath each of its letters rather
+   than beneath the whole block. A container underline wraps to the bottom of
+   the last line only, so a word that folded onto two rows read as a single
+   link-line beneath two lines of letters; letter by letter, every row carries
+   its own even rule and the word keeps its marking whether it sits on one row
+   or two. */
+.noun.done-clean   .word { color: var(--visited); }
+.noun.done-clean   .word span { border-bottom: 1px solid var(--visited); }
+.noun.done-partial .word { color: var(--visited); }
+.noun.done-partial .word span { border-bottom: 1px dotted var(--visited); }
 .noun.done-given   .word { color: var(--ink-faint); font-style: italic; }
 .noun.wrong { background: var(--wrong-bg); }
-.noun.wrong .word { color: var(--wrong); border-bottom-color: var(--wrong); text-decoration: line-through; }
+.noun.wrong .word { color: var(--wrong); text-decoration: line-through; }
+.noun.wrong .word span { border-bottom-color: var(--wrong); }
+/* The 3x3 sheet (the small lattice) sets its words a touch smaller and a touch
+   tighter than the 5x5, so a long noun still fits its syllables instead of
+   crowding against the box. It is applied to the typed slots and the placed
+   word alike, so entering a word never moves it. */
+.board[data-size="3"] .noun .slots { font-size: 13px; }
+.board[data-size="3"] .noun .slots span { width: 10px; margin: 0 1.5px; }
+.board[data-size="3"] .noun .word  { font-size: 13px; }
+.board[data-size="3"] .noun .word span { width: 10px; margin: 0 1.5px; }
 .board[data-size="5"] .noun .slots { font-size: 13px; }
 .board[data-size="5"] .noun .slots span { width: 9px; margin: 0 1.5px; }
 .board[data-size="5"] .noun .word  { font-size: 13px; }
@@ -407,6 +424,36 @@ button.ghost.solid:not(:disabled) { font-weight: 700; }
   text-decoration: underline dotted var(--ink-faint);
   text-underline-offset: 2px;
 }
+
+/* ---- the trifecta ----------------------------------------------------- */
+/* A trifecta board's gutter is a span of one of its six lines. The line's
+   sentence is split at its word seats, so each gutter carries the stretch that
+   runs up to the next word — written on its own coloured wire, exactly as a
+   net's gutter carries its verb between two squares — and the whole sentence
+   reads across the two wires with the middle word seated between them. Six
+   lines, six colours, one per unique sentence; the arrowhead tells the reading
+   order and the wire tells which line the span belongs to. */
+
+.gut.shown.trifecta { padding: 0 2px; }
+.gut.shown.trifecta.h::before { background: var(--ln); height: 3px; margin-top: -1.5px; }
+.gut.shown.trifecta.v::before { background: var(--ln); width: 3px; margin-left: -1.5px; }
+
+.gut.trifecta.to-right .arrow { border-left-color: var(--ln); }
+.gut.trifecta.to-left  .arrow { border-right-color: var(--ln); }
+.gut.trifecta.to-down  .arrow { border-top-color: var(--ln); }
+.gut.trifecta.to-up    .arrow { border-bottom-color: var(--ln); }
+
+.gut.trifecta.line-r0, .line-r0 { --ln: #C4423A; }
+.gut.trifecta.line-r1, .line-r1 { --ln: #3E7A3E; }
+.gut.trifecta.line-r2, .line-r2 { --ln: #7A4A9E; }
+.gut.trifecta.line-c0, .line-c0 { --ln: #2E6FA0; }
+.gut.trifecta.line-c1, .line-c1 { --ln: #C07A1E; }
+.gut.trifecta.line-c2, .line-c2 { --ln: #2A8A86; }
+
+/* In the clue panel, the script window and the closing page, a line reads as a
+   coloured swatch before its words — the same signal as the wire on the board. */
+ul#routes li.line, ul#script-list li.line, ul#sentences li.line {
+  border-left: 4px solid var(--ln); padding-left: 8px; margin-left: 2px; }
 .gut.turnable:hover .label {
   color: var(--link); text-decoration-color: var(--link);
 }

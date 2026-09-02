@@ -124,7 +124,7 @@ the one for the language you are reading in, so German — one board — has tha
 board every day, and will have seven the day it has seven.
 
 
-Every board now opens with the same line — **Edited by Simon Allmer** — and
+Every board now opens with the same line — **Written by Simon Allmer** — and
 nothing else. The standfirsts used to describe the subject, which handed over
 the first deduction a board offers before a square was filled. What replaces
 them is colour: each board tints the paper for as long as it is open, sand
@@ -132,7 +132,7 @@ through to firebrick, which says a board has a character and says nothing about
 what it is. See E27 and A15.
 
 
-### English — six
+### English — eight
 
 Every one of them passes `tools/check-boards.py` on its own account.
 Three used to stand in front of them. *The Centre Is a Fish* and *Worth Its
@@ -154,13 +154,23 @@ into the gap.
 | 4 | Human Nature | 5×5 | 34/40 | 34 | ★★ | A garden, which is already a network before anyone puts a grid on it — twenty-four squares of nature and one man in it with a spade. Turn it and it becomes a set of clocks: three days of blossom, six weeks of bee, a thousand years of topsoil. |
 | 5 | Set, Inked and Pulled | 5×5 | 35/40 | 35 | ★★★ | The riddle, and the hardest board here. Metal in the west, newsprint in the east, PRESS in the middle meaning both. |
 | 6 | A Fire That Learned to Push | 5×5 | 32/40 | 32 | ★★ | A subject board at full size. Five bands and four arms, with STEAM in the middle. Two stars by hand, not by the scale — see E19. |
+| 7 | Crosslink Americana | 5×5 | 40/40 | 40 | ★ | The frontier built large out of the game's own register: TRAIN, BILL, STAR, STRIKE and the rest, five rows of a country settling itself. The frame is the thing — every word is reachable from the centre and the board is one dense national net. |
+| 8 | All-American | 3×3 | 6/6 | 0 | ★★ | The first trifecta — R3b. Nine words and the six straight lines through them, three rows and three columns, each line one sentence in its own colour. OUTLAW hideouts raided by a BAND of warriors from a TRIBE; a CORE drilled from ROCK to prove a CLAIM. |
 
-Boards 1 and 5 are the two kinds the format admits, and the spec names them as
+Boards 1 and 5 are two kinds the format admits, and the spec names them as
 such under E4a: a *net*, where the pleasure is that everything really is joined
 to everything, and a *riddle*, where the pleasure is the twist. Neither is the
 lesser kind — but the riddle is the harder one to build, which is the lesson of
 *Everything Flows*: a riddle that does not hold one twist all the way across is
 not a riddle, it is a pile of puns.
+
+Board 8 is a third kind, R3b: a **trifecta**, where the connection is not a
+gutter between two squares but a straight line through three. It carries no
+`h`/`v` tables and no barred gutters — its six lines are the whole of its map,
+and a diagonal is deliberately not one of them, because a diagonal would have to
+borrow a colour a row or a column already wears. It keeps everything else: type
+to place, hints reveal a letter then the word, error check on its own switch,
+and a closing page of all six sentences.
 
 ### German — one
 
@@ -254,6 +264,15 @@ a grid of nouns, an `h` table of horizontal verbs and
 a `v` table of vertical ones, with `null` where a gutter is barred. `dir` names the
 subject: `"right"`/`"down"` mean the first noun acts, `"left"`/`"up"` mean the
 second one does.
+
+A trifecta (R3b) replaces the two tables with its six lines: `kind: "trifecta"`,
+then `tr` for the three row lines and `tc` for the three column lines, each a
+`{ dir, color, verb }` where `verb` is a template holding a `_` for every word
+after the first. Six lines, six colours, no `null` to bar and no diagonal to
+draw; the gutter count rule D4 has nothing to say about a board whose map is
+fixed by geometry, so that one check stands down. The engine, the clue panel,
+the script window and the closing page read the same `nouns` grid and the same
+six sentences as every other board reads its own.
 
 Board geometry follows `size` automatically — cells shrink for a bigger lattice and
 the whole board scales to the page, so a 7×7 needs no CSS.

@@ -3,7 +3,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   id: "01-nile",
   lang: "en",
   title: "The River of Life",
-  standfirst: "Edited by Simon Allmer",
+  standfirst: "Written by Simon Allmer",
   hue: "sand",
   size: 3,
   centre: [1, 1],

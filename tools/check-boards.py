@@ -40,7 +40,9 @@ def load(path):
     verbs = re.findall(r'verb2?:\s*"([^"]*)"', t)
     # gutters: walk the h and v blocks entry by entry, counting nulls in order
     def slots(block):
-        src = re.search(block + r":\s*\[(.*?)\n  \]", t, re.S).group(1)
+        m = re.search(block + r":\s*\[(.*?)\n  \]", t, re.S)
+        if not m: return []   # a trifecta board has lines, not gutters
+        src = m.group(1)
         depth, cur, rows = 0, "", []
         for ch in src:
             if ch == "[":
@@ -63,12 +65,27 @@ def load(path):
             items.append(cur.strip())
             out.append([None if i.strip().startswith("null") else i for i in items if i.strip()])
         return out
+    trifecta = bool(re.search(r'kind:\s*"trifecta"', t))
+    # Lines, for a trifecta: three rows and three columns.
+    lines = [[(r,0),(r,1),(r,2)] for r in range(size)] if trifecta else []
+    if trifecta:
+        lines += [[(0,c),(1,c),(2,c)] for c in range(size)]
     return dict(path=os.path.basename(path), id=js_field(t, "id"), title=js_field(t, "title"),
                 lang=js_field(t, "lang") or "en",
-                size=size, centre=centre, nouns=nouns, verbs=verbs, h=slots("h"), v=slots("v"))
+                size=size, centre=centre, nouns=nouns, verbs=verbs,
+                h=slots("h"), v=slots("v"), trifecta=trifecta, lines=lines)
 
 def edges(p):
     n = p["size"]
+    if p["trifecta"]:
+        # A trifecta's graph is its hypergraph of lines; flatten each line of
+        # three into its two unit segments so the net's connectivity rules (D1,
+        # D2, D3) can run unchanged over the same squares.
+        out = []
+        for line in p["lines"]:
+            for i in range(n - 1):
+                out.append((line[i], line[i + 1]))
+        return out
     out = []
     for r in range(n):
         for g in range(n - 1):
@@ -120,9 +137,12 @@ def check(p, already):
     # anyone wrote down. It warns now, and does not fail.
     possible = 2 * n * (n - 1)
     lo, hi = (10, 12) if n == 3 else (28, 34)
-    if len(es) < lo:
+    # A trifecta's density is set by its geometry — six lines, no gutters to fill
+    # in or bar — so the net's taste rule about gutter counts has nothing to say
+    # about one. D1-D3 above still run, over the lines' unit segments.
+    if not p["trifecta"] and len(es) < lo:
         bad.append("D4 fails: %d of %d, below the floor of %d" % (len(es), possible, lo))
-    elif len(es) > hi:
+    elif not p["trifecta"] and len(es) > hi:
         warn.append("D4 note: %d of %d, above the usual %d - dense, not wrong" % (len(es), possible, hi))
 
     onboard = set(w for row in p["nouns"] for w in row)
@@ -159,6 +179,11 @@ def check(p, already):
     # this game must never make loosely.
     clash = sorted(set(ws) & already)
     if clash: warn.append("crosses an earlier board in the same language: %s" % ", ".join(clash))
+    # A trifecta prints its six lines where a net prints its twelve gutters; the
+    # flattened segments above are only for the connectivity rules, so report the
+    # line count a solver will actually see.
+    if p["trifecta"]:
+        return bad, warn, set(ws), len(p["lines"]), len(p["lines"])
     return bad, warn, set(ws), len(es), possible
 
 def spellings():

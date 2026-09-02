@@ -29,7 +29,8 @@
     if (typeof demoStop === "function") demoStop();
     st = {
       puzzle: P,
-      edges: CL.edgeList(P),
+      edges: CL.isTrifecta(P) ? [] : CL.edgeList(P),
+      lines: CL.isTrifecta(P) ? CL.lineList(P) : [],
       filled: {}, status: {}, revealed: {}, surfaced: {}, mark: {},
       // Which connections are showing their second face. Restart clears them
       // with everything else; nothing else ever does.
@@ -150,6 +151,71 @@
     takeFocus();
   }
 
+  function firstUnfilled() {
+    for (var r = 0; r < P.size; r++)
+      for (var c = 0; c < P.size; c++)
+        if (!st.filled[CL.K(r, c)]) return [r, c];
+    return null;
+  }
+
+  function nextCell(r, c) {
+    var lines = CL.isTrifecta(P)
+      ? CL.linesAt(st, r, c)
+      : CL.edgesAt(st, r, c);
+    for (var i = 0; i < lines.length; i++) {
+      var cells = lines[i].cells;
+      for (var j = 0; j < cells.length; j++) {
+        if (cells[j][0] === r && cells[j][1] === c) {
+          for (var k = j + 1; k < cells.length; k++) {
+            if (!st.filled[CL.K(cells[k][0], cells[k][1])]) return cells[k];
+          }
+          for (var k = j - 1; k >= 0; k--) {
+            if (!st.filled[CL.K(cells[k][0], cells[k][1])]) return cells[k];
+          }
+        }
+      }
+    }
+    return firstUnfilled();
+  }
+
+  function selectNext(r, c) {
+    var lines = CL.isTrifecta(P)
+      ? CL.linesAt(st, r, c)
+      : CL.edgesAt(st, r, c);
+    for (var i = 0; i < lines.length; i++) {
+      var cells = lines[i].cells;
+      for (var j = 0; j < cells.length; j++) {
+        if (cells[j][0] === r && cells[j][1] === c) {
+          for (var k = j + 1; k < cells.length; k++) {
+            if (!st.filled[CL.K(cells[k][0], cells[k][1])]) return cells[k];
+          }
+        }
+      }
+    }
+    for (var i = 0; i < lines.length; i++) {
+      var cells = lines[i].cells;
+      for (var j = 0; j < cells.length; j++) {
+        if (cells[j][0] === r && cells[j][1] === c) {
+          for (var k = j - 1; k >= 0; k--) {
+            if (!st.filled[CL.K(cells[k][0], cells[k][1])]) return cells[k];
+          }
+        }
+      }
+    }
+    return firstUnfilled();
+  }
+
+  function move(dr, dc) {
+    if (!st.selected) return;
+    var r = st.selected[0] + dr, c = st.selected[1] + dc;
+    if (r < 0 || r >= P.size || c < 0 || c >= P.size) return;
+    st.selected = [r, c];
+    st.draft = freshDraft(r, c);
+    say("");
+    draw();
+    takeFocus();
+  }
+
   function lift(r, c) {
     delete st.filled[CL.K(r, c)];
     st.selected = [r, c];
@@ -234,11 +300,23 @@
 
     var ul = document.getElementById("routes");
     ul.innerHTML = "";
-    CL.edgesAt(st, r, c).filter(function (e) { return st.verbVisible[e.id]; }).forEach(function (e) {
-      var li = document.createElement("li");
-      li.innerHTML = term(e.subject, r, c) + " " + e.verb + " " + term(e.object, r, c);
-      ul.appendChild(li);
-    });
+    if (CL.isTrifecta(P)) {
+      // Two sentences pass through every square — its row and its column. Show
+      // each with this square's word masked, so the square asks which of the
+      // two it is.
+      CL.linesAt(st, r, c).forEach(function (ln) {
+        var li = document.createElement("li");
+        li.className = "line " + ln.color;
+        li.innerHTML = lineText(st, ln, r, c);
+        ul.appendChild(li);
+      });
+    } else {
+      CL.edgesAt(st, r, c).filter(function (e) { return st.verbVisible[e.id]; }).forEach(function (e) {
+        var li = document.createElement("li");
+        li.innerHTML = term(e.subject, r, c) + " " + e.verb + " " + term(e.object, r, c);
+        ul.appendChild(li);
+      });
+    }
     if (!ul.children.length) {
       ul.innerHTML = '<li class="gap"></li>';
       ul.firstChild.textContent = CL.t("play.nothingHere");
@@ -285,6 +363,24 @@
 
   function dashes(n) { var s = ""; for (var i = 0; i < n; i++) s += "_"; return s; }
 
+  // A trifecta line, rendered for the clue panel: subject first, then the verb
+  // with its slots. A word already down is set as a link-open `em`; a word not
+  // yet down is dashes showing its length.
+  function lineText(st, ln, r, c) {
+    var subj = ln.ordered[0], rest = ln.ordered.slice(1), i = 0;
+    var verb = ln.verb.replace(/_/g, function () {
+      var w = rest[i++], k = CL.K(w[0], w[1]);
+      return st.filled[k] !== undefined
+        ? "<em>" + st.filled[k] + "</em>"
+        : '<span class="gap">' + dashes(CL.answer(st, w[0], w[1]).length) + "</span>";
+    });
+    var sk = CL.K(subj[0], subj[1]);
+    var subject = st.filled[sk] !== undefined
+      ? "<em>" + st.filled[sk] + "</em>"
+      : '<span class="gap">' + dashes(CL.answer(st, subj[0], subj[1]).length) + "</span>";
+    return subject + " " + verb;
+  }
+
   // ---- the two side windows -------------------------------------------
 
   function show(id, on) {
@@ -305,6 +401,25 @@
     var ul = document.getElementById("script-list");
     ul.innerHTML = "";
     if (!st) { ul.innerHTML = '<li class="gap"></li>'; ul.firstChild.textContent = CL.t("script.none"); return; }
+    if (CL.isTrifecta(P)) {
+      st.lines.forEach(function (ln) {
+        var down = 0;
+        ln.ordered.forEach(function (rc) { if (st.filled[CL.K(rc[0], rc[1])] !== undefined) down++; });
+        var li = document.createElement("li");
+        li.className = (down === 3 ? "closed" : "open") + " line " + ln.color;
+        // Rebuild with the line's own words honoured as em.
+        li.innerHTML = scriptLineText(st, ln);
+        Array.prototype.forEach.call(li.querySelectorAll("em"), function (em) {
+          em.onclick = function () { lexOpen(em.textContent); refresh(); };
+        });
+        ul.appendChild(li);
+      });
+      if (!ul.children.length) {
+        ul.innerHTML = '<li class="gap"></li>';
+        ul.firstChild.textContent = CL.t("script.nothing");
+      }
+      return;
+    }
     st.edges.forEach(function (e) {
       if (!st.verbVisible[e.id]) return;
       var s = st.filled[CL.K(e.subject[0], e.subject[1])],
@@ -326,6 +441,17 @@
   function piece(xy, word) {
     if (word !== undefined) return "<em>" + word + "</em>";
     return '<span class="gap">' + dashes(CL.answer(st, xy[0], xy[1]).length) + "</span>";
+  }
+
+  // A trifecta line, whole, for the script window and the closing page: every
+  // down word is a link, every blank is dashes showing its length.
+  function scriptLineText(st, ln) {
+    var subj = ln.ordered[0], rest = ln.ordered.slice(1), i = 0;
+    var verb = ln.verb.replace(/_/g, function () {
+      var w = rest[i++];
+      return piece(w, st.filled[CL.K(w[0], w[1])]);
+    });
+    return piece(subj, st.filled[CL.K(subj[0], subj[1])]) + " " + verb;
   }
 
   // Right: the entry for the last word you clicked, and the words on the board.
@@ -1138,7 +1264,14 @@
 
     st.filled[k] = w;
     st.status[k] = st.mark[k] || "clean";
-    st.selected = null; st.draft = [];
+    say("");
+    if (st.check && CL.same(w, ans)) {
+      var nxt = selectNext(r, c);
+      if (nxt) { st.selected = nxt; st.draft = freshDraft(nxt[0], nxt[1]); }
+      else { st.selected = null; st.draft = []; }
+    } else {
+      st.selected = null; st.draft = [];
+    }
     say("");
     // The noise first, then the board. A full redraw of a 5x5 is eighty-one
     // elements and some six milliseconds, and it used to sit between the key
@@ -1194,6 +1327,23 @@
 
     var ul = document.getElementById("sentences");
     ul.innerHTML = "";
+    if (CL.isTrifecta(P)) {
+      // At the close every word is down, so each line is a full sentence with
+      // all three of its words set in type.
+      st.lines.forEach(function (ln) {
+        var li = document.createElement("li");
+        li.className = "line " + ln.color;
+        li.innerHTML = '<span class="n"></span> ' + ln.verb.replace(/_/g, '<span class="n"></span>');
+        var words = ln.ordered, i = 0;
+        Array.prototype.forEach.call(li.querySelectorAll(".n"), function (n) {
+          n.textContent = st.filled[CL.K(words[i][0], words[i][1])];
+          n.title = CL.t("lookup", { word: n.textContent });
+          n.onclick = (function (word) { return function () { lexOpen(word); refresh(); }; })(n.textContent);
+          i++;
+        });
+        ul.appendChild(li);
+      });
+    } else {
     st.edges.forEach(function (e) {
       var li = document.createElement("li");
       li.innerHTML = '<span class="n"></span> ' + e.verb + ' <span class="n"></span>.';
@@ -1207,6 +1357,7 @@
       });
       ul.appendChild(li);
     });
+    }
     if (CL.sfx && !gaveUp) CL.sfx.close();
     document.getElementById("panel-empty").textContent = "";
     document.getElementById("panel").hidden = true;
@@ -1258,6 +1409,10 @@
     if (ev.key === "Backspace") { ev.preventDefault(); back(); }
     else if (ev.key === "Enter") { ev.preventDefault(); submit(); }
     else if (ev.key === "Escape") { ev.preventDefault(); st.selected = null; st.draft = []; draw(); }
+    else if (ev.key === "ArrowUp")    { ev.preventDefault(); move(-1, 0); }
+    else if (ev.key === "ArrowDown")  { ev.preventDefault(); move(1, 0); }
+    else if (ev.key === "ArrowLeft")  { ev.preventDefault(); move(0, -1); }
+    else if (ev.key === "ArrowRight") { ev.preventDefault(); move(0, 1); }
   });
 
   document.addEventListener("keydown", function (ev) {

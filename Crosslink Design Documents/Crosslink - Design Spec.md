@@ -1765,10 +1765,10 @@ next ones should be written for the top of the scale.
   what a board is **about** is the first deduction it offers, and it was being
   handed over for free at the top of the page.
 
-  All six now read **Edited by Simon Allmer** and nothing else, which is the
-  byline a puzzle page has carried since before any of this. It is also the
-  honest label: these are edited, not authored, in the sense that matters — the
-  facts were there already.
+  All six now read **Written by Simon Allmer** and nothing else, which is the
+  byline a puzzle page has carried since before any of this. It is the honest
+  label: these are written, in the sense that matters — the words on the page
+  are his, even though the facts were there already.
 
   **The titles still name the subject**, and that is a real inconsistency rather
   than an oversight. *God's Batch and Devil's Crust* says bread; *Water World*

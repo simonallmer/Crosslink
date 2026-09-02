@@ -3,7 +3,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   id: "06-steam",
   lang: "en",
   title: "A Fire That Learned to Push",
-  standfirst: "Edited by Simon Allmer",
+  standfirst: "Written by Simon Allmer",
   hue: "red",
   size: 5,
   centre: [2, 2],

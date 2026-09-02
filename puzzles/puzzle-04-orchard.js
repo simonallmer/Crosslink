@@ -3,7 +3,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   id: "04-orchard",
   lang: "en",
   title: "Human Nature",
-  standfirst: "Edited by Simon Allmer",
+  standfirst: "Written by Simon Allmer",
   hue: "green",
   size: 5,
   centre: [2, 2],

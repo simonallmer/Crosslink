@@ -3,7 +3,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   id: "05-press",
   lang: "en",
   title: "Set, Inked and Pulled",
-  standfirst: "Edited by Simon Allmer",
+  standfirst: "Written by Simon Allmer",
   hue: "grey",
   size: 5,
   centre: [2, 2],

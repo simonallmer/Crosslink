@@ -57,6 +57,83 @@
     });
   };
 
+  // ---- the trifecta ----------------------------------------------------
+  //
+  // A second kind of board coexists with the net. Where the net joins adjacent
+  // cells two at a time, a trifecta joins three cells that stand in a straight
+  // line — a whole row or a whole column — and treats that line as one fact.
+  // Nine nouns, six lines, no diagonals. Each line owns its two gutters (the
+  // spans between its three squares) and wears its own colour, so a solver reads
+  // the board as six coloured arrows long before a single square is filled.
+  //
+  // R3b: a board opts in by setting `kind: "trifecta"` and declaring its lines
+  // in `tr` (the three row lines) and `tc` (the three column lines) instead of
+  // the net's `h` and `v`. Everything else — the squares, the typing, the hints,
+  // the error check, the closing page — is the same game.
+  CL.isTrifecta = function (p) { return p.kind === "trifecta"; };
+
+  // Where a long noun folds onto a second row, measured as the index of the
+  // first letter kept down. Only the words that want a deliberate syllable
+  // break are in here; everything else lets the box decide and returns non.
+  CL.foldAt = function (word) {
+    var folds = { ESTABLISHMENT: 5, RESERVATION: 5 };
+    return folds[word] === undefined ? -1 : folds[word];
+  };
+
+  function line(d, cells) {
+    // Reading order: the subject comes first. "right"/"down" read the line as
+    // it is printed, so the first-listed word is the subject; "left"/"up" read
+    // it backwards, so the last-listed one is.
+    var fwd = d.dir === "right" || d.dir === "down";
+    var ordered = fwd ? cells.slice() : cells.slice().reverse();
+    var id = (d.axis === "h" ? "h:" + d.i : "v:" + d.i);
+    return {
+      id: id, axis: d.axis, i: d.i, dir: d.dir, color: d.color, verb: d.verb,
+      ordered: ordered, cells: cells,
+      gutters: d.axis === "h"
+        ? [id + ":0", id + ":1"]
+        : ["v:0:" + d.i, "v:1:" + d.i]
+    };
+  }
+
+  // The six lines of a trifecta board, resolved. A line keeps its cells in board
+  // order and its ordered words in subject-first reading order.
+  CL.lineList = function (p) {
+    var out = [], r, c, cells;
+    for (r = 0; r < p.size; r++) {
+      cells = [];
+      for (c = 0; c < p.size; c++) cells.push([r, c]);
+      out.push(line(p.tr[r], cells));
+    }
+    for (c = 0; c < p.size; c++) {
+      cells = [];
+      for (r = 0; r < p.size; r++) cells.push([r, c]);
+      out.push(line(p.tc[c], cells));
+    }
+    return out;
+  };
+
+  CL.linesAt = function (st, r, c) {
+    return st.lines.filter(function (ln) {
+      return ln.cells.some(function (x) { return x[0] === r && x[1] === c; });
+    });
+  };
+
+  // The full sentence of a line, its subject stated and its `_` slots filled in
+  // reading order. Unknown words read as ellipses, exactly as a net's sentence
+  // reads an empty neighbour.
+  CL.lineSentence = function (st, ln) {
+    var rest = ln.ordered.slice(1);
+    var i = 0;
+    var verb = ln.verb.replace(/_/g, function () {
+      var w = st.filled[K(rest[i][0], rest[i][1])];
+      i++;
+      return w !== undefined ? w : "\u2026";
+    });
+    var subj = st.filled[K(ln.ordered[0][0], ln.ordered[0][1])];
+    return (subj !== undefined ? subj : "\u2026") + " " + verb + ".";
+  };
+
   CL.other = function (e, r, c) {
     return (e.cells[0][0] === r && e.cells[0][1] === c) ? e.cells[1] : e.cells[0];
   };
@@ -113,6 +190,22 @@
 
     // Reachable: the centre, or any cell with a connection whose other end is solved.
     st.reachable = {};
+    if (CL.isTrifecta(p)) {
+      // Every square lies on a public line, so every square is reachable. The
+      // net spreads from the centre; the trifecta is open at once.
+      for (var ar = 0; ar < p.size; ar++)
+        for (var ac = 0; ac < p.size; ac++) st.reachable[K(ar, ac)] = true;
+      st.verbVisible = {};
+      st.lines.forEach(function (ln) { st.verbVisible[ln.id] = true; });
+      st.wrong = {};
+      if (!st.check) return;
+      for (var ay = 0; ay < p.size; ay++)
+        for (var ax = 0; ax < p.size; ax++) {
+          var ak = K(ay, ax);
+          if (st.filled[ak] !== undefined && !CL.same(st.filled[ak], CL.answer(st, ay, ax))) st.wrong[ak] = true;
+        }
+      return;
+    }
     st.reachable[K(ctr[0], ctr[1])] = true;
     for (var r = 0; r < p.size; r++) {
       for (var c = 0; c < p.size; c++) {
@@ -185,7 +278,11 @@
     // harder, and the board already says which it is: charging a big board two
     // tenths of a star made it impossible for a 5x5 of plain words to be rated
     // easy, which is a thing the scale should be able to say.
-    var possible = 2 * p.size * (p.size - 1), bare = possible - CL.edgeList(p).length;
+    var possible = 2 * p.size * (p.size - 1);
+    // A trifecta's connections are its six lines, not gutters between adjacent
+    // squares; count those, or a board with its real map open would read as an
+    // unbuilt one and come out a star too hard.
+    var bare = possible - (CL.isTrifecta(p) ? CL.lineList(p).length : CL.edgeList(p).length);
     var raw = (hard + twist) / n + bare / possible;
     return raw < 0.30 ? 1 : raw < 0.55 ? 2 : 3;
   };
@@ -306,6 +403,12 @@
     d.className = "noun";
     d.setAttribute("role", "gridcell");
 
+    // A couple of nouns are long enough to want a break at a syllable rather
+    // than wherever the box happens to run out, so the fold reads as a word
+    // break instead of a ragged edge. The same index is used by the typed slots
+    // below, so the two stay identical and entering a word never moves it.
+    var fold = CL.foldAt(ans);
+
     if (word !== undefined) {
       d.classList.add("done-" + (st.status[k] || "clean"));
       if (st.wrong[k]) d.classList.add("wrong");
@@ -315,6 +418,7 @@
       d.innerHTML = '<span class="word"></span>';
       var w = d.querySelector(".word");
       for (var n = 0; n < word.length; n++) {
+        if (fold === n) w.appendChild(document.createElement("br"));
         var sp = document.createElement("span");
         sp.textContent = word.charAt(n);
         w.appendChild(sp);
@@ -340,8 +444,9 @@
     }
     for (var i = 0; i < ans.length; i++) {
       var ch = here && st.draft[i] ? st.draft[i] : (rev[i] ? ans[i] : null);
-      out += ch ? '<span class="' + (rev[i] ? "rev" : "") + '">' + ch + "</span>"
-                : '<span class="blank' + (i === caret ? " caret" : "") + '">&#160;</span>';
+      out += (fold === i ? "<br>" : "") +
+            (ch ? '<span class="' + (rev[i] ? "rev" : "") + '">' + ch + "</span>"
+                : '<span class="blank' + (i === caret ? " caret" : "") + '">&#160;</span>');
     }
     d.innerHTML = '<span class="slots">' + out + "</span>" +
                   '<span class="tick">' + ans.length + "</span>";
@@ -350,6 +455,7 @@
   }
 
   function paintGut(st, d, id) {
+    if (CL.isTrifecta(st.puzzle)) return paintGutTrifecta(st, d, id);
     var e = null;
     for (var i = 0; i < st.edges.length; i++) if (st.edges[i].id === id) { e = st.edges[i]; break; }
     if (!e) { d.className = "gut barred"; d.title = CL.t("gut.barred"); return; }
@@ -377,5 +483,36 @@
       CL.status(over ? CL.t("gut.turnBack") : CL.t("gut.turn"));
     };
     d.onmouseleave = function () { CL.status(null); };
+  }
+
+  // A trifecta gutter is a span of one of the board's six lines: two spans per
+  // line, each coloured with the line's colour and pointed the way the reading
+  // order runs. The line's sentence runs to three words, so it cannot sit in one
+  // span; instead it is split at its word seats and each stretch is printed on
+  // the wire between the two words it joins. The sentence then reads across the
+  // two coloured wires exactly as a net's gutter reads between its two cells —
+  // the board stays a page of sentences, and the middle word sits in its square
+  // between the two halves.
+  function paintGutTrifecta(st, d, id) {
+    var ln = null, i, gi = -1;
+    for (i = 0; i < st.lines.length; i++) {
+      var g = st.lines[i].gutters.indexOf(id);
+      if (g >= 0) { ln = st.lines[i]; gi = g; break; }
+    }
+    if (!ln) { d.className = "gut barred"; d.title = CL.t("gut.barred"); return; }
+    var axis = id.charAt(0) === "h" ? "h" : "v";
+    var head = (axis === "h")
+      ? (ln.dir === "right" ? "to-right" : "to-left")
+      : (ln.dir === "down" ? "to-down" : "to-up");
+    // Split the template at its `_` word seats: parts[0] is the stretch after
+    // the first word, parts[1] after the second, and this gutter carries the
+    // stretch that runs up to the next word. (All six lines here read right or
+    // down, so the physical gap order matches the template order.)
+    var parts = ln.verb.split("_");
+    var frag = (parts[gi] || "").replace(/^\s+|\s+$/g, "");
+    d.className = "gut shown trifecta " + axis + " " + head + " line-" + ln.color;
+    d.innerHTML = '<span class="arrow" aria-hidden="true"></span><span class="label"></span>';
+    d.lastChild.textContent = frag;
+    d.title = CL.lineSentence(st, ln);
   }
 })();
