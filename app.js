@@ -1392,7 +1392,26 @@
     draw();
   }
 
+  // iOS (and any IME) treats predictive-text entry as a *composition*: the
+  // letters are tentative until the user taps a suggestion or presses space.
+  // During a composition the `input` event fires with the in-progress text, and
+  // clearing `ghost.value` underneath it cancels the composition mid-flight —
+  // which makes iOS lose the keystroke or scroll the viewport to the hidden
+  // input. The fix is to leave the value alone while composing, and process the
+  // committed text once on `compositionend`.
+  var composing = false;
+
+  ghost.addEventListener("compositionstart", function () { composing = true; });
+  ghost.addEventListener("compositionend", function () {
+    composing = false;
+    var letters = ghost.value.toUpperCase().replace(CL.language().strip, "");
+    ghost.value = "";
+    if (!st || !st.selected || !letters) return;
+    typeIn(letters);
+  });
+
   ghost.addEventListener("input", function (ev) {
+    if (composing) return;            // let compositionend handle it
     if (ev.inputType === "deleteContentBackward" || ev.inputType === "deleteContentForward") {
       ghost.value = "";
       back();

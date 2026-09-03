@@ -503,7 +503,7 @@ ul#routes li.line, ul#script-list li.line, ul#sentences li.line {
 .dead::after { content: "+"; font-family: var(--mono); font-size: 9px; color: var(--rule); }
 
 #ghost-input {
-  position: fixed; bottom: 0; left: 0;
+  position: fixed; top: 0; left: 0;
   width: 1px; height: 1px; padding: 0; border: 0;
   font-size: 16px; opacity: 0.01; background: transparent; color: transparent;
   pointer-events: none;
