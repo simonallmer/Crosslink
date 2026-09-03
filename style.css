@@ -738,6 +738,13 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
      come later in source order, do not win them back. */
   .frontispiece .hero { grid-column: 1 / -1; width: 100%; max-width: 240px; }
   .frontispiece .tile { width: auto; }
+  /* Swap Word List and Puzzles so the top row is Play Daily | Puzzles
+     and the bottom row is Word List | Rulebook. */
+  .frontispiece .tile[data-go="daily"]   { order: 1; }
+  .frontispiece .tile[data-go="puzzles"] { order: 2; }
+  .frontispiece .hero                    { order: 3; }
+  .frontispiece .tile[data-go="words"]   { order: 4; }
+  .frontispiece .tile[data-go="rules"]   { order: 5; }
 }
 .hero svg { display: block; width: 100%; height: auto; }
 .hero .p { fill: var(--card); stroke: var(--ink-soft); stroke-width: 2; }
