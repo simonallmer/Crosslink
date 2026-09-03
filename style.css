@@ -734,8 +734,6 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
     justify-content: center; gap: 14px 14px;
   }
   .tile-col { display: contents; }
-  .t-green { order: 3; }
-  .t-navy  { order: 2; }
   /* Named through the parent so the fixed widths further down the sheet, which
      come later in source order, do not win them back. */
   .frontispiece .hero { grid-column: 1 / -1; width: 100%; max-width: 240px; }
