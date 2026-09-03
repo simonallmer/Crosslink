@@ -1,11 +1,13 @@
 window.CROSSLINK = window.CROSSLINK || {};
 (window.CROSSLINK.puzzles = window.CROSSLINK.puzzles || []).push({
-  id: "08-all-american",
+  id: "08-rebel-land",
   lang: "en",
-  title: "All-American",
+  title: "Rebel Land",
   standfirst: "Written by Simon Allmer",
-  hue: "sand",
+  hue: "america",
   kind: "trifecta",
+  theme: "american",
+  stars: 1,
   size: 3,
   centre: [1, 1],
 
@@ -40,7 +42,7 @@ window.CROSSLINK = window.CROSSLINK || {};
   tr: [
     { axis: "h", i: 0, dir: "right", color: "r0", verb: "hideouts were often raided by a _ of warriors from a local _" },
     { axis: "h", i: 1, dir: "right", color: "r1", verb: "samples are drilled from deep _ to prove the gold value of a mining _" },
-    { axis: "h", i: 2, dir: "right", color: "r2", verb: "with at least one Michelin _ usually requires an advance _" }
+    { axis: "h", i: 2, dir: "right", color: "r2", verb: "with at least one _ usually requires an advance _" }
   ],
 
   tc: [

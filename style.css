@@ -129,6 +129,7 @@ body[data-hue="red"]   { --sheet: #CDAFA6; --page: #95776E; }   /* No. 6, firebr
    shelf before a word of it is read. Brett № 1, nine creatures leading double
    lives in a city. */
 body[data-hue="plum"]  { --sheet: #C6B0BC; --page: #8E7884; }   /* de № 1, a sour plum */
+body[data-hue="america"] { --sheet: #C5CBE0; --page: #8B93AD; } /* american flag blue */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) body[data-hue="sand"]  { --sheet: #272318; --page: #100E08; }
@@ -138,6 +139,7 @@ body[data-hue="plum"]  { --sheet: #C6B0BC; --page: #8E7884; }   /* de № 1, a s
   :root:not([data-theme="light"]) body[data-hue="grey"]  { --sheet: #242424; --page: #0F0F0F; }
   :root:not([data-theme="light"]) body[data-hue="red"]   { --sheet: #2B1E1C; --page: #120C0B; }
   :root:not([data-theme="light"]) body[data-hue="plum"]  { --sheet: #261C22; --page: #0F0A0D; }
+  :root:not([data-theme="light"]) body[data-hue="america"] { --sheet: #1A1D30; --page: #0D0F1A; }
 }
 :root[data-theme="dark"] body[data-hue="sand"]  { --sheet: #272318; --page: #100E08; }
 :root[data-theme="dark"] body[data-hue="blue"]  { --sheet: #1B2129; --page: #090C11; }
@@ -146,6 +148,53 @@ body[data-hue="plum"]  { --sheet: #C6B0BC; --page: #8E7884; }   /* de № 1, a s
 :root[data-theme="dark"] body[data-hue="grey"]  { --sheet: #242424; --page: #0F0F0F; }
 :root[data-theme="dark"] body[data-hue="red"]   { --sheet: #2B1E1C; --page: #120C0B; }
 :root[data-theme="dark"] body[data-hue="plum"]  { --sheet: #261C22; --page: #0F0A0D; }
+:root[data-theme="dark"] body[data-hue="america"] { --sheet: #1A1D30; --page: #0D0F1A; }
+
+/* American-themed puzzles: subtle star field on the page background */
+body[data-hue="america"]::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.35), transparent),
+    radial-gradient(1px 1px at 80px 70px, rgba(255,255,255,.25), transparent),
+    radial-gradient(1px 1px at 150px 20px, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 50px 100px, rgba(255,255,255,.2), transparent),
+    radial-gradient(1px 1px at 120px 60px, rgba(255,255,255,.35), transparent),
+    radial-gradient(1px 1px at 30px 130px, rgba(255,255,255,.25), transparent),
+    radial-gradient(1px 1px at 170px 90px, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 90px 150px, rgba(255,255,255,.2), transparent),
+    radial-gradient(1px 1px at 60px 40px, rgba(255,255,255,.35), transparent),
+    radial-gradient(1px 1px at 140px 120px, rgba(255,255,255,.25), transparent),
+    radial-gradient(1px 1px at 10px 80px, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px 1px at 110px 140px, rgba(255,255,255,.2), transparent),
+    radial-gradient(1.5px 1.5px at 45px 55px, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.5px 1.5px at 160px 110px, rgba(255,255,255,.35), transparent),
+    radial-gradient(1.5px 1.5px at 75px 15px, rgba(255,255,255,.4), transparent);
+  background-size: 180px 160px;
+}
+:root[data-theme="dark"] body[data-hue="america"]::after,
+:root:not([data-theme="light"]) body[data-hue="america"]::after {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.15), transparent),
+    radial-gradient(1px 1px at 80px 70px, rgba(255,255,255,.1), transparent),
+    radial-gradient(1px 1px at 150px 20px, rgba(255,255,255,.12), transparent),
+    radial-gradient(1px 1px at 50px 100px, rgba(255,255,255,.08), transparent),
+    radial-gradient(1px 1px at 120px 60px, rgba(255,255,255,.15), transparent),
+    radial-gradient(1px 1px at 30px 130px, rgba(255,255,255,.1), transparent),
+    radial-gradient(1px 1px at 170px 90px, rgba(255,255,255,.12), transparent),
+    radial-gradient(1px 1px at 90px 150px, rgba(255,255,255,.08), transparent),
+    radial-gradient(1px 1px at 60px 40px, rgba(255,255,255,.15), transparent),
+    radial-gradient(1px 1px at 140px 120px, rgba(255,255,255,.1), transparent),
+    radial-gradient(1px 1px at 10px 80px, rgba(255,255,255,.12), transparent),
+    radial-gradient(1px 1px at 110px 140px, rgba(255,255,255,.08), transparent),
+    radial-gradient(1.5px 1.5px at 45px 55px, rgba(255,255,255,.18), transparent),
+    radial-gradient(1.5px 1.5px at 160px 110px, rgba(255,255,255,.15), transparent),
+    radial-gradient(1.5px 1.5px at 75px 15px, rgba(255,255,255,.18), transparent);
+  background-size: 180px 160px;
+}
 
 * { box-sizing: border-box; }
 body {
@@ -791,6 +840,27 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
 .ti-link:hover { color: var(--active); }
 .index .sz { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); width: 48px; }
 .index .st { font-family: var(--serif); font-size: 13px; color: var(--ink-soft); }
+.index .flag { width: 28px; text-align: center; }
+.flag-icon {
+  display: inline-block;
+  width: 16px;
+  height: 11px;
+  border: 1px solid #333;
+  vertical-align: middle;
+  position: relative;
+  background: repeating-linear-gradient(
+    to bottom,
+    #B22234 0px, #B22234 1.5px,
+    #FFF 1.5px, #FFF 3px
+  );
+}
+.flag-icon b {
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+  width: 7px; height: 6px;
+  background: #3C3B6E;
+}
 .index .ac { width: 96px; text-align: right; }
 
 /* ---- the word list ---- */
@@ -925,7 +995,7 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   .banner-kicker { font-size: 10px; letter-spacing: .24em; text-indent: .24em; }
   .banner-sub { font-size: 11px; letter-spacing: .26em; text-indent: .26em; }
   .wordgrid { column-count: 2; }
-  .index .sz, .index .st { display: none; }
+  .index .sz, .index .st, .index .flag { display: none; }
 }
 
 /* ---- the emblem, which is also the index ---- */

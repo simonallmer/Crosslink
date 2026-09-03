@@ -14,7 +14,6 @@ window.CROSSLINK.words = {
   APPLE: { e: 3, k: "food", d: "The orchard fruit that carries the most stories." },
   ARGENTINA: { e: 3, k: "country", d: "Southern South America. Capital Buenos Aires. About 46 million people." },
   ARMSTRONG: { e: 2, k: "figure", d: "Two of them: Neil, first to walk on the moon, and Louis, who invented much of jazz." },
-  ARMY: { e: 2, k: "people", d: "People enough to take a country." },
   ASSEMBLY: { e: 2, k: "idea", d: "A gathering of people for a meeting; also a factory setup where a product is put together step by step." },
   ASH: { e: 3, k: "nature", d: "What fire leaves when it has finished." },
   ASIA: { e: 3, k: "continent", d: "The largest continent, and the most populous: some 4.7 billion people." },

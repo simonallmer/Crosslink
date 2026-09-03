@@ -8,8 +8,9 @@
     // The number is the board's place on its OWN shelf. Each language counts
     // from 1: there is an English No. 1 and a German Brett № 1, and neither is
     // waiting on the other to be built.
-    document.getElementById("eyebrow").textContent =
-      CL.t("play.eyebrow", { n: CL.boardNo(CL.puzzles.indexOf(P)), stars: CL.starText(CL.stars(P)) });
+    var eyebrowText = CL.t("play.eyebrow", { n: CL.boardNo(CL.puzzles.indexOf(P)), stars: CL.starText(CL.stars(P)) });
+    var flagHtml = P.theme === "american" ? ' <span class="flag-icon" style="vertical-align:middle"><b></b></span>' : '';
+    document.getElementById("eyebrow").innerHTML = eyebrowText + flagHtml;
     document.getElementById("title").textContent = P.title;
     document.getElementById("standfirst").textContent = P.standfirst;
     // The narrow sheet is 700px with 26 either side, so 648 of lattice fits in
@@ -682,11 +683,16 @@
       var p = CL.puzzles[i];
       var tr = document.createElement("tr");
       tr.innerHTML = '<td class="no"></td><td class="ti"></td><td class="sz"></td>' +
-                     '<td class="st"></td><td class="ac"></td>';
+                     '<td class="st"></td><td class="flag"></td><td class="ac"></td>';
       tr.children[0].textContent = "\u2116" + (place + 1);
       tr.children[2].textContent = p.size + "\u00D7" + p.size;
       tr.children[3].textContent = CL.starText(CL.stars(p));
       tr.children[3].className = "st stars";
+
+      // American flag icon for American-themed puzzles
+      if (p.theme === "american") {
+        tr.children[4].innerHTML = '<span class="flag-icon" title="American theme"><b></b></span>';
+      }
 
       // The title is a link, and behaves like one.
       var open = function () { go("play", i); };
@@ -700,7 +706,7 @@
       b.type = "button"; b.className = "ghost";
       b.textContent = CL.t("puzzles.play");
       b.onclick = open;
-      tr.children[4].appendChild(b);
+      tr.children[5].appendChild(b);
       t.appendChild(tr);
     });
 
@@ -1285,9 +1291,11 @@
     checkWin();
   }
 
-  // S gives the whole board up. Everything it fills is marked given, and the
-  // report at the close says so — there is no way to take the board this way
-  // and have it read as solved.
+  // Shift+S gives the whole board up, but only if pressed twice in under a
+  // second — to prevent accidental solves. Everything it fills is marked
+  // given, and the report at the close says so — there is no way to take the
+  // board this way and have it read as solved.
+  var lastShiftS = 0;
   function giveUp() {
     if (!st || !here || here.name !== "play") return;
     for (var r = 0; r < P.size; r++) {
@@ -1403,7 +1411,11 @@
     // threw the whole board away. Giving up is the one move that cannot be
     // taken back, so it is the one move that asks for two keys.
     if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) {
-      ev.preventDefault(); giveUp(); return;
+      ev.preventDefault();
+      var now = Date.now();
+      if (now - lastShiftS < 1000) { lastShiftS = 0; giveUp(); }
+      else { lastShiftS = now; say(CL.t("msg.giveUpConfirm") || "Press Shift+S again to solve"); }
+      return;
     }
     if (!st || !st.selected) return;
     if (ev.key === "Backspace") { ev.preventDefault(); back(); }
@@ -1424,7 +1436,14 @@
     // second use of a free key rather than a key doing double duty.
     if ((ev.key === "s" || ev.key === "S") && ev.shiftKey) {
       ev.preventDefault();
-      if (here && here.name === "menu") go("intro"); else giveUp();
+      var now = Date.now();
+      if (now - lastShiftS < 1000) {
+        lastShiftS = 0;
+        if (here && here.name === "menu") go("intro"); else giveUp();
+      } else {
+        lastShiftS = now;
+        say(CL.t("msg.giveUpConfirm") || "Press Shift+S again to solve");
+      }
       return;
     }
     // Shift+A, from the front page only: the emblem, filled in and square.

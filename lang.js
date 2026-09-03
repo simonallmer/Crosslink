@@ -140,6 +140,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 
       "msg.takes":       "That square takes {n} letters.",
       "msg.dup":         "Each word is used once, and {word} is already on the board.",
+      "msg.giveUpConfirm": "Press Shift+S again to solve",
       "msg.gaveUp":      "The whole board, given.",
 
       "finish.head":     "The board closes.",
@@ -260,6 +261,7 @@ window.CROSSLINK = window.CROSSLINK || {};
 
       "msg.takes":       "Dieses Feld nimmt {n} Buchstaben.",
       "msg.dup":         "Jedes Wort steht nur einmal, und {word} steht schon auf dem Brett.",
+      "msg.giveUpConfirm": "Nochmal Shift+S drücken zum Lösen",
       "msg.gaveUp":      "Das ganze Brett, geschenkt.",
 
       "finish.head":     "Das Brett schließt.",
