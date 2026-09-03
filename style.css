@@ -967,7 +967,14 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   .banner-kicker { font-size: 10px; letter-spacing: .24em; text-indent: .24em; }
   .banner-sub { font-size: 11px; letter-spacing: .26em; text-indent: .26em; }
   .wordgrid { column-count: 2; }
-  .index .sz, .index .st { display: none; }
+  .index td { padding: 6px 4px; }
+  .index .no { width: 32px; font-size: 11px; }
+  .ti-link { font-size: 14px; }
+  .index .sz { width: 36px; font-size: 10px; }
+  .index .st { font-size: 10px; }
+  .index .st.stars { font-size: 12px; letter-spacing: 0; }
+  .index .ac { width: auto; }
+  .index .ac .ghost { padding: 4px 8px; font-size: 11px; }
 }
 
 /* ---- the emblem, which is also the index ---- */
