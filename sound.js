@@ -30,7 +30,7 @@
       try { ctx = new A({ latencyHint: "interactive" }); }
       catch (e) { ctx = new A(); }
     }
-    if (ctx.state === "suspended") ctx.resume();
+    if (ctx.state === "suspended") { var p = ctx.resume(); if (p && p.catch) p.catch(function () {}); }
     return ctx;
   }
 

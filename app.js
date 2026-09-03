@@ -136,7 +136,7 @@
   // you see is it flickering open and shut. Nothing focuses it during a demo.
   function takeFocus() {
     if (typeof DEMO !== "undefined" && DEMO && DEMO.on) return;
-    ghost.focus();
+    ghost.focus({ preventScroll: true });
   }
 
   function pick(r, c) {
@@ -343,13 +343,13 @@
 
     enter.textContent = CL.t("play.enter");
     enter.disabled = !draftFull();
-    enter.onclick = function () { submit(); ghost.focus(); };
+    enter.onclick = function () { submit(); ghost.focus({ preventScroll: true }); };
 
     var h = nextHint(r, c);
     btn.hidden = false;
     btn.textContent = h ? h.label : CL.t("play.spent");
     btn.disabled = !h;
-    btn.onclick = function () { if (h) { h.run(); say(h.note, true); draw(); ghost.focus(); } };
+    btn.onclick = function () { if (h) { h.run(); say(h.note, true); draw(); ghost.focus({ preventScroll: true }); } };
     document.getElementById("hint-note").textContent = CL.t("play.hintNote");
   }
 
@@ -1456,8 +1456,8 @@
     // that the front page is somewhere you press a key on purpose (A14).
     if (!st || !st.selected) return;
     if (ev.key.length === 1 && CL.language().letters.test(ev.key.toUpperCase())) {
-      ghost.focus();
-      typeIn(ev.key.toUpperCase());
+    ghost.focus({ preventScroll: true });
+    typeIn(ev.key.toUpperCase());
     }
   });
 

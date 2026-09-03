@@ -150,50 +150,15 @@ body[data-hue="america"] { --sheet: #C5CBE0; --page: #8B93AD; } /* american flag
 :root[data-theme="dark"] body[data-hue="plum"]  { --sheet: #261C22; --page: #0F0A0D; }
 :root[data-theme="dark"] body[data-hue="america"] { --sheet: #1A1D30; --page: #0D0F1A; }
 
-/* American-themed puzzles: subtle star field on the page background */
-body[data-hue="america"]::after {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: -1;
-  background-image:
-    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.35), transparent),
-    radial-gradient(1px 1px at 80px 70px, rgba(255,255,255,.25), transparent),
-    radial-gradient(1px 1px at 150px 20px, rgba(255,255,255,.3), transparent),
-    radial-gradient(1px 1px at 50px 100px, rgba(255,255,255,.2), transparent),
-    radial-gradient(1px 1px at 120px 60px, rgba(255,255,255,.35), transparent),
-    radial-gradient(1px 1px at 30px 130px, rgba(255,255,255,.25), transparent),
-    radial-gradient(1px 1px at 170px 90px, rgba(255,255,255,.3), transparent),
-    radial-gradient(1px 1px at 90px 150px, rgba(255,255,255,.2), transparent),
-    radial-gradient(1px 1px at 60px 40px, rgba(255,255,255,.35), transparent),
-    radial-gradient(1px 1px at 140px 120px, rgba(255,255,255,.25), transparent),
-    radial-gradient(1px 1px at 10px 80px, rgba(255,255,255,.3), transparent),
-    radial-gradient(1px 1px at 110px 140px, rgba(255,255,255,.2), transparent),
-    radial-gradient(1.5px 1.5px at 45px 55px, rgba(255,255,255,.4), transparent),
-    radial-gradient(1.5px 1.5px at 160px 110px, rgba(255,255,255,.35), transparent),
-    radial-gradient(1.5px 1.5px at 75px 15px, rgba(255,255,255,.4), transparent);
-  background-size: 180px 160px;
+/* American-themed puzzles: blue background with stars */
+body[data-hue="america"] {
+  background-color: var(--page);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z' fill='%23ffffff' opacity='.22'/%3E%3Cpath d='M10 35l1.5 4.5h4.5l-3.5 3 1.5 4.5-3.5-3-3.5 3 1.5-4.5-3.5-3h4.5z' fill='%23ffffff' opacity='.16'/%3E%3Cpath d='M50 40l1.5 4.5h4.5l-3.5 3 1.5 4.5-3.5-3-3.5 3 1.5-4.5-3.5-3h4.5z' fill='%23ffffff' opacity='.16'/%3E%3C/svg%3E");
 }
-:root[data-theme="dark"] body[data-hue="america"]::after,
-:root:not([data-theme="light"]) body[data-hue="america"]::after {
-  background-image:
-    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,.15), transparent),
-    radial-gradient(1px 1px at 80px 70px, rgba(255,255,255,.1), transparent),
-    radial-gradient(1px 1px at 150px 20px, rgba(255,255,255,.12), transparent),
-    radial-gradient(1px 1px at 50px 100px, rgba(255,255,255,.08), transparent),
-    radial-gradient(1px 1px at 120px 60px, rgba(255,255,255,.15), transparent),
-    radial-gradient(1px 1px at 30px 130px, rgba(255,255,255,.1), transparent),
-    radial-gradient(1px 1px at 170px 90px, rgba(255,255,255,.12), transparent),
-    radial-gradient(1px 1px at 90px 150px, rgba(255,255,255,.08), transparent),
-    radial-gradient(1px 1px at 60px 40px, rgba(255,255,255,.15), transparent),
-    radial-gradient(1px 1px at 140px 120px, rgba(255,255,255,.1), transparent),
-    radial-gradient(1px 1px at 10px 80px, rgba(255,255,255,.12), transparent),
-    radial-gradient(1px 1px at 110px 140px, rgba(255,255,255,.08), transparent),
-    radial-gradient(1.5px 1.5px at 45px 55px, rgba(255,255,255,.18), transparent),
-    radial-gradient(1.5px 1.5px at 160px 110px, rgba(255,255,255,.15), transparent),
-    radial-gradient(1.5px 1.5px at 75px 15px, rgba(255,255,255,.18), transparent);
-  background-size: 180px 160px;
+:root[data-theme="dark"] body[data-hue="america"],
+:root:not([data-theme="light"]) body[data-hue="america"] {
+  background-color: var(--page);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z' fill='%23ffffff' opacity='.22'/%3E%3Cpath d='M10 35l1.5 4.5h4.5l-3.5 3 1.5 4.5-3.5-3-3.5 3 1.5-4.5-3.5-3h4.5z' fill='%23ffffff' opacity='.16'/%3E%3Cpath d='M50 40l1.5 4.5h4.5l-3.5 3 1.5 4.5-3.5-3-3.5 3 1.5-4.5-3.5-3h4.5z' fill='%23ffffff' opacity='.16'/%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; }
@@ -995,7 +960,7 @@ footer p:first-child::before { content: "\2691"; margin-right: 7px; }
   .banner-kicker { font-size: 10px; letter-spacing: .24em; text-indent: .24em; }
   .banner-sub { font-size: 11px; letter-spacing: .26em; text-indent: .26em; }
   .wordgrid { column-count: 2; }
-  .index .sz, .index .st, .index .flag { display: none; }
+  .index .sz, .index .st { display: none; }
 }
 
 /* ---- the emblem, which is also the index ---- */
