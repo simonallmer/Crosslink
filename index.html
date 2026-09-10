@@ -469,88 +469,34 @@
       <p>Want to create your own Crosslink puzzles? You are completely free to adapt the format and design your own! We only ask that you mention the inventor, Simon Allmer, and provide a link back to this page.</p>
     </div>
 
-    <!-- Die deutsche Anleitung. Geschrieben und nicht Zeile für Zeile
-         übersetzt: die kurzen Beschriftungen stehen in lang.js, aber eine
-         Anleitung ist ein Stück Prosa, und Schlüssel für Schlüssel übersetzt
-         hätte sie englische Sätze in deutschen Wörtern ergeben. Ein Abschnitt
-         steht hier, der in der englischen Fassung fehlt und dort auch nicht
-         hingehört: dass die Sprachen verschieden weit sind, und warum. -->
     <div class="rules" data-lang="de" hidden>
-      <h2>Das Brett</h2>
-      <p>Neun Wörter stehen in den Feldern eines Gitters aus drei mal drei. Zwischen ihnen,
-      in den Gassen, stehen die Verbindungen, die sie verbinden. Jede Gasse ist ein Satz: das
-      Wort am Schaft, die Verbindung, das Wort an der Spitze.</p>
+      <h2>Das Konzept</h2>
+      <p>Crosslink ist ein wortbasiertes Rätsel aus Knoten, in dem jedes Wort durch seine Beziehung zu den Wörtern in seiner Umgebung definiert wird. Indem du die Verbindungen zwischen leeren Feldern liest, erschließt du, welche Wörter dort hingehören. Das gesamte Netzwerk ist von Anfang an sichtbar, und du kannst die Felder in beliebiger Reihenfolge ausfüllen.</p>
 
-      <h2>Was zu sehen ist</h2>
-      <p>Jede Verbindung auf dem Brett steht von Anfang an da. Nichts ist verborgen: das
-      ganze Netz ist zu lesen, und jedes Feld darin lässt sich von dort aus erschließen, wo
-      du gerade sitzt.</p>
-      <p>Du darfst in jedes Feld schreiben, in jeder Reihenfolge. Von einem Wort aus
-      weiterzugehen, das schon steht, ist meist der leichteste Weg zum nächsten — aber
-      nichts ist gesperrt, und wer das Wort in der fernen Ecke sieht, darf es sofort
-      hinsetzen.</p>
+      <h2>Gitter und Formen</h2>
+      <p>Rätsel gibt es in verschiedenen Formen und Größen: von gewöhnlichen Gittern wie Mini (3x3), Midi (4x4) und Maxi (5x5) bis hin zu einzigartigen thematischen Formen. Unabhängig von der Form bleibt das Ziel gleich: Erschließe die Wörter anhand ihrer Verbindungen.</p>
 
-      <h2>Eine Verbindung umdrehen</h2>
-      <p>Manche Verbindungen sind zweimal geschrieben. Wo eine es ist, trägt ihr Satz einen
-      feinen gepunkteten Strich darunter — klick darauf, und sie dreht sich um auf die
-      andere Seite, die dasselbe mit anderen Worten sagt. Manchmal ist das einfacher.
-      Manchmal ist es nur ein anderer Blickwinkel, und manchmal schwerer als die Seite, mit
-      der du angefangen hast.</p>
-      <p>Es kostet nichts. Das Umdrehen wird nirgends gezählt, und ein Brett, das mit lauter
-      umgedrehten Verbindungen gelöst wurde, ist rundheraus gelöst und sagt das auch.</p>
-      <p>Die zweiten Seiten sind bisher englisch. Auf dem deutschen Brett trägt jede
-      Verbindung eine Seite, und der gepunktete Strich steht deshalb gar nicht erst da — die
-      Engine lässt ihn weg, statt ihn leer anzubieten.</p>
+      <h2>Verbindungen lesen</h2>
+      <p>Zwischen den Feldern liegen die Verbindungen, die Sätze bilden. Du wirst auf einige verschiedene Typen stoßen:</p>
+      <ul>
+        <li><strong>Gewöhnliche Pfeile:</strong> Lies sie in Richtung des Pfeils (zum Beispiel bedeutet A &rarr; B: „A ist der Vater von B“).</li>
+        <li><strong>Gegenseitige Linien:</strong> Eine Beziehung in beide Richtungen, bei der die Reihenfolge keine Rolle spielt (zum Beispiel bedeutet C &mdash; D: „C ist der Cousin von D“).</li>
+        <li><strong>Farbige Ketten:</strong> Diese Verbindungen führen einen einzelnen Satz über drei Felder hinweg fort. Folge den farbigen Pfeilen oder Linien, um die vollständige Aussage zu lesen.</li>
+      </ul>
 
-      <h2>Ein Wort eintragen</h2>
-      <p>Klick auf ein Feld und tippe. Jeder Buchstabe hat seine eigene Linie, du kannst also
-      abzählen, was das Feld verlangt. <em>Wort eintragen</em> setzt es hin; <em>Wieder
-      wegnehmen</em> hebt es wieder auf. Nichts ist endgültig, und ein Feld, das du wieder
-      leerst, behält jede Markierung, die es sich verdient hat.</p>
+      <h2>Polysemie und Wortspiele</h2>
+      <p>Erwarte elegante Irreführung. Viele Rätsel verwenden Polysemie, also Wörter mit mehreren Bedeutungen. Ein Brett kann für eine eingehende Verbindung eine Bedeutung eines Wortes und für eine ausgehende Verbindung eine völlig andere verwenden. Je mehr Schwierigkeitssterne ein Brett hat, desto wahrscheinlicher triffst du auf Wörter mit zwei Seiten.</p>
 
-      <h2>Hilfe, und was sie kostet</h2>
-      <p><em>Buchstabe zeigen</em> setzt einen Buchstaben, den du nicht getippt hast, und
-      zählt das Feld als halb gelöst. <em>Wort zeigen</em> zählt es als geschenkt, nicht als
-      gelöst. Das Brett führt darüber Buch und liest es dir am Ende vor.</p>
-      <p><em>Esc</em> geht einen Schritt zurück: aus dem Feld, auf dem du stehst, und dann
-      von der Seite, auf der du bist.</p>
+      <h2>Hilfe und Werkzeuge</h2>
+      <p>Wenn du feststeckst, bietet dir das Brett einige Möglichkeiten zur Hilfe:</p>
+      <ul>
+        <li><strong>Alternative Verbindungen:</strong> Verbindungen mit einer gepunkteten Linie darunter kannst du anklicken, um sie umzudrehen. Dadurch wird ein anderer Hinweis auf dieselbe Beziehung sichtbar. Das Nachsehen kostet nichts!</li>
+        <li><strong>Fehlerprüfung:</strong> Sie ist standardmäßig aktiviert; falsche Wörter werden sofort rot. Du kannst sie ausschalten, wenn du lieber ohne Unterstützung löst.</li>
+        <li><strong>Hinweise:</strong> Du kannst einen einzelnen Buchstaben oder ein ganzes Wort aufdecken, wenn du wirklich feststeckst. Das Brett merkt sich jedoch, dass du Hilfe angefordert hast.</li>
+      </ul>
 
-      <h2>Der Schalter</h2>
-      <p><em>Fehlerprüfung</em> ist zu Beginn an: ein falsches Wort wird rot, sobald du es
-      einträgst. Schalte sie aus, und nichts auf dem Brett widerspricht dir mehr — ein Wort,
-      das du hinsetzt, wird einfach genommen, und du erfährst es am Schluss. Auch der Klang
-      ändert sich: mit ausgeschalteter Prüfung sagt dir das Brett in einem Geräusch nicht,
-      was es dir auf der Seite verschweigt.</p>
-
-      <h2>Die zwei Fenster</h2>
-      <p>Ein Klick auf die Sätze im Hinweisfeld öffnet den <em>Wortlaut</em>, der jeden Satz
-      enthält, den das Brett gezeigt hat, ob ganz oder halb bekannt. Ein Klick auf ein Wort,
-      das du gesetzt hast, öffnet das <em>Wörterbuch</em> mit seinen Bedeutungen — meist
-      mehr als eine, und meist ist die zweite die, die das Brett meint.</p>
-
-      <h2>Die Jagd</h2>
-      <p>Die Wortliste ist der ganze Steinbruch. Ein Wort darf auf mehr als einem Brett
-      stehen, und dann trägt die Liste für jedes eine Nummer — ein Wort, das zweimal
-      auftaucht, ist eine Kreuzung zwischen zwei Rätseln und kein Fehler. Auf
-      <em>demselben</em> Brett steht kein Wort zweimal.</p>
-
-      <h2>Die Sprachen</h2>
-      <p>Englisch ist die Grundsprache und bleibt die breiteste: der Steinbruch der
-      mehrdeutigen Wörter, die beiden Rechtschreibungen und alle zweiten Seiten sind
-      englisch.</p>
-      <p>Ein Brett in einer anderen Sprache ist keine Übersetzung. Es kann keine sein. Ein
-      Crosslink lebt davon, dass ein Wort zufällig zwei Dinge meint, und diese Zufälle
-      gehören der Sprache: <em>UHU</em> heißt Eule und Alleskleber, weil eine Firma in Bühl
-      1932 ihre Leime nach Vögeln benannte, und dafür gibt es kein englisches Wort — also
-      auch kein englisches Brett, von dem <em>Verrückte Tiere</em> eine Fassung wäre. Der
-      Knopf in der Leiste wechselt die Sprache und mit ihr das Regal: jede Sprache zählt
-      ihre Bretter selbst, von № 1 an.</p>
-
-      <h2>Schwierigkeit</h2>
-      <p>Jedes Brett trägt einen, zwei oder drei Sterne. Die Zahl kommt von den Wörtern
-      darauf: wie gewöhnlich sie sind, und wie viele davon in einer zweiten Bedeutung
-      gebraucht werden. Ein Brett aus schlichten Tatsachen bekommt einen Stern. Ein Brett,
-      auf dem die Hälfte der Wörter zwei Mäntel trägt, bekommt drei.</p>
+      <h2>Eigene Rätsel erstellen</h2>
+      <p>Du möchtest eigene Crosslink-Rätsel erstellen? Du darfst das Format frei anpassen und deine eigenen Rätsel entwerfen! Wir bitten dich nur, den Erfinder Simon Allmer zu nennen und einen Link auf diese Seite bereitzustellen.</p>
     </div>
 
     <!-- The figure is not repeated in the markup: app.js clones the one on the
