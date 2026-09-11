@@ -9,7 +9,7 @@
     // from 1: there is an English No. 1 and a German Brett № 1, and neither is
     // waiting on the other to be built.
     var eyebrowText = CL.t("play.eyebrow", { n: CL.boardNo(CL.puzzles.indexOf(P)), stars: CL.starText(CL.stars(P)) });
-    var flagHtml = P.theme === "american" ? ' <span class="flag-icon" style="vertical-align:middle"><b></b></span>' : '';
+    var flagHtml = P.theme === "american" ? ' <a class="flag-link" href="https://simonallmer.com/americanportrait" target="_blank" rel="noopener" aria-label="American portrait"><span class="flag-icon" style="vertical-align:middle"><b></b></span></a>' : '';
     document.getElementById("eyebrow").innerHTML = eyebrowText + flagHtml;
     document.getElementById("title").textContent = P.title;
     document.getElementById("standfirst").textContent = P.standfirst;
@@ -691,7 +691,7 @@
 
       // American flag icon for American-themed puzzles
       if (p.theme === "american") {
-        tr.children[4].innerHTML = '<span class="flag-icon" title="American theme"><b></b></span>';
+        tr.children[4].innerHTML = '<a class="flag-link" href="https://simonallmer.com/americanportrait" target="_blank" rel="noopener" aria-label="American portrait"><span class="flag-icon" title="American theme"><b></b></span></a>';
       }
 
       // The title is a link, and behaves like one.
