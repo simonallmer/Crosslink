@@ -12,7 +12,7 @@
     var flagHtml = P.theme === "american" ? ' <a class="flag-link" href="https://simonallmer.com/americanportrait" target="_blank" rel="noopener" aria-label="American portrait"><span class="flag-icon" style="vertical-align:middle"><b></b></span></a>' : '';
     document.getElementById("eyebrow").innerHTML = eyebrowText + flagHtml;
     document.getElementById("title").textContent = P.title;
-    document.getElementById("standfirst").textContent = P.standfirst;
+    document.getElementById("standfirst").textContent = P.size + "\u00D7" + P.size + " \u00B7 " + CL.starText(CL.stars(P));
     // The narrow sheet is 700px with 26 either side, so 648 of lattice fits in
     // it. Asked of the board rather than of its size, so a language with wider
     // gutters gets the wide sheet at 3x3 without anything here being told
@@ -679,7 +679,7 @@
   function puzzleIndex() {
     var t = document.getElementById("puzzle-index");
     t.innerHTML = "";
-    CL.shelf().forEach(function (i, place) {
+    CL.shelf().filter(function (i) { return CL.puzzles[i].id !== "07-americana"; }).forEach(function (i, place) {
       var p = CL.puzzles[i];
       var tr = document.createElement("tr");
       tr.innerHTML = '<td class="no"></td><td class="ti"></td><td class="sz"></td>' +
@@ -1031,6 +1031,7 @@
   function paintStrings() {
     function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
     each("[data-i18n]",       function (el) { el.textContent = CL.t(el.getAttribute("data-i18n")); });
+    each("[data-i18n-html]",  function (el) { el.innerHTML = CL.t(el.getAttribute("data-i18n-html")); });
     each("[data-i18n-title]", function (el) { el.title = CL.t(el.getAttribute("data-i18n-title")); });
     each("[data-i18n-label]", function (el) { el.setAttribute("aria-label", CL.t(el.getAttribute("data-i18n-label"))); });
     each("[data-lang]",       function (el) { el.hidden = el.getAttribute("data-lang") !== CL.lang; });
@@ -1502,5 +1503,16 @@
   })();
 
   paintStrings();
-  go("menu");
+
+  var hash = window.location.hash;
+  if (hash.indexOf('#play-') === 0) {
+    var idx = parseInt(hash.replace('#play-', ''), 10);
+    if (!isNaN(idx)) {
+      go("play", idx);
+    } else {
+      go("menu");
+    }
+  } else {
+    go("menu");
+  }
 })();
